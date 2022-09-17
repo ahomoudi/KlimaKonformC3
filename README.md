@@ -4,9 +4,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of KlimaKonformC3 is to ...
+The goal of KlimaKonformC3 is to analysis the Agricultural Simulations performed within of the Projekt KlimaKonform (TB C3 Landwirtschaft)
 
 ## Installation
+
+`KlimaKonformC3` is NOT available from CRAN, so you can NOT use `install.packages("KlimaKonformC3")`.
 
 You can install the development version of KlimaKonformC3 like so:
 

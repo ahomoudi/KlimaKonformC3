@@ -1,0 +1,44 @@
+pattern,longname,units,variable,standardname,frequency,comment,lower_limit,upper_limit,interval,lower_scale,upper_scale,interval_scale,rounding
+AET_sum_year_,Actual Evapotranspiration,mm,AET,actual_evapotranspiration,yearly,sumoftheyear,200,800,50,-500,500,100,100
+Groundwater_recharge_sum_year_,Groundwater Recharge,mm,GWR,groundwater_recharge,yearly,sumoftheyear,0,600,50,-500,500,100,100
+SOC_0-30_,Soil Organic Carbon,%,SOC,"Soil organic carbon of topsoil (0 ""\u2212"" 30) cm",yearly,sumoftheyear,-100,200,50,-100,200,50,100
+wheatwinterwheat_AET_sum_season_,Actual Evapotranspiration for Winter Wheat,mm,AET-ww,actual_evapotranspiration_winter_wheat,yearly,sumoftheseason,200,800,50,-500,500,100,100
+wheatwinterwheat_Groundwater_recharge_sum_season_,Groundwater Recharge for Winter Wheat,mm,GWR-ww,groundwater_recharge_winter_wheat,yearly,sumoftheseason,0,600,50,-500,500,100,100
+wheatwinterwheat_Season_length_,Season Length of Winter Wheat,days,SL-ww,season_length_winter_wheat,yearly,count,200,500,50,-150,150,30,10
+wheatwinterwheat_Yield_,Yield of Winter Wheat,dt/ha,yield-ww,yield_winter_wheat,yearly,atharvesting,0,150,15,-50,50,10,100
+wheatwinterwheat_LAI_max_season_,Maximum LAI for Winter Wheat,m2/m2,LAI-ww,maximum_leaf_area_index-ww,yearly,maxoftheseason,0,20,2.5,-5,5,1,10
+maizesilagemaize_AET_sum_season_,Actual Evapotranspiration for Silage Maize,mm,AET-sm,actual_evapotranspiration_silage_maize,yearly,sumoftheseason,200,800,50,-500,500,100,100
+maizesilagemaize_Groundwater_recharge_sum_season_,Groundwater Recharge for Silage Maize,mm,GWR-sm,groundwater_recharge_silage_maize,yearly,sumoftheseason,0,600,50,-500,500,100,100
+maizesilagemaize_Season_length_,Season Length of Silage Maize,days,SL-sm,season_length_silage_maize,yearly,count,0,300,25,-150,150,30,10
+maizesilagemaize_Yield_,Yield of Silage Maize,dt/ha,yield-sm,yield_silage_maize,yearly,atharvesting,0,150,15,-50,50,10,100
+maizesilagemaize_LAI_max_season_,Maximum LAI for Silage Maize,m2/m2,LAI-sm,maximum_leaf_area_index-silage_maize,yearly,maxoftheseason,0,20,2.5,-5,5,1,10
+_AET_sum_season_,Actual Evapotranspiration for Rotation09,mm,AET-rotation09,actual_evapotranspiration_rotation09,yearly,sumoftheseason,200,800,50,-500,500,100,100
+Groundwater_recharge_sum_season_,Groundwater Recharge for Rotation09,mm,GWR-rotation09,groundwater_recharge_rotation09,yearly,sumoftheseason,-100,600,50,-500,500,100,100
+_Season_length_,Season Length for Rotation09,days,SL-rotation09,season_length_rotation09,yearly,count,200,500,50,-150,150,30,10
+_Yield_,Yield for Rotation09,dt/ha,yield-rotation09,yield_rotation09,yearly,atharvesting,0,150,15,-50,50,10,100
+_LAI_max_season_,Maximum LAI for Rotation09,m2/m2,LAI-rotation09,maximum_leaf_area_index-rotation09,yearly,maxoftheseason,0,20,2,5,-5,5,10
+_AET_sum_season_,Actual Evapotranspiration for Rotation10,mm,AET-rotation10,actual_evapotranspiration_rotation10,yearly,sumoftheseason,200,800,50,-500,500,100,100
+Groundwater_recharge_sum_season_,Groundwater Recharge for Rotation10,mm,GWR-rotation10,groundwater_recharge_rotation10,yearly,sumoftheseason,-100,600,50,-500,500,100,100
+_Season_length_,Season Length for Rotation10,days,SL-rotation10,season_length_rotation10,yearly,count,200,500,50,-150,150,30,10
+_Yield_,Yield for Rotation10,dt/ha,yield-rotation10,yield_rotation10,yearly,atharvesting,0,150,15,-50,50,10,100
+_LAI_max_season_,Maximum LAI for Rotation10,m2/m2,LAI-rotation10,maximum_leaf_area_index-rotation10,yearly,maxoftheseason,0,20,2,5,-5,5,10
+barleywinterbarley_AET_sum_season_,Actual Evapotranspiration for Winter Barley,mm,AET-wg,actual_evapotranspiration_winter_barley,yearly,sumoftheseason,200,800,50,-500,500,100,100
+barleywinterbarley_Groundwater_recharge_sum_season_,Groundwater Recharge for Winter Barley,mm,GWR-wg,groundwater_recharge_winter_barley,yearly,sumoftheseason,0,600,50,-500,500,100,100
+barleywinterbarley_Season_length_,Season Length of Winter Barley,days,SL-wg,season_length_winter_barley,yearly,count,200,500,50,-150,150,30,10
+barleywinterbarley_Yield_,Yield of Winter Barley,dt/ha,yield-wg,yield_winter_barley,yearly,atharvesting,0,150,15,-50,50,10,100
+barleywinterbarley_LAI_max_season_,Maximum LAI for Winter Barley,m2/m2,LAI-wg,maximum_leaf_area_index-wg,yearly,maxoftheseason,0,20,2.5,-5,5,1,10
+rapewinterrape_AET_sum_season_,Actual Evapotranspiration for Winter Rapeseed,mm,AET-wra,actual_evapotranspiration_winter_rapeseed,yearly,sumoftheseason,200,800,50,-500,500,100,100
+rapewinterrape_Groundwater_recharge_sum_season_,Groundwater Recharge for Winter Rapeseed,mm,GWR-wra,groundwater_recharge_winter_rapeseed,yearly,sumoftheseason,0,600,50,-500,500,100,100
+rapewinterrape_Season_length_,Season Length of Winter Rapeseed,days,SL-wra,season_length_winter_rapeseed,yearly,count,200,500,50,-150,150,30,10
+rapewinterrape_Yield_,Yield of Winter Rapeseed,dt/ha,yield-wra,yield_winter_rapeseed,yearly,atharvesting,0,150,15,-50,50,10,100
+rapewinterrape_LAI_max_season_,Maximum LAI for Winter Rapeseed,m2/m2,LAI-wra,maximum_leaf_area_index-wra,yearly,maxoftheseason,0,20,2.5,-5,5,1,10
+barleyspringbarley_AET_sum_season_,Actual Evapotranspiration for Spring Barley,mm,AET-sg,actual_evapotranspiration_spring_barley,yearly,sumoftheseason,200,800,50,-500,500,100,100
+barleyspringbarley_Groundwater_recharge_sum_season_,Groundwater Recharge for Spring Barley,mm,GWR-sg,groundwater_recharge_spring_barley,yearly,sumoftheseason,0,600,50,-500,500,100,100
+barleyspringbarley_Season_length_,Season Length of Spring Barley,days,SL-sg,season_length_spring_barley,yearly,count,200,500,50,-150,150,30,10
+barleyspringbarley_Yield_,Yield of Spring Barley,dt/ha,yield-sg,yield_spring_barley,yearly,atharvesting,0,150,15,-50,50,10,100
+barleyspringbarley_LAI_max_season_,Maximum LAI for Spring Barley,m2/m2,LAI-sg,maximum_leaf_area_index-sg,yearly,maxoftheseason,0,20,2.5,-5,5,1,10
+sugarbeet_AET_sum_season_,Actual Evapotranspiration for Suger Beet,mm,AET-zr,actual_evapotranspiration_sugerbeet,yearly,sumoftheseason,200,800,50,-500,500,100,100
+sugarbeet_Groundwater_recharge_sum_season_,Groundwater Recharge for Suger Beet,mm,GWR-zr,groundwater_recharge_sugerbeet,yearly,sumoftheseason,0,600,50,-500,500,100,100
+sugarbeet_Season_length_,Season Length of Suger Beet,days,SL-zr,season_length_sugerbeet,yearly,count,200,500,50,-150,150,30,10
+sugarbeet_Yield_,Yield of Suger Beet,dt/ha,yield-zr,yield_sugerbeet,yearly,atharvesting,0,150,15,-50,50,10,100
+sugarbeet_LAI_max_season_,Maximum LAI for Suger Beet,m2/m2,LAI-zr,maximum_leaf_area_index-zr,yearly,maxoftheseason,0,20,2.5,-5,5,1,10

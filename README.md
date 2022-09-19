@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of KlimaKonformC3 is to analysis the Agricultural Simulations performed within of the Projekt KlimaKonform (TB C3 Landwirtschaft)
+The goal of KlimaKonformC3 is to analyse the Agricultural Simulations performed within of the Projekt KlimaKonform (TB C3 Landwirtschaft)
 
 ## Installation
 
@@ -19,6 +19,9 @@ You can install the development version of KlimaKonformC3 like so:
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
+Two types of fucntions are included in the package: 
+1. `sim` functions: they are mainly written to perform analysis on individual simulation files/file. 
+2. `ens` functions: they are mainly written to perform analysis on ensemble files/file. 
 
 ``` r
 library(KlimaKonformC3)

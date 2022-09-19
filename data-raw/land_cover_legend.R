@@ -1,7 +1,7 @@
 ## code to prepare `land_cover_legend` dataset goes here
 land_cover_legend <- read.csv("data-raw/LC_corine/CLC_legend.csv",
-                              stringsAsFactors = FALSE,
-                              sep = ";"
+  stringsAsFactors = FALSE,
+  sep = ";"
 )
 
 # Function to apply

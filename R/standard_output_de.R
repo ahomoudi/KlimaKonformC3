@@ -16,6 +16,5 @@
 #'   \item{upper_limit}{upper_limit}
 #'   \item{interval}{interval}
 #' }
-#' @source The KlimaKonform Convection
-#'
+#' @source The KlimaKonform CThe KlimaKnofrom Report
 "standard_output_de"

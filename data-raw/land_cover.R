@@ -18,5 +18,9 @@ land_cover <- terra::as.data.frame(land_cover, xy = TRUE)
 # crs(land_cover) <- NA
 rm(x1, x2)
 gc()
-usethis::use_data(land_cover, overwrite = TRUE)
-usethis::use_data(land_cover, overwrite = TRUE, internal = TRUE)
+sysdata_filenames <- load("R/sysdata.rda")
+save(list = c(sysdata_filenames, "land_cover"),
+     file = "R/sysdata.rda",
+     compress='xz')
+# usethis::use_data(land_cover, overwrite = TRUE)
+# usethis::use_data(land_cover, overwrite = TRUE, internal = TRUE)

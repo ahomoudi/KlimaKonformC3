@@ -72,48 +72,77 @@ for (ivar in 1:nrow(vars)) {
     for (ilandcover in 1:length(landcover_variables)) {
 
       # loop over statistical ensemble memebers
+
       for (istat in 1:length(stat_variables)) {
-        output_folder <- paste0(
-          output_path, "/",
-          landcover_variables[ilandcover], "/",
-          regions[iregion], "/",
-          stat_variables[istat], "/",
-          var_path, "/"
-        )
-        output_csv_folder <- paste0(
-          output_plotting_data, "/",
-          landcover_variables[ilandcover], "/",
-          regions[iregion], "/",
-          stat_variables[istat], "/",
-          var_path, "/"
-        )
+
+        if (stringr::str_detect(regions[iregion], pattern = " ")) {
+
+          output_folder <- paste0(
+            output_path, "/",
+            landcover_variables[ilandcover], "/",
+            stringr::str_replace(regions[iregion]," ",""), "/",
+            stat_variables[istat], "/",
+            var_path, "/"
+          )
+          output_csv_folder <- paste0(
+            output_plotting_data, "/",
+            landcover_variables[ilandcover], "/",
+            stringr::str_replace(regions[iregion]," ",""), "/",
+            stat_variables[istat], "/",
+            var_path, "/"
+          )
+
+        }else{
+          output_folder <- paste0(
+            output_path, "/",
+            landcover_variables[ilandcover], "/",
+            regions[iregion], "/",
+            stat_variables[istat], "/",
+            var_path, "/"
+          )
+          output_csv_folder <- paste0(
+            output_plotting_data, "/",
+            landcover_variables[ilandcover], "/",
+            regions[iregion], "/",
+            stat_variables[istat], "/",
+            var_path, "/"
+          )
+        }
+
+
+        # create dir
+        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
+        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
 
         print(c(output_folder,
                 output_csv_folder))
 
-        # ens_linear_trend(netCDF.files = sub_files,
-        #                  variable = vars[i,1],
-        #                  region = regions[iregion],
-        #                  landcover = landcover_variables[ilandcover],
-        #                  language = "DE",
-        #                  stat_var = stat_variables[istat],
-        #                  output_path = output_folder,
-        #output_csv = output_csv_folder)
+        ens_linear_trend(netCDF.files = sub_files,
+                         variable = vars[ivar,1],
+                         region = regions[iregion],
+                         landcover = landcover_variables[ilandcover],
+                         language = "DE",
+                         stat_var = stat_variables[istat],
+                         run_id = "2ter",
+                         output_path = output_folder,
+                         output_csv = output_csv_folder)
       }
     }
   }
 }
 # test
-netCDF.files <- sub_files
-variable <- vars[ivar, 1]
-region <- regions[iregion]
-landcover <- landcover_variables[ilandcover]
-language <- "DE"
-stat_var <- stat_variables[istat]
-output_path <- output_folder
-output_csv<-output_csv_folder
+# netCDF.files <- sub_files
+# variable <- vars[ivar, 1]
+# region <- regions[iregion]
+# landcover <- landcover_variables[ilandcover]
+# language <- "DE"
+# run_id <-"2ter"
+# stat_var <- stat_variables[istat]
+# output_path <- output_folder
+# output_csv<-output_csv_folder
 # 3ter --------------------------------------------------------------------
 
+# skip SOC
 input_dir <- "/media/ahmed/Daten/WHK2/Data/netCDF/3ter_lauf_ensemble"
 
 nc.files <- list.files(
@@ -156,6 +185,7 @@ ilandcover <- 2
 
 
 # 4ter --------------------------------------------------------------------
+# skip SOC
 input_dir <- "/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble"
 
 nc.files <- list.files(

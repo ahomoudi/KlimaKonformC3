@@ -20,9 +20,11 @@ DEM_data <- terra::as.data.frame(DEM_data, xy = TRUE)
 names(DEM_data) <- c("x", "y", "DEM")
 
 sysdata_filenames <- load("R/sysdata.rda")
-save(list = c(sysdata_filenames,"DEM_data"),
-     file = "R/sysdata.rda",
-     compress='xz')
+save(
+  list = c(sysdata_filenames, "DEM_data"),
+  file = "R/sysdata.rda",
+  compress = "xz"
+)
 
 #
 # usethis::use_data(DEM_data, overwrite = TRUE)

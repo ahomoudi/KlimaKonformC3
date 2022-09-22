@@ -12,7 +12,9 @@ names(Landkreise) <- c("Name", "geometry")
 # usethis::use_data(Landkreise, overwrite = TRUE, internal = TRUE)
 
 sysdata_filenames <- load("R/sysdata.rda")
-save(list = c(sysdata_filenames, "Landkreise"),
-     file = "R/sysdata.rda",
-     compress='xz')
+save(
+  list = c(sysdata_filenames, "Landkreise"),
+  file = "R/sysdata.rda",
+  compress = "xz"
+)
 #+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs

@@ -10,9 +10,11 @@ names(Bundeslaender) <- c("Name", "geometry")
 Bundeslaender$Name <- c("Bayern", "Sachsen", "Sachsen-Anhalt", "Thueringen")
 
 sysdata_filenames <- load("R/sysdata.rda")
-save(list = c(sysdata_filenames, "Bundeslaender"),
-     file = "R/sysdata.rda",
-     compress='xz')
+save(
+  list = c(sysdata_filenames, "Bundeslaender"),
+  file = "R/sysdata.rda",
+  compress = "xz"
+)
 
 # usethis::use_data(Bundeslaender, overwrite = TRUE)
 # usethis::use_data(Bundeslaender, overwrite = TRUE, internal = TRUE)

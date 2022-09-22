@@ -1,10 +1,9 @@
 
 
 # mean of SpatRaster
-f1_mean<-function(x){
-
-  y<- terra::as.array(x) %>%
-    apply(MARGIN = c(3), FUN = mean, na.rm =TRUE)
+f1_mean <- function(x) {
+  y <- terra::as.array(x) %>%
+    apply(MARGIN = c(3), FUN = mean, na.rm = TRUE)
 
   return(y)
 }
@@ -12,36 +11,31 @@ f1_mean<-function(x){
 
 
 # max of spatRaster in vector forum
-f1_max<-function(x){
-
-  y<- terra::as.array(x)%>%
-    apply(MARGIN = c(3), FUN = max, na.rm =TRUE)
+f1_max <- function(x) {
+  y <- terra::as.array(x) %>%
+    apply(MARGIN = c(3), FUN = max, na.rm = TRUE)
 
   return(y)
 }
 
 # min
-f1_min<-function(x){
-
-  y<- terra::as.array(x)%>%
-    apply(MARGIN = c(3), FUN = min, na.rm =TRUE)
+f1_min <- function(x) {
+  y <- terra::as.array(x) %>%
+    apply(MARGIN = c(3), FUN = min, na.rm = TRUE)
 
   return(y)
 }
 
 # replace
 
-f1_replace_values_in_SpatRaster_layers<-function(x,IDs){
+f1_replace_values_in_SpatRaster_layers <- function(x, IDs) {
+  layers <- terra::nlyr(x)
 
-  layers<-terra::nlyr(x)
-
-  for(ilyr in 1:layers){
-
-    x[[ilyr]][IDs]<-NA
+  for (ilyr in 1:layers) {
+    x[[ilyr]][IDs] <- NA
   }
 
   return(x)
-
 }
 #' A function to receive a number and round up or down according to the next number indicated by roundTo
 #' @param x A number to round
@@ -75,11 +69,10 @@ scaleFUN <- function(x) sprintf("%.0f", x)
 
 
 #
-setting_nice_intervals<-function(minval, maxval){
+setting_nice_intervals <- function(minval, maxval) {
+  diff <- maxval - minval
 
-  diff<-maxval-minval
-
-  intervals<-diff%/%8 # setting 8 as 10 labels minus two (limits)
+  intervals <- diff %/% 8 # setting 8 as 10 labels minus two (limits)
 
 
   leg_breaks <- seq.default(

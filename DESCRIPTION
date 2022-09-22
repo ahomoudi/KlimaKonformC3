@@ -18,6 +18,8 @@ Depends:
 Imports: 
     dplyr,
     ggplot2,
+    lubridate,
+    magick,
     magrittr,
     parallel,
     sf,

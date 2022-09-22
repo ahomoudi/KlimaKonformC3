@@ -6,4 +6,3 @@ standard_output_en <- read.csv("data-raw/standard_output_en.csv",
 
 usethis::use_data(standard_output_en, overwrite = TRUE)
 usethis::use_data(standard_output_en, overwrite = TRUE, internal = TRUE)
-

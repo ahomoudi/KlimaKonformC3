@@ -11,6 +11,7 @@ ens_linear_trend(
   landcover,
   stat_var,
   language,
+  run_id,
   output_path,
   output_csv
 )
@@ -31,6 +32,9 @@ To consider all land cover give 1000.}
 for example, "mean","sd","median","max" and "min"}
 
 \item{language}{A character variable either "EN" or "DE", to specify the languages of plots}
+
+\item{run_id}{A character variable either "2ter", "3ter", or "4ter" specificng the which run is used
+to produce the ensemble.}
 
 \item{output_path}{A string pointing to the output directory, it should end with "/"}
 

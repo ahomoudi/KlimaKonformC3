@@ -16,8 +16,11 @@ RoxygenNote: 7.2.1
 Depends: 
     R (>= 3.5.0)
 Imports: 
+    dplyr,
+    ggplot2,
     magrittr,
     parallel,
     sf,
     stringr,
-    terra
+    terra,
+    tidyr

@@ -50,8 +50,11 @@ ens_linear_trend<- function(netCDF.files,
     stop("Please select a language, either \"EN\" or \"DE\"")
   }
 
+  netCDF.files<-sort(netCDF.files, decreasing = F)
   # read files
   r.rast<-lapply(X = netCDF.files, FUN = terra::rast, subds = stat_var)
+
+  names(r.rast)<-c("RCP2.6","RCP4.5","RCP8.5")
 
   # load spatial data -------------------------------------------------------
 
@@ -59,9 +62,6 @@ ens_linear_trend<- function(netCDF.files,
   utils::data("Bundeslaender", envir = environment())
   utils::data("Landkreise", envir = environment())
   utils::data("land_cover", envir = environment())
-
-  #STUIPED error
-  #globalVariables("land_cover")
 
   # project shapefiles
   sf::st_crs(Landkreise) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -72,7 +72,6 @@ ens_linear_trend<- function(netCDF.files,
   terra::crs(LC) <- terra::crs(r.rast[[1]])
 
   # terra::plot(LC)
-
 
   # get region
   # crop the data to the region
@@ -97,28 +96,234 @@ ens_linear_trend<- function(netCDF.files,
          \"Burgenlandkreis\", \"Greiz\", or \"Altenburger Land\" ")
   }
 
+  # checking landcover ------------------------------------------------------
+
+  # check landcover
+  if (landcover == 1000) {
+    message("Analysis will include all land cover types")
+
+    # assign LC plot caption
+    if (language == "DE") {
+      LC_name <- paste0(enc2utf8("F\u00FCr"), " alle CORINE-Landbedeckungsklassen")
+    } else if (language == "EN") {
+      LC_name <- "For all CORINE Land Cover Classes"
+    }
+  } else {
+    message(paste0("Analysis will include only landcover type: ", landcover))
+
+    # for further analysis
+
+    indices <- which(terra::values(LC) != landcover)
+
+    # remove other LC classes
+    r.rast<-lapply(r.rast, f1_replace_values_in_SpatRaster_layers, IDs = indices)
+
+    # test
+    # terra::plot(r.rast[[1]][[1]])
+
+    # get the name of specific land cover
+    utils::data("land_cover_legend", envir = environment())
+
+    if (language == "DE") {
+      LC_name <- paste0(
+        " ", enc2utf8("F\u00FCr"), " CORINE-LB: ",
+        land_cover_legend$LABEL3[which(land_cover_legend$CLC_CODE == landcover)]
+      )
+    } else if (language == "EN") {
+      LC_name <- LC_name <- paste0(
+        "For CORINE-LC: ",
+        land_cover_legend$LABEL3[which(land_cover_legend$CLC_CODE == landcover)]
+      )
+    }
+  }
+
+# prepare timeseries  -----------------------------------------------------
+
   # obtain time series
   var_plotting<-as.Date(terra::time(r.rast[[1]]))
 
   r.mean<-lapply(r.rast, f1_mean)
-
   r.mean<-Reduce(cbind.data.frame, r.mean)
-
   colnames(r.mean)<-c("RCP2.6","RCP4.5","RCP8.5")
 
-  var_plotting<-cbind(var_plotting, r.mean)
-  # meta data
+  var_plotting<-cbind(YEAR=var_plotting, r.mean)
+
+  var_plotting<- var_plotting %>%
+    tidyr::pivot_longer(cols = 2:4,
+                        names_to = "Scenario",
+                        values_to = "Kmean")
+
+
+  rm(r.mean);gc(verbose = F)
+
+  # max
+  r.max<-lapply(r.rast, f1_max)
+  r.max<-Reduce(cbind.data.frame, r.max)
+  # use from different files to get consistency
+  r.max<- cbind(YEAR =as.Date(terra::time(r.rast[[2]])), r.max)
+  colnames(r.max)<-c("YEAR","RCP2.6","RCP4.5","RCP8.5")
+
+  var_plotting <- r.max%>%
+    tidyr::pivot_longer(cols = 2:4,
+                        names_to = "Scenario",
+                        values_to = "Kmax")%>%
+    dplyr::right_join(y= var_plotting, by = c("YEAR", "Scenario") )
+
+  rm(r.max);gc(verbose = F)
+
+  # min
+  r.min<-lapply(r.rast, f1_min)
+  r.min<-Reduce(cbind.data.frame, r.min)
+  # use from different files to get consistency
+  r.min<- cbind(YEAR =as.Date(terra::time(r.rast[[3]])), r.min)
+  colnames(r.min)<-c("YEAR","RCP2.6","RCP4.5","RCP8.5")
+
+  var_plotting <- r.min%>%
+    tidyr::pivot_longer(cols = 2:4,
+                        names_to = "Scenario",
+                        values_to = "Kmin")%>%
+    dplyr::right_join(y= var_plotting, by = c("YEAR", "Scenario") )
+
+
+  rm(r.min);gc(verbose = F)
+
+
+# meta data ---------------------------------------------------------------
+
+
   # index of the variable in standard output
   variable_index <- which(standard_output_en$variable == variable)
 
-
-  # plot
-
-
-  # save plot
+# plots and csv name  -----------------------------------------------------
 
 
-  # clean memory
+
+
+
+# plot --------------------------------------------------------------------
+
+  # time axis
+  x.axis<-unique(var_plotting$YEAR)
+
+  drops <- c("YEAR","Scenario")
+
+  y.axis.max<-max(var_plotting[ , !(names(var_plotting) %in% drops)], na.rm = T)
+  y.axis.min<-min(var_plotting[ , !(names(var_plotting) %in% drops)], na.rm = T)
+
+  if(y.axis.max -y.axis.min >100){
+   # round up/down to next 50
+    y.axis.max<-round_custom(y.axis.max, 50, 1)
+    y.axis.min<-round_custom(y.axis.min, 50, 0)
+
+  }else if(y.axis.max -y.axis.min <100 & y.axis.max -y.axis.min >50){
+    # round up/down to next 10
+    y.axis.max<-round_custom(y.axis.max, 10, 1)
+    y.axis.min<-round_custom(y.axis.min, 10, 0)
+
+  }else{
+    # round to next 5
+    # round up/down to next 50
+    y.axis.max<-round_custom(y.axis.max, 5, 1)
+    y.axis.min<-round_custom(y.axis.min, 5, 0)
+
+  }
+
+  y.axis.interval<-setting_nice_intervals(minval = y.axis.min,
+                         maxval = y.axis.max)
+
+
+  # colors
+  rcps_colours<-c("#003466", "#70A0CD",  "#990002")
+
+  figure <- ggplot2::ggplot(var_plotting) +
+
+    # ribbon
+    ggplot2::geom_ribbon(mapping = ggplot2::aes(x = YEAR,
+                                                ymin = Kmin,
+                                                ymax = Kmax,
+                                                fill = Scenario),
+                         alpha = 0.25
+    )+
+    ggplot2::geom_line(mapping = ggplot2::aes(x = YEAR, y = Kmean, color = Scenario),
+                       size = 0.3,
+                       show.legend = T
+    ) +
+    # mean trend line
+    ggplot2::geom_smooth(mapping = ggplot2::aes(x = YEAR, y = Kmean, color = Scenario),
+                         method = "lm",
+                         linetype = "longdash",
+                         size = 0.3,
+                         se = F
+    ) +
+
+    ggplot2::scale_color_manual(values = rcps_colours) +
+
+    ggplot2::scale_fill_manual(values = rcps_colours) +
+
+    ggplot2::theme_bw(base_size = 8) +
+
+    ggplot2::xlab("") +
+
+    ggplot2::scale_y_continuous(
+      limits = c(y.axis.min,y.axis.max),
+      expand = c(0, 0),
+      breaks = y.axis.interval,
+      labels =
+    ) +
+
+    ggplot2::scale_x_date(
+      limits = c(x.axis[1], x.axis[length(x.axis)]),
+      expand = c(0, 0),
+      breaks = seq.Date(x.axis[1], x.axis[length(x.axis)], by = "5 year"), # Date labels for each year
+      minor_breaks = seq.Date(x.axis[1], x.axis[length(x.axis)], by = "1 year",
+                         date_labels =  "%Y")
+    )
+figure
+    ggplot2::ylab(paste0(var_name, " [", var_units, "]")) +
+    ggplot2::labs(
+      title = plot.title,
+      caption = plot.caption,
+    ) +
+
+
+    ggplot2::theme(
+      plot.caption.position = "plot",
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 6),
+      axis.title.y = ggplot2::element_text(hjust = 0.5, size = 5, margin = ggplot2::margin(0, 5, 0, 0)),
+      axis.text = ggplot2::element_text(hjust = 0.5, size = 5, colour = "black"),
+      plot.caption = ggplot2::element_text(hjust = c(0), size = 4, colour = "blue", margin = ggplot2::margin(0, 0, 0, 0))
+    ) +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank(),
+      legend.position = c(0.8, 0.9),
+      legend.direction = "horizontal",
+      legend.margin = ggplot2::margin(0, 0, 0, 0, unit = "mm"),
+      legend.text = ggplot2::element_text(size = 5),
+      legend.background = ggplot2::element_blank()
+    )
+
+
+  ggplot2::ggsave(
+    plot = figure,
+    filename = plot_name,
+    units = "mm",
+    width = 150,
+    height = 80,
+    dpi = 300,
+    device = "png"
+  )
+
+figure
+
+
+
+# End ---------------------------------------------------------------------
+# clean
+rm(list = ls())
+gc()
+
+# missing stuff.
+# meta data and all that Kram
 
 }
 

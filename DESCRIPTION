@@ -22,6 +22,7 @@ Imports:
     magick,
     magrittr,
     parallel,
+    purrr,
     sf,
     stringr,
     terra,

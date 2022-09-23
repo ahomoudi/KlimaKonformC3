@@ -1,6 +1,6 @@
-#' @title Plotting boxplots from 3 RCP scenario from ensemble files
+#' @title Plotting 12 maps from 3 RCP scenario from ensemble files
 #' @description A function that receives three netCDF files, and variable name,
-#' statistical ensemble member and plot boxplots of 4 different period and place
+#' statistical ensemble member and plot 12 maps, considering 3 RCPs X four periods
 #' it  in the desired the out ṕut directory in which the output is placed.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
@@ -23,17 +23,18 @@
 #' @author Ahmed Homoudi
 #' @return  PNG
 #' @import stats
-#' @importFrom utils globalVariables write.table
+#' @importFrom utils write.table
+#' @importFrom grDevices rgb
 #' @export
-ens_boxplots <- function(netCDF.files,
-                         variable,
-                         region,
-                         landcover,
-                         stat_var,
-                         language,
-                         run_id,
-                         output_path,
-                         output_csv) {
+ens_12maps <- function(netCDF.files,
+                       variable,
+                       region,
+                       landcover,
+                       stat_var,
+                       language,
+                       run_id,
+                       output_path,
+                       output_csv) {
 
 
   # check files
@@ -145,7 +146,7 @@ ens_boxplots <- function(netCDF.files,
     }
   }
 
-  # prepare boxplots data-----------------------------------------------------
+  # prepare maps data-----------------------------------------------------
 
   # r.time<-as.data.frame(do.call(cbind, lapply(r.rast, terra::time)))
   r.time <- as.Date(terra::time(r.rast[[1]]))
@@ -153,35 +154,40 @@ ens_boxplots <- function(netCDF.files,
   period1 <- which(r.time > as.Date("1970-12-31") &
     r.time < as.Date("2000-02-01"))
   r.period1 <- lapply(r.rast, terra::subset, subset = period1)
-  r.period1 <- lapply(r.period1, terra::values, mat = F, col = 1)
-  r.period1 <- as.data.frame(Reduce(cbind, r.period1)) %>%
+  r.period1 <- lapply(r.period1, terra::mean)
+  # https://stackoverflow.com/a/53969052/13818750
+  r.period1 <- lapply(r.period1, terra::as.data.frame, xy = TRUE) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "1971-2000")
 
   period2 <- which(r.time > as.Date("1990-12-31") &
     r.time < as.Date("2020-02-01"))
   r.period2 <- lapply(r.rast, terra::subset, subset = period2)
-  r.period2 <- lapply(r.period2, terra::values, mat = F, col = 1)
-  r.period2 <- as.data.frame(Reduce(cbind, r.period2)) %>%
+  r.period2 <- lapply(r.period2, terra::mean)
+  r.period2 <- lapply(r.period2, terra::as.data.frame, xy = TRUE) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "1991-2020")
 
   period3 <- which(r.time > as.Date("2020-12-31") &
     r.time < as.Date("2050-02-01"))
   r.period3 <- lapply(r.rast, terra::subset, subset = period3)
-  r.period3 <- lapply(r.period3, terra::values, mat = F, col = 1)
-  r.period3 <- as.data.frame(Reduce(cbind, r.period3)) %>%
+  r.period3 <- lapply(r.period3, terra::mean)
+  r.period3 <- lapply(r.period3, terra::as.data.frame, xy = TRUE) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "2021-2050")
 
   period4 <- which(r.time > as.Date("2069-12-31") &
     r.time < as.Date("2099-02-01"))
   r.period4 <- lapply(r.rast, terra::subset, subset = period4)
-  r.period4 <- lapply(r.period4, terra::values, mat = F, col = 1)
-  r.period4 <- as.data.frame(Reduce(cbind, r.period4)) %>%
+  r.period4 <- lapply(r.period4, terra::mean)
+  r.period4 <- lapply(r.period4, terra::as.data.frame, xy = TRUE) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "2070-2099")
 
-  colnames(r.period1) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-  colnames(r.period2) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-  colnames(r.period3) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-  colnames(r.period4) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
 
   var_plotting <- rbind(
     r.period1,
@@ -192,7 +198,7 @@ ens_boxplots <- function(netCDF.files,
 
   var_plotting <- var_plotting %>%
     tidyr::pivot_longer(
-      cols = (-Period),
+      cols = (-c(x, y, Period)),
       values_to = "Kvalue"
     )
 
@@ -337,14 +343,14 @@ ens_boxplots <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_BP_.png"
+      "3XRCPs_12maps_.png"
     )
   } else {
     plot_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_BP_.png"
+      "3XRCPs_12maps.png"
     )
   }
   # define csv name
@@ -354,24 +360,23 @@ ens_boxplots <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_BP_.csv"
+      "3XRCPs_12maps_.csv"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_BP_.csv"
+      "3XRCPs_12maps_.csv"
     )
   }
 
+  colnames(var_plotting) <- c("x", "y", "Period", "Scenario", "Kvalue")
   # pre-plot --------------------------------------------------------------------
   # read logo
   # KlimaKonform_img <- project_logo()
   # grid::rasterGrob(KlimaKonform_img)
 
-  # remove na.
-  var_plotting <- na.omit(var_plotting)
   # y axis
 
   y.axis.max <- max(var_plotting$Kvalue, na.rm = T)
@@ -395,48 +400,50 @@ ens_boxplots <- function(netCDF.files,
   # y.axis.interval<-setting_nice_intervals(minval = y.axis.min,
   #                        maxval = y.axis.max)
 
-
   # colors
-  rcps_colours <- c("#003466", "#70A0CD", "#990002")
+  rcps_colours <- matrix(c(
+    103, 0, 31,
+    178, 24, 43,
+    214, 96, 77,
+    244, 165, 130,
+    253, 219, 199,
+    247, 247, 247,
+    209, 229, 240,
+    146, 197, 222,
+    67, 147, 195,
+    33, 102, 172
+  ), byrow = F, nrow = 3)
 
-  colnames(var_plotting) <- c("Period", "Scenario", "Kvalue")
+  rcps_colours <- grDevices::colorRampPalette(rgb2col(rcps_colours))
 
+  shp_lk <- sf::st_as_sf(shp_lk)
   # plot --------------------------------------------------------------------
 
-  figure <- ggplot2::ggplot(
-    data = var_plotting,
-    mapping = ggplot2::aes(
-      x = Period,
-      y = Kvalue,
-      color = Scenario
-    )
-  ) +
-    # ggplot2::geom_violin(draw_quantiles = c(0.25, 0.5, 0.75))+
-
-    ggplot2::geom_boxplot(
-      outlier.colour = "red", outlier.shape = 4,
-      outlier.size = 0.1, outlier.alpha = 0.5,
-      fatten = 0.3, size = 0.3
+  figure <- ggplot2::ggplot() +
+    ggplot2::geom_tile(
+      data = var_plotting,
+      mapping = ggplot2::aes(
+        x = x,
+        y = y,
+        fill = Kvalue
+      )
     ) +
-    ggplot2::stat_boxplot(
-      geom = "errorbar",
-      size = 0.3
+    ggplot2::facet_grid(Period ~ Scenario) +
+    ggplot2::geom_sf(shp_lk,
+      mapping = ggplot2::aes(),
+      fill = NA,
+      color = "black"
     ) +
-    ggplot2::scale_color_manual(values = rcps_colours) +
+    ggplot2::scale_fill_gradientn(
+      colors = rcps_colours(50),
+      limits = c(y.axis.min, y.axis.max),
+      expand = c(0, 0)
+    ) +
     ggplot2::theme_bw(base_size = 6) +
 
     # add axis title
     ggplot2::xlab("") +
-    ggplot2::ylab(paste0(
-      var_name,
-      " [", var_units, "]"
-    )) +
-
-    # set axis breaks
-    ggplot2::scale_y_continuous(
-      limits = c(y.axis.min, y.axis.max),
-      expand = c(0, 0)
-    ) +
+    ggplot2::ylab("") +
     ggplot2::labs(
       title = plot.title,
       caption = plot.caption,
@@ -444,33 +451,59 @@ ens_boxplots <- function(netCDF.files,
     ggplot2::theme(
       plot.title = ggplot2::element_text(
         hjust = 0.5,
-        size = 6
-      ),
-      axis.title.y = ggplot2::element_text(
-        hjust = 0.5,
-        size = 5,
-        margin = ggplot2::margin(0, 5, 0, 0)
+        size = 7,
+        margin = ggplot2::margin(2, 0, 2, 0, "mm")
       ),
       axis.text = ggplot2::element_text(
         hjust = 0.5,
-        size = 5,
+        size = 4,
         colour = "black"
+      ),
+      axis.text.x = ggplot2::element_text(
+        angle = 45,
+        vjust = 0.5,
+        margin = ggplot2::margin(0, 0, -1, 0, "mm")
       ),
       plot.caption = ggplot2::element_text(
         hjust = c(0),
         size = 4,
         colour = "blue",
-        margin = ggplot2::margin(0, 0, 0, 0)
+        margin = ggplot2::margin(2, 0, 2, 0, "mm")
       )
     ) +
 
-    # set legend
+    # legend formatting
     ggplot2::theme(
-      legend.title = ggplot2::element_blank(),
-      legend.key.size = ggplot2::unit(4, "mm"),
-      legend.margin = ggplot2::margin(0, 0, 0, 0, unit = "mm"),
-      legend.text = ggplot2::element_text(size = 5)
-    )
+      legend.position = "bottom",
+      legend.direction = "horizontal",
+      legend.key.width = ggplot2::unit(10, "mm"),
+      legend.key.height = ggplot2::unit(2, "mm"),
+      legend.text = ggplot2::element_text(
+        colour = "black",
+        size = 5,
+        family = "sans"
+      ),
+      legend.title = ggplot2::element_text(
+        colour = "black",
+        size = 6,
+        family = "sans"
+      ),
+      legend.margin = ggplot2::margin(0, 0, 0, 0, "mm"),
+      legend.box.margin = ggplot2::margin(0, 0, 0, 0, "mm"),
+      plot.margin = ggplot2::margin(0, 0, 0, 0, "mm")
+    ) +
+
+    # legend title and position
+    ggplot2::guides(fill = ggplot2::guide_colourbar(
+      title.position = "bottom",
+      title.hjust = 0.5,
+      label.position = "top",
+      ticks = FALSE,
+      title = paste0(
+        var_name,
+        " [", var_units, "]"
+      )
+    ))
 
   # # add logo
   # ggplot2::annotation_custom(KlimaKonform_img
@@ -482,8 +515,8 @@ ens_boxplots <- function(netCDF.files,
     plot = figure,
     filename = plot_name,
     units = "mm",
-    width = 150,
-    height = 80,
+    width = 100,
+    height = 150,
     dpi = 300,
     device = "png"
   )

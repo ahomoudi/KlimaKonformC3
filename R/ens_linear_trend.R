@@ -332,14 +332,14 @@ ens_linear_trend <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_.png"
+      "3XRCPs_LT_.png"
     )
   } else {
     plot_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_.png"
+      "3XRCPs_LT_.png"
     )
   }
   # define csv name
@@ -349,14 +349,14 @@ ens_linear_trend <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_.csv"
+      "3XRCPs_LT_.csv"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_.csv"
+      "3XRCPs_LT_.csv"
     )
   }
 

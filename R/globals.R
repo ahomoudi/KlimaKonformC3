@@ -6,5 +6,8 @@ utils::globalVariables(c(
   "Kmin",
   "Kvalue",
   "Period",
-  "Scenario"
+  "Scenario",
+  "x",
+  "y",
+  "."
 ))

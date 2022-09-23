@@ -97,3 +97,19 @@ setting_nice_intervals <- function(minval, maxval) {
   # }
   return(leg_breaks)
 }
+
+
+
+# color scale
+rgb2col <- function(rgbmat) {
+  # function to apply to each column of input rgbmat
+  ProcessColumn <- function(col) {
+    rgb(rgbmat[1, col],
+      rgbmat[2, col],
+      rgbmat[3, col],
+      maxColorValue = 255
+    )
+  }
+  # Apply the function
+  sapply(1:ncol(rgbmat), ProcessColumn)
+}

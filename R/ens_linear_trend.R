@@ -362,8 +362,8 @@ ens_linear_trend <- function(netCDF.files,
 
   # pre-plot --------------------------------------------------------------------
   # read logo
-  #KlimaKonform_img <- project_logo()
-  #grid::rasterGrob(KlimaKonform_img)
+  # KlimaKonform_img <- project_logo()
+  # grid::rasterGrob(KlimaKonform_img)
 
   # time axis
   x.axis <- unique(var_plotting$YEAR)
@@ -429,15 +429,16 @@ ens_linear_trend <- function(netCDF.files,
 
     # add axis title
     ggplot2::xlab("") +
-    ggplot2::ylab(paste0(var_name,
-                         " [", var_units, "]")) +
+    ggplot2::ylab(paste0(
+      var_name,
+      " [", var_units, "]"
+    )) +
 
     # set axis breaks
     ggplot2::scale_y_continuous(
       limits = c(y.axis.min, y.axis.max),
       expand = c(0, 0)
     ) +
-
     ggplot2::scale_x_date(
       date_breaks = "10 years",
       minor_breaks = "5 years",
@@ -448,40 +449,40 @@ ens_linear_trend <- function(netCDF.files,
       title = plot.title,
       caption = plot.caption,
     ) +
-
-  ggplot2::theme(
-    plot.title = ggplot2::element_text(
-      hjust = 0.5,
-      size = 6
-    ),
-    axis.title.y = ggplot2::element_text(
-      hjust = 0.5,
-      size = 5,
-      margin = ggplot2::margin(0, 5, 0, 0)
-    ),
-    axis.text = ggplot2::element_text(
-      hjust = 0.5,
-      size = 5,
-      colour = "black"
-    ),
-    plot.caption = ggplot2::element_text(
-      hjust = c(0),
-      size = 4,
-      colour = "blue",
-      margin = ggplot2::margin(0, 0, 0, 0)
-    )
-  ) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(
+        hjust = 0.5,
+        size = 6
+      ),
+      axis.title.y = ggplot2::element_text(
+        hjust = 0.5,
+        size = 5,
+        margin = ggplot2::margin(0, 5, 0, 0)
+      ),
+      axis.text = ggplot2::element_text(
+        hjust = 0.5,
+        size = 5,
+        colour = "black"
+      ),
+      plot.caption = ggplot2::element_text(
+        hjust = c(0),
+        size = 4,
+        colour = "blue",
+        margin = ggplot2::margin(0, 0, 0, 0)
+      )
+    ) +
 
     # set legend
     ggplot2::theme(
       legend.title = ggplot2::element_blank(),
-      legend.key.size = ggplot2::unit(4, 'mm'),
+      legend.key.size = ggplot2::unit(4, "mm"),
       legend.margin = ggplot2::margin(0, 0, 0, 0, unit = "mm"),
-      legend.text = ggplot2::element_text(size = 5))
+      legend.text = ggplot2::element_text(size = 5)
+    )
 
-    # # add logo
-    # ggplot2::annotation_custom(KlimaKonform_img
-    # )
+  # # add logo
+  # ggplot2::annotation_custom(KlimaKonform_img
+  # )
 
   # post-plot ---------------------------------------------------------------
 

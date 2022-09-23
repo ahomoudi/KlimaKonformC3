@@ -4,5 +4,7 @@ utils::globalVariables(c(
   "Kmean",
   "Kmax",
   "Kmin",
+  "Kvalue",
+  "Period",
   "Scenario"
 ))

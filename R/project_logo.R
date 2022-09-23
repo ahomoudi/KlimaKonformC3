@@ -9,5 +9,4 @@ project_logo <- function() {
   )
 }
 
-#KlimaKonform_Logo_lang_farbig.svg SVG 240x125 240x125+0+0 16-bit sRGB 36955B 0.000u 0:14.789
-
+# KlimaKonform_Logo_lang_farbig.svg SVG 240x125 240x125+0+0 16-bit sRGB 36955B 0.000u 0:14.789

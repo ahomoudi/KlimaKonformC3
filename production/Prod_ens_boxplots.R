@@ -13,8 +13,8 @@ nc.files <- list.files(
 )
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/2ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/2ter_lauf_ensemble"
+output_path <- "/media/ahmed/Daten/WHK2/Plotting/boxplots_3RCPs/2ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/boxplots_3RCPs/2ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -118,7 +118,7 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_linear_trend(netCDF.files = sub_files,
+        ens_boxplots(netCDF.files = sub_files,
                          variable = vars[ivar,1],
                          region = regions[iregion],
                          landcover = landcover_variables[ilandcover],
@@ -132,15 +132,15 @@ for (ivar in 1:nrow(vars)) {
   }
 }
 # test
-# netCDF.files <- sub_files
-# variable <- vars[ivar, 1]
-# region <- regions[iregion]
-# landcover <- landcover_variables[ilandcover]
-# language <- "DE"
-# run_id <-"2ter"
-# stat_var <- stat_variables[istat]
-# output_path <- output_folder
-# output_csv<-output_csv_folder
+netCDF.files <- sub_files
+variable <- vars[ivar, 1]
+region <- regions[iregion]
+landcover <- landcover_variables[ilandcover]
+language <- "DE"
+run_id <-"2ter"
+stat_var <- stat_variables[istat]
+output_path <- output_folder
+output_csv<-output_csv_folder
 # 3ter --------------------------------------------------------------------
 
 input_dir <- "/media/ahmed/Daten/WHK2/Data/netCDF/3ter_lauf_ensemble"
@@ -156,8 +156,8 @@ nc.files <- list.files(
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/3ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/3ter_lauf_ensemble"
+output_path <- "/media/ahmed/Daten/WHK2/Plotting/boxplots_3RCPs/3ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/boxplots_3RCPs/3ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -261,7 +261,7 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_linear_trend(netCDF.files = sub_files,
+        ens_boxplots(netCDF.files = sub_files,
                          variable = vars[ivar,1],
                          region = regions[iregion],
                          landcover = landcover_variables[ilandcover],
@@ -299,8 +299,8 @@ nc.files <- list.files(
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/4ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/4ter_lauf_ensemble"
+output_path <- "/media/ahmed/Daten/WHK2/Plotting/boxplots_3RCPs/4ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/boxplots_3RCPs/4ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -404,7 +404,7 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_linear_trend(netCDF.files = sub_files,
+        ens_boxplots(netCDF.files = sub_files,
                          variable = vars[ivar,1],
                          region = regions[iregion],
                          landcover = landcover_variables[ilandcover],

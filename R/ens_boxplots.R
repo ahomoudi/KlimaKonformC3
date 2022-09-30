@@ -1,7 +1,7 @@
 #' @title Plotting boxplots from 3 RCP scenario from ensemble files
 #' @description A function that receives three netCDF files, and variable name,
 #' statistical ensemble member and plot boxplots of 4 different period and place
-#' it  in the desired the out ṕut directory in which the output is placed.
+#' it  in the desired the out put directory in which the output is placed.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
 #' @param variable inside these netCDf files, e.g., AET
@@ -354,14 +354,14 @@ ens_boxplots <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_BP_.csv"
+      "3XRCPs_BP_.csv.gz"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_BP_.csv"
+      "3XRCPs_BP_.csv.gz"
     )
   }
 
@@ -489,13 +489,13 @@ ens_boxplots <- function(netCDF.files,
   )
 
   # write csv to disk
-  write.table(
+  crunch::write.csv.gz(
     x = var_plotting %>%
       dplyr::mutate_if(is.numeric, round, digits = 3),
+    quote = FALSE,
     file = csv_name,
     row.names = F
   )
-
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())

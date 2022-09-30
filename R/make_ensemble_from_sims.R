@@ -1,7 +1,7 @@
 #' @title Making an ensemble from individual simulations (i.e. individual simulation as netCDf files)
 #'
 #' @description A function that receives multiple netCDF files, and variable name,
-#' the desired the out ṕut directory in which the output is placed.
+#' the desired the output directory in which the output is placed.
 #'
 #' @param nc.files The netCDF files that contain similar simulation variables.
 #' They should be provided including the full path to the files

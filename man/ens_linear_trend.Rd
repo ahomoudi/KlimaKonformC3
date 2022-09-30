@@ -47,7 +47,7 @@ PNG
 \description{
 A function that receives three netCDF files, and variable name,
 statistical ensemble member and plot linear trend plot
-the desired the out ṕut directory in which the output is placed.
+the desired the out put directory in which the output is placed.
 }
 \author{
 Ahmed Homoudi

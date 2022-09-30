@@ -69,33 +69,33 @@ scaleFUN <- function(x) sprintf("%.0f", x)
 
 
 #
-setting_nice_intervals <- function(minval, maxval) {
-  diff <- maxval - minval
-
-  intervals <- diff %/% 8 # setting 8 as 10 labels minus two (limits)
-
-
-  leg_breaks <- seq.default(
-    from = minval,
-    to = maxval,
-    by = intervals
-  )
-
-  # while (length(scaleFUN(leg_breaks)) != length(unique(scaleFUN(leg_breaks)))) {
-  #
-  #   breaks_length <- breaks_length - 1
-  #
-  #   if (breaks_length <= 4) {
-  #     break
-  #   }
-  #
-  #   leg_breaks <- seq.default(
-  #     from = opt_min,
-  #     to = opt_max,
-  #     length.out = breaks_length
-  #   )
-  # }
-  return(leg_breaks)
+setting_nice_limits <- function(y.axis.min, y.axis.max) {
+  if (c(y.axis.max - y.axis.min) > 100) {
+    # round up/down to next 50
+    y.axis.max <- round_custom(y.axis.max, 50, 1)
+    y.axis.min <- round_custom(y.axis.min, 50, 0)
+  } else if (c(y.axis.max - y.axis.min) < 100 & c(y.axis.max - y.axis.min) > 50) {
+    # round up/down to next 10
+    y.axis.max <- round_custom(y.axis.max, 10, 1)
+    y.axis.min <- round_custom(y.axis.min, 10, 0)
+  } else if (c(y.axis.max - y.axis.min) < 50 & c(y.axis.max - y.axis.min) > 1) {
+    # round to next 1
+    y.axis.max <- round_custom(y.axis.max, 1, 1)
+    y.axis.min <- round_custom(y.axis.min, 1, 0)
+  } else if (c(y.axis.max - y.axis.min) < 1 & c(y.axis.max - y.axis.min) > 0.1) {
+    # round to next 1
+    y.axis.max <- round_custom(y.axis.max, 0.1, 1)
+    y.axis.min <- round_custom(y.axis.min, 0.1, 0)
+  } else if (c(y.axis.max - y.axis.min) < 0.1 & c(y.axis.max - y.axis.min) > 0.01) {
+    # round to next 1
+    y.axis.max <- round_custom(y.axis.max, 0.01, 1)
+    y.axis.min <- round_custom(y.axis.min, 0.01, 0)
+  } else if (c(y.axis.max - y.axis.min) < 0.01 & c(y.axis.max - y.axis.min) > 0.001) {
+    # round to next 1
+    y.axis.max <- round_custom(y.axis.max, 0.001, 1)
+    y.axis.min <- round_custom(y.axis.min, 0.001, 0)
+  }
+  return(c(y.axis.min, y.axis.max))
 }
 
 
@@ -113,3 +113,131 @@ rgb2col <- function(rgbmat) {
   # Apply the function
   sapply(1:ncol(rgbmat), ProcessColumn)
 }
+
+
+# compress csv
+compress_csv <- function(csv_file) {
+  tmp <- readr::read_table(csv_file)
+
+  new.name <- paste0(csv_file, ".gz")
+
+  crunch::write.csv.gz(
+    x = tmp,
+    quote = FALSE,
+    file = new.name
+  )
+
+  rm(list = ls())
+  gc()
+}
+
+robust_spatial_trend <- function(x) {
+
+  # x<-r.rast[[1]]
+
+  r.time <- as.Date(terra::time(x))
+
+  r.year <- as.numeric(format(r.time, "%Y"))
+
+  r.df <- terra::as.data.frame(x, xy = TRUE)
+
+  r.subtrend <- apply(r.df[, -c(1, 2)], c(1), function(y) {
+
+    # test
+    # y<-unlist(r.df[1,-c(1,2)])
+
+    res <- robustbase::lmrob(y ~ r.time)
+
+    return(cbind(coef(res), confint(res, level = 0.95)))
+  })
+
+  r.subtrend <- cbind.data.frame(
+    variables = c(
+      "Intercept", "slope",
+      "Intercept2.5", "slope2.5",
+      "Intercept97.5", "slope97.5"
+    ),
+    r.subtrend
+  )
+
+  # test
+  r.subtrend <- tidyr::pivot_longer(as.data.frame(r.subtrend),
+    cols = -"variables",
+    names_to = "pixels"
+  )
+
+  r.crd <- cbind(
+    pixels = rownames(r.df),
+    r.df[, c(1, 2)]
+  )
+
+
+  r.subtrend <- dplyr::left_join(r.subtrend, r.crd, "pixels")
+
+  r.subtrend <- r.subtrend[, c("x", "y", "variables", "value")]
+
+
+  return(r.subtrend)
+}
+
+linear_spatial_trend <- function(x) {
+
+  # x<-r.rast[[1]]
+
+  r.time <- as.Date(terra::time(x))
+
+  r.year <- as.numeric(format(r.time, "%Y"))
+
+  r.df <- terra::as.data.frame(x, xy = TRUE)
+
+  r.subtrend <- apply(r.df[, -c(1, 2)], c(1), function(y) {
+
+    # test
+    # y<-unlist(r.df[1,-c(1,2)])
+
+    res <- lm(y ~ r.time)
+    # res<-robustbase::lmrob(y~r.time)
+
+    return(cbind(coef(res), confint(res, level = 0.95)))
+  })
+
+  r.subtrend <- cbind.data.frame(
+    variables = c(
+      "Intercept", "slope",
+      "Intercept2.5", "slope2.5",
+      "Intercept97.5", "slope97.5"
+    ),
+    r.subtrend
+  )
+
+  # test
+  r.subtrend <- tidyr::pivot_longer(as.data.frame(r.subtrend),
+    cols = -"variables",
+    names_to = "pixels"
+  )
+
+  r.crd <- cbind(
+    pixels = rownames(r.df),
+    r.df[, c(1, 2)]
+  )
+
+
+  r.subtrend <- dplyr::left_join(r.subtrend, r.crd, "pixels")
+
+  r.subtrend <- r.subtrend[, c("x", "y", "variables", "value")]
+
+
+  return(r.subtrend)
+}
+
+# complete a df of expnded grid
+complete_df_of_expanded_grid <- function(x) {
+
+
+}
+# creat robust lm
+# library(robustbase)
+# res <- lmrob(light ~ temperature,
+#              data=currentDataset)
+# summary(res)
+# cbind(coef(res),confint(res, level = 0.95))

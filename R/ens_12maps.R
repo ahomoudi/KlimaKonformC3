@@ -1,7 +1,7 @@
 #' @title Plotting 12 maps from 3 RCP scenario from ensemble files
 #' @description A function that receives three netCDF files, and variable name,
 #' statistical ensemble member and plot 12 maps, considering 3 RCPs X four periods
-#' it  in the desired the out ṕut directory in which the output is placed.
+#' it  in the desired the out put directory in which the output is placed.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
 #' @param variable inside these netCDf files, e.g., AET
@@ -84,6 +84,8 @@ ens_12maps <- function(netCDF.files,
   # crop the data to the region
   if (region == "total") {
     message("Producing Plots considering the Whole model region")
+
+    shp_lk <- Landkreise
   } else if (region != "total") {
     message(paste0("Producing Plots considering only: ", region))
 
@@ -156,7 +158,7 @@ ens_12maps <- function(netCDF.files,
   r.period1 <- lapply(r.rast, terra::subset, subset = period1)
   r.period1 <- lapply(r.period1, terra::mean)
   # https://stackoverflow.com/a/53969052/13818750
-  r.period1 <- lapply(r.period1, terra::as.data.frame, xy = TRUE) %>%
+  r.period1 <- lapply(r.period1, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "1971-2000")
@@ -165,7 +167,7 @@ ens_12maps <- function(netCDF.files,
     r.time < as.Date("2020-02-01"))
   r.period2 <- lapply(r.rast, terra::subset, subset = period2)
   r.period2 <- lapply(r.period2, terra::mean)
-  r.period2 <- lapply(r.period2, terra::as.data.frame, xy = TRUE) %>%
+  r.period2 <- lapply(r.period2, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "1991-2020")
@@ -174,7 +176,7 @@ ens_12maps <- function(netCDF.files,
     r.time < as.Date("2050-02-01"))
   r.period3 <- lapply(r.rast, terra::subset, subset = period3)
   r.period3 <- lapply(r.period3, terra::mean)
-  r.period3 <- lapply(r.period3, terra::as.data.frame, xy = TRUE) %>%
+  r.period3 <- lapply(r.period3, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "2021-2050")
@@ -183,7 +185,7 @@ ens_12maps <- function(netCDF.files,
     r.time < as.Date("2099-02-01"))
   r.period4 <- lapply(r.rast, terra::subset, subset = period4)
   r.period4 <- lapply(r.period4, terra::mean)
-  r.period4 <- lapply(r.period4, terra::as.data.frame, xy = TRUE) %>%
+  r.period4 <- lapply(r.period4, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "2070-2099")
@@ -360,18 +362,19 @@ ens_12maps <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_12maps_.csv"
+      "3XRCPs_12maps_.csv.gz"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_12maps_.csv"
+      "3XRCPs_12maps_.csv.gz"
     )
   }
 
   colnames(var_plotting) <- c("x", "y", "Period", "Scenario", "Kvalue")
+
   # pre-plot --------------------------------------------------------------------
   # read logo
   # KlimaKonform_img <- project_logo()
@@ -417,6 +420,17 @@ ens_12maps <- function(netCDF.files,
   rcps_colours <- grDevices::colorRampPalette(rgb2col(rcps_colours))
 
   shp_lk <- sf::st_as_sf(shp_lk)
+  Bundeslaender <- sf::st_as_sf(Bundeslaender)
+
+  # get extent
+  if (region == "total") {
+    xlim_sf <- c(min(var_plotting$x, na.rm = T), max(var_plotting$x, na.rm = T))
+    ylim_sf <- c(min(var_plotting$y, na.rm = T), max(var_plotting$y, na.rm = T))
+  } else {
+    xlim_sf <- sf::st_bbox(shp_lk)[c(1, 3)]
+    ylim_sf <- sf::st_bbox(shp_lk)[c(2, 4)]
+  }
+
   # plot --------------------------------------------------------------------
 
   figure <- ggplot2::ggplot() +
@@ -429,13 +443,26 @@ ens_12maps <- function(netCDF.files,
       )
     ) +
     ggplot2::facet_grid(Period ~ Scenario) +
+    ggplot2::geom_sf(Bundeslaender,
+      mapping = ggplot2::aes(),
+      fill = NA,
+      size = 0.2,
+      color = "grey31"
+    ) +
     ggplot2::geom_sf(shp_lk,
       mapping = ggplot2::aes(),
       fill = NA,
+      size = 0.3,
       color = "black"
+    ) +
+    ggplot2::coord_sf(
+      xlim = xlim_sf,
+      ylim = ylim_sf,
+      expand = FALSE
     ) +
     ggplot2::scale_fill_gradientn(
       colors = rcps_colours(50),
+      na.value = "grey77",
       limits = c(y.axis.min, y.axis.max),
       expand = c(0, 0)
     ) +
@@ -522,9 +549,11 @@ ens_12maps <- function(netCDF.files,
   )
 
   # write csv to disk
-  write.table(
-    x = var_plotting %>%
+
+  crunch::write.csv.gz(
+    x = na.omit(var_plotting) %>%
       dplyr::mutate_if(is.numeric, round, digits = 3),
+    quote = FALSE,
     file = csv_name,
     row.names = F
   )

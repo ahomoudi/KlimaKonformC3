@@ -19,7 +19,7 @@ netCDf file
 }
 \description{
 A function that receives multiple netCDF files, and variable name,
-the desired the out ṕut directory in which the output is placed.
+the desired the output directory in which the output is placed.
 }
 \author{
 Ahmed Homoudi

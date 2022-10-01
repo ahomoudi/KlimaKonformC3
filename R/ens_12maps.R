@@ -44,15 +44,12 @@ ens_12maps <- function(netCDF.files,
   if (language == "DE") {
     message("Producing Plots in German")
 
-    utils::data("standard_output_de",
-      envir = environment()
-    )
+    standard_output<-standard_output_de
+
   } else if (language == "EN") {
     message("Producing Plots in English")
 
-    utils::data("standard_output_en",
-      envir = environment()
-    )
+    standard_output<-standard_output_en
   } else {
     stop("Please select a language, either \"EN\" or \"DE\"")
   }
@@ -64,12 +61,6 @@ ens_12maps <- function(netCDF.files,
   names(r.rast) <- c("RCP2.6", "RCP4.5", "RCP8.5")
 
   # load spatial data -------------------------------------------------------
-
-  # spatial data
-  utils::data("Bundeslaender", envir = environment())
-  utils::data("Landkreise", envir = environment())
-  utils::data("land_cover", envir = environment())
-
   # project shapefiles
   sf::st_crs(Landkreise) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   sf::st_crs(Bundeslaender) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -132,9 +123,6 @@ ens_12maps <- function(netCDF.files,
     # test
     # terra::plot(r.rast[[1]][[1]])
 
-    # get the name of specific land cover
-    utils::data("land_cover_legend", envir = environment())
-
     if (language == "DE") {
       LC_name <- paste0(
         " ", enc2utf8("F\u00FCr"), " CORINE-LB: ",
@@ -158,7 +146,7 @@ ens_12maps <- function(netCDF.files,
   r.period1 <- lapply(r.rast, terra::subset, subset = period1)
   r.period1 <- lapply(r.period1, terra::mean)
   # https://stackoverflow.com/a/53969052/13818750
-  r.period1 <- lapply(r.period1, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
+  r.period1 <- lapply(r.period1, terra::as.data.frame, xy = TRUE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "1971-2000")
@@ -167,7 +155,7 @@ ens_12maps <- function(netCDF.files,
     r.time < as.Date("2020-02-01"))
   r.period2 <- lapply(r.rast, terra::subset, subset = period2)
   r.period2 <- lapply(r.period2, terra::mean)
-  r.period2 <- lapply(r.period2, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
+  r.period2 <- lapply(r.period2, terra::as.data.frame, xy = TRUE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "1991-2020")
@@ -176,7 +164,7 @@ ens_12maps <- function(netCDF.files,
     r.time < as.Date("2050-02-01"))
   r.period3 <- lapply(r.rast, terra::subset, subset = period3)
   r.period3 <- lapply(r.period3, terra::mean)
-  r.period3 <- lapply(r.period3, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
+  r.period3 <- lapply(r.period3, terra::as.data.frame, xy = TRUE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "2021-2050")
@@ -185,7 +173,7 @@ ens_12maps <- function(netCDF.files,
     r.time < as.Date("2099-02-01"))
   r.period4 <- lapply(r.rast, terra::subset, subset = period4)
   r.period4 <- lapply(r.period4, terra::mean)
-  r.period4 <- lapply(r.period4, terra::as.data.frame, xy = TRUE, na.rm = FALSE) %>%
+  r.period4 <- lapply(r.period4, terra::as.data.frame, xy = TRUE) %>%
     purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
     purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
     dplyr::mutate(Period = "2070-2099")
@@ -219,11 +207,11 @@ ens_12maps <- function(netCDF.files,
 
 
   # index of the variable in standard output
-  variable_index <- which(standard_output_en$variable == variable)
+  variable_index <- which(standard_output$variable == variable)
 
   if (language == "DE") {
-    var_units <- standard_output_de$units[variable_index]
-    var_name <- standard_output_de$longname[variable_index]
+    var_units <- standard_output$units[variable_index]
+    var_name <- standard_output$longname[variable_index]
 
     if (region == "total") {
       plot.title <- paste0(var_name, " ", enc2utf8("f\u00FCr"), " die Gesamtmodellregion")
@@ -239,8 +227,8 @@ ens_12maps <- function(netCDF.files,
     sep = "\n"
     )
   } else if (language == "EN") {
-    var_units <- standard_output_en$units[variable_index]
-    var_name <- standard_output_en$longname[variable_index]
+    var_units <- standard_output$units[variable_index]
+    var_name <- standard_output$longname[variable_index]
 
     if (region == "total") {
       plot.title <- paste0(var_name, " for the Total Model Region")
@@ -385,39 +373,11 @@ ens_12maps <- function(netCDF.files,
   y.axis.max <- max(var_plotting$Kvalue, na.rm = T)
   y.axis.min <- min(var_plotting$Kvalue, na.rm = T)
 
-  if (y.axis.max - y.axis.min > 100) {
-    # round up/down to next 50
-    y.axis.max <- round_custom(y.axis.max, 50, 1)
-    y.axis.min <- round_custom(y.axis.min, 50, 0)
-  } else if (y.axis.max - y.axis.min < 100 & y.axis.max - y.axis.min > 50) {
-    # round up/down to next 10
-    y.axis.max <- round_custom(y.axis.max, 10, 1)
-    y.axis.min <- round_custom(y.axis.min, 10, 0)
-  } else {
-    # round to next 5
-    # round up/down to next 50
-    y.axis.max <- round_custom(y.axis.max, 5, 1)
-    y.axis.min <- round_custom(y.axis.min, 5, 0)
-  }
 
-  # y.axis.interval<-setting_nice_intervals(minval = y.axis.min,
-  #                        maxval = y.axis.max)
+  y.limits <- setting_nice_limits(y.axis.min, y.axis.max)
 
-  # colors
-  rcps_colours <- matrix(c(
-    103, 0, 31,
-    178, 24, 43,
-    214, 96, 77,
-    244, 165, 130,
-    253, 219, 199,
-    247, 247, 247,
-    209, 229, 240,
-    146, 197, 222,
-    67, 147, 195,
-    33, 102, 172
-  ), byrow = F, nrow = 3)
-
-  rcps_colours <- grDevices::colorRampPalette(rgb2col(rcps_colours))
+  y.axis.max<- y.limits[2]
+  y.axis.min <- y.limits[1]
 
   shp_lk <- sf::st_as_sf(shp_lk)
   Bundeslaender <- sf::st_as_sf(Bundeslaender)
@@ -461,7 +421,7 @@ ens_12maps <- function(netCDF.files,
       expand = FALSE
     ) +
     ggplot2::scale_fill_gradientn(
-      colors = rcps_colours(50),
+      colors = rcps_colours_temp(50),
       na.value = "grey77",
       limits = c(y.axis.min, y.axis.max),
       expand = c(0, 0)
@@ -481,16 +441,9 @@ ens_12maps <- function(netCDF.files,
         size = 7,
         margin = ggplot2::margin(2, 0, 2, 0, "mm")
       ),
-      axis.text = ggplot2::element_text(
-        hjust = 0.5,
-        size = 4,
-        colour = "black"
-      ),
-      axis.text.x = ggplot2::element_text(
-        angle = 45,
-        vjust = 0.5,
-        margin = ggplot2::margin(0, 0, -1, 0, "mm")
-      ),
+      axis.text = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+
       plot.caption = ggplot2::element_text(
         hjust = c(0),
         size = 4,
@@ -516,8 +469,7 @@ ens_12maps <- function(netCDF.files,
         family = "sans"
       ),
       legend.margin = ggplot2::margin(0, 0, 0, 0, "mm"),
-      legend.box.margin = ggplot2::margin(0, 0, 0, 0, "mm"),
-      plot.margin = ggplot2::margin(0, 0, 0, 0, "mm")
+      legend.box.margin = ggplot2::margin(0, 0, 0, 0, "mm")
     ) +
 
     # legend title and position
@@ -530,7 +482,13 @@ ens_12maps <- function(netCDF.files,
         var_name,
         " [", var_units, "]"
       )
-    ))
+    ))+
+    # format plot background
+    ggplot2::theme(
+      panel.background = ggplot2::element_rect(fill = "grey77"),
+      plot.margin = ggplot2::margin(0, 0, 0, 0, "mm")
+    )
+
 
   # # add logo
   # ggplot2::annotation_custom(KlimaKonform_img

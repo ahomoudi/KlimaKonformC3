@@ -32,5 +32,5 @@ save(
   compress = "xz"
 )
 
-# usethis::use_data(land_cover_legend, overwrite = TRUE)
-# usethis::use_data(land_cover_legend, overwrite = TRUE, internal = TRUE)
+usethis::use_data(land_cover_legend, overwrite = TRUE)
+usethis::use_data(land_cover_legend, overwrite = TRUE, internal = TRUE)

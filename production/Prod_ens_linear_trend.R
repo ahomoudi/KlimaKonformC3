@@ -1,5 +1,4 @@
 
-library(KlimaKonformC3)
 library(stringr)
 # 2ter --------------------------------------------------------------------
 
@@ -13,8 +12,8 @@ nc.files <- list.files(
 )
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/2ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/2ter_lauf_ensemble"
+output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/2ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -115,21 +114,28 @@ for (ivar in 1:nrow(vars)) {
         if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
         if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
 
-        print(c(output_folder,
-                output_csv_folder))
+        # print(c(output_folder,
+        #         output_csv_folder))
 
-        ens_linear_trend(netCDF.files = sub_files,
-                         variable = vars[ivar,1],
-                         region = regions[iregion],
-                         landcover = landcover_variables[ilandcover],
-                         language = "DE",
-                         stat_var = stat_variables[istat],
-                         run_id = "2ter",
-                         output_path = output_folder,
-                         output_csv = output_csv_folder)
+        writeLines(text = c(sub_files,
+                            vars[ivar,1],
+                            regions[iregion],
+                            landcover_variables[ilandcover],
+                            "DE",
+                            stat_variables[istat],
+                            "2ter",
+                            output_folder,
+                            output_csv_folder), "input_text_linear_trend" )
+
+        system("R CMD BATCH sub_ens_linear_trend.R")
+
+        gc()
       }
+      gc()
     }
+    gc()
   }
+  gc()
 }
 # test
 # netCDF.files <- sub_files
@@ -156,8 +162,8 @@ nc.files <- list.files(
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/3ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/3ter_lauf_ensemble"
+output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/3ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -261,15 +267,31 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_linear_trend(netCDF.files = sub_files,
-                         variable = vars[ivar,1],
-                         region = regions[iregion],
-                         landcover = landcover_variables[ilandcover],
-                         language = "DE",
-                         stat_var = stat_variables[istat],
-                         run_id = "3ter",
-                         output_path = output_folder,
-                         output_csv = output_csv_folder)
+        # profvis::profvis({
+        #   ens_linear_trend(netCDF.files = sub_files,
+        #                    variable = vars[ivar,1],
+        #                    region = regions[iregion],
+        #                    landcover = landcover_variables[ilandcover],
+        #                    language = "DE",
+        #                    stat_var = stat_variables[istat],
+        #                    run_id = "3ter",
+        #                    output_path = output_folder,
+        #                    output_csv = output_csv_folder)
+        # })
+
+        writeLines(text = c(sub_files,
+                            vars[ivar,1],
+                            regions[iregion],
+                            landcover_variables[ilandcover],
+                            "DE",
+                            stat_variables[istat],
+                            "3ter",
+                            output_folder,
+                            output_csv_folder), "input_text_linear_trend" )
+
+        system("R CMD BATCH sub_ens_linear_trend.R")
+
+                         gc()
       }
     }
   }
@@ -299,8 +321,8 @@ nc.files <- list.files(
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/4ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/4ter_lauf_ensemble"
+output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -324,9 +346,9 @@ stat_variables <- c("mean", "sd", "median", "max", "min")
 landcover_variables <- c(1000, 211)
 
 # output_path<-"D:/AHomoudi/KlimaKonform/output/Alle/"
-ivar <- 1
-iregion <- 2
-istat <- 1
+ivar <- 7
+iregion <- 1
+istat <- 2
 ilandcover <- 2
 
 
@@ -404,15 +426,19 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_linear_trend(netCDF.files = sub_files,
-                         variable = vars[ivar,1],
-                         region = regions[iregion],
-                         landcover = landcover_variables[ilandcover],
-                         language = "DE",
-                         stat_var = stat_variables[istat],
-                         run_id = "4ter",
-                         output_path = output_folder,
-                         output_csv = output_csv_folder)
+        writeLines(text = c(sub_files,
+                            vars[ivar,1],
+                            regions[iregion],
+                            landcover_variables[ilandcover],
+                            "DE",
+                            stat_variables[istat],
+                            "4ter",
+                            output_folder,
+                            output_csv_folder), "input_text_linear_trend" )
+
+        system("R CMD BATCH sub_ens_linear_trend.R")
+
+        gc()
       }
     }
   }
@@ -423,7 +449,7 @@ for (ivar in 1:nrow(vars)) {
 # region <- regions[iregion]
 # landcover <- landcover_variables[ilandcover]
 # language <- "DE"
-# run_id <-"2ter"
+# run_id <-"4ter"
 # stat_var <- stat_variables[istat]
 # output_path <- output_folder
 # output_csv<-output_csv_folder

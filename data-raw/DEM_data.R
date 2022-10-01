@@ -27,5 +27,5 @@ save(
 )
 
 #
-# usethis::use_data(DEM_data, overwrite = TRUE)
-# usethis::use_data(DEM_data, overwrite = TRUE, internal = TRUE)
+usethis::use_data(DEM_data, overwrite = TRUE)
+usethis::use_data(DEM_data, overwrite = TRUE, internal = TRUE)

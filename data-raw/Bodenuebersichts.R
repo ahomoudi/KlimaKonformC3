@@ -25,5 +25,5 @@ save(
   compress = "xz"
 )
 #
-# usethis::use_data(Bodenuebersichts, overwrite = TRUE)
-# usethis::use_data(Bodenuebersichts, overwrite = TRUE, internal = TRUE)
+usethis::use_data(Bodenuebersichts, overwrite = TRUE)
+usethis::use_data(Bodenuebersichts, overwrite = TRUE, internal = TRUE)

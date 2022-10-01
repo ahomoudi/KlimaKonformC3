@@ -7,9 +7,9 @@
 \format{
 A data frame with three columns and 19172 rows
 \describe{
-  \item{x}{coordinates in x dimensions with 1000 m resoultion}
-  \item{y}{coordinates in y dimensions with 1000 m resoultion}
-  \item{DEM}{values describing the elevation value (DEM)}
+\item{x}{coordinates in x dimensions with 1000 m resoultion}
+\item{y}{coordinates in y dimensions with 1000 m resoultion}
+\item{DEM}{values describing the elevation value (DEM)}
 }
 }
 \source{

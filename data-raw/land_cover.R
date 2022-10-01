@@ -24,5 +24,5 @@ save(
   file = "R/sysdata.rda",
   compress = "xz"
 )
-# usethis::use_data(land_cover, overwrite = TRUE)
-# usethis::use_data(land_cover, overwrite = TRUE, internal = TRUE)
+usethis::use_data(land_cover, overwrite = TRUE)
+usethis::use_data(land_cover, overwrite = TRUE, internal = TRUE)

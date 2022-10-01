@@ -11,5 +11,5 @@ save(
 )
 
 
-# usethis::use_data(standard_output_de, overwrite = TRUE)
-# usethis::use_data(standard_output_de, overwrite = TRUE, internal = TRUE)
+usethis::use_data(standard_output_de, overwrite = TRUE)
+usethis::use_data(standard_output_de, overwrite = TRUE, internal = TRUE)

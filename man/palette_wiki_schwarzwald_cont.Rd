@@ -7,7 +7,7 @@
 \format{
 a csv file or a r-vector
 \describe{
-  \item{color}{colors to plot}
+\item{color}{colors to plot}
 }
 }
 \source{

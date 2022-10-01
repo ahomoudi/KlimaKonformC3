@@ -7,11 +7,11 @@
 \format{
 A data frame with 47 rows and 6 columns
 \describe{
-  \item{GRID_CODE}{Classes ID}
-  \item{CLC_CODE}{Classes Code similar to Code_18}
-  \item{LABEL3}{Classes labels in long form}
-  \item{RGB}{Classes legend (colors) in RGB format}
-  \item{Hex}{Classes legend (colors) in Hex format}
+\item{GRID_CODE}{Classes ID}
+\item{CLC_CODE}{Classes Code similar to Code_18}
+\item{LABEL3}{Classes labels in long form}
+\item{RGB}{Classes legend (colors) in RGB format}
+\item{Hex}{Classes legend (colors) in Hex format}
 }
 }
 \source{

@@ -9,5 +9,6 @@ utils::globalVariables(c(
   "Scenario",
   "x",
   "y",
-  "."
+  ".",
+  "variables"
 ))

@@ -2,10 +2,10 @@
 
 export("%>%")
 export(ens_12maps)
+export(ens_12maps_relative_change)
 export(ens_boxplots)
 export(ens_linear_trend)
 export(ens_spatial_trend)
-export(land_cover)
 export(make_ensemble_from_sims)
 export(round_custom)
 import(stats)

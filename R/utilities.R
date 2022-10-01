@@ -180,6 +180,27 @@ robust_spatial_trend <- function(x) {
   return(r.subtrend)
 }
 
+lm_fun <- function(x, x.time) {
+
+  if(all(is.na(x))){
+
+    lm_coeff<-rep(NA,7)
+
+  }else{
+
+    res <- lm(x ~ x.time)
+
+    lm_coeff<-
+      c(coefficients(res),
+        summary(res)$coefficients[2,4],
+        confint(res, level = 0.95))
+
+  }
+
+  return(unname(lm_coeff))
+
+}
+
 linear_spatial_trend <- function(x) {
 
   # x<-r.rast[[1]]
@@ -188,53 +209,141 @@ linear_spatial_trend <- function(x) {
 
   r.year <- as.numeric(format(r.time, "%Y"))
 
-  r.df <- terra::as.data.frame(x, xy = TRUE)
+  r.subtrend <- terra::app(x, lm_fun, x.time =r.time)
 
-  r.subtrend <- apply(r.df[, -c(1, 2)], c(1), function(y) {
-
-    # test
-    # y<-unlist(r.df[1,-c(1,2)])
-
-    res <- lm(y ~ r.time)
-    # res<-robustbase::lmrob(y~r.time)
-
-    return(cbind(coef(res), confint(res, level = 0.95)))
-  })
-
-  r.subtrend <- cbind.data.frame(
-    variables = c(
-      "Intercept", "slope",
-      "Intercept2.5", "slope2.5",
-      "Intercept97.5", "slope97.5"
-    ),
-    r.subtrend
+  names(r.subtrend)<-c(
+    "Intercept", "Slope",
+    "p-value",
+    "Intercept2.5", "Slope2.5",
+    "Intercept97.5", "Slope97.5"
   )
+
+  r.subtrend <- terra::as.data.frame(r.subtrend, xy = TRUE)
 
   # test
   r.subtrend <- tidyr::pivot_longer(as.data.frame(r.subtrend),
-    cols = -"variables",
-    names_to = "pixels"
+    cols = -c("x","y" ),
+    names_to = "variables",
+    values_to = "Kvalue"
   )
-
-  r.crd <- cbind(
-    pixels = rownames(r.df),
-    r.df[, c(1, 2)]
-  )
-
-
-  r.subtrend <- dplyr::left_join(r.subtrend, r.crd, "pixels")
-
-  r.subtrend <- r.subtrend[, c("x", "y", "variables", "value")]
 
 
   return(r.subtrend)
 }
+
+# calculate the mean for four periods
+relative_change_four_periods <- function(x) {
+
+  # x<-r.rast[[1]]
+
+  r.time <- as.Date(terra::time(x))
+
+  periods <- list(
+    period1 = which(r.time > as.Date("1970-12-31") &
+      r.time < as.Date("2000-02-01")),
+    period2 = which(r.time > as.Date("1990-12-31") &
+      r.time < as.Date("2020-02-01")),
+    period3 = which(r.time > as.Date("2020-12-31") &
+      r.time < as.Date("2050-02-01")),
+    period4 = which(r.time > as.Date("2069-12-31") &
+      r.time < as.Date("2099-02-01"))
+  )
+
+  r.periods <- lapply(X = periods, FUN = function(y) {
+
+    # y<-periods[[1]]
+    terra::subset(x = x, subset = y) %>%
+      terra::mean()
+  })
+
+  rm(periods)
+  r.periods$period2 <- r.periods$period2 - r.periods$period1
+  r.periods$period3 <- r.periods$period3 - r.periods$period1
+  r.periods$period4 <- r.periods$period4 - r.periods$period1
+
+  # https://stackoverflow.com/a/53969052/13818750
+  r.periods <- lapply(r.periods, terra::as.data.frame, xy = TRUE) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
+    tidyr::pivot_longer(
+      cols = -c("x", "y"),
+      names_to = "Periods"
+    )
+
+  return(r.periods)
+}
+
+
 
 # complete a df of expnded grid
 complete_df_of_expanded_grid <- function(x) {
 
 
 }
+
+
+# colors ------------------------------------------------------------------
+
+rcps_colours_temp <- function(n) {
+  rcpcolors <- matrix(c(
+    103, 0, 31,
+    178, 24, 43,
+    214, 96, 77,
+    244, 165, 130,
+    253, 219, 199,
+    247, 247, 247,
+    209, 229, 240,
+    146, 197, 222,
+    67, 147, 195,
+    33, 102, 172
+  ), byrow = F, nrow = 3)
+
+  rcps_colours <- grDevices::colorRampPalette(rgb2col(rcpcolors))
+
+  return(rcps_colours(n))
+}
+
+
+rcps_colours_precip <- function(n) {
+  rcpcolors <- matrix(c(
+    084, 048, 005,
+    140, 081, 010,
+    191, 129, 045,
+    223, 194, 125,
+    246, 232, 195,
+    245, 245, 245,
+    199, 234, 229,
+    128, 205, 193,
+    053, 151, 143,
+    001, 102, 094,
+    000, 060, 048
+  ), byrow = F, nrow = 3)
+
+  rcps_colours <- grDevices::colorRampPalette(rgb2col(rcpcolors))
+
+
+  return(rcps_colours(n))
+}
+
+
+
+# internal data -----------------------------------------------------------
+
+Bundeslaender<-  utils::data("Bundeslaender",
+                             envir = environment())
+Landkreise<-utils::data("Landkreise",
+                        envir = environment())
+land_cover<-utils::data("land_cover",
+                        envir = environment())
+
+standard_output_de<- utils::data("standard_output_de",
+                                 envir = environment()
+)
+standard_output_en<- utils::data("standard_output_en",
+                                 envir = environment()
+)
+land_cover_legend<-utils::data("land_cover_legend",
+                               envir = environment())
 # creat robust lm
 # library(robustbase)
 # res <- lmrob(light ~ temperature,

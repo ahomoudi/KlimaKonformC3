@@ -7,8 +7,8 @@
 \format{
 A tibble with 4 rows and 2 variables:
 \describe{
-  \item{Name}{Name of the fedral state}
-  \item{geometry}{geometry of the federal state}
+\item{Name}{Name of the fedral state}
+\item{geometry}{geometry of the federal state}
 }
 }
 \source{

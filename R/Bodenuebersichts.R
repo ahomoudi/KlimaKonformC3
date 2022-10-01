@@ -9,5 +9,5 @@
 #'   \item{TKLE_NR}{values describing the soil map types in SpatRaster}
 #' }
 #' @source Bodenuebersichtskarte 1:200.000 (BueK200) \url{https://www.bgr.bund.de/DE/Themen/Boden/Projekte/Informationsgrundlagen-laufend/BUEK200/BUEK200.html}
-#'
+#' 
 "Bodenuebersichts"

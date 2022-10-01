@@ -16,7 +16,7 @@ save(
   compress = "xz"
 )
 
-# usethis::use_data(Bundeslaender, overwrite = TRUE)
-# usethis::use_data(Bundeslaender, overwrite = TRUE, internal = TRUE)
+usethis::use_data(Bundeslaender, overwrite = TRUE)
+usethis::use_data(Bundeslaender, overwrite = TRUE, internal = TRUE)
 
 #+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs

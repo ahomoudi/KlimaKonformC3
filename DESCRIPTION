@@ -1,28 +1,22 @@
 Package: KlimaKonformC3
-Type: Package
 Title: Analysis of Agricultural Simulations, KlimaKonform (C3)
 Version: 2.0.0
-Date: 2022-09-15
-Author: person("Ahmed", "Homoudi", "ahmed.homoudi@tu-dresden.de", role = c("aut", "cre"),
+Authors@R: 
+    person("Ahmed", "Homoudi", , "ahmed.homoudi@tu-dresden.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-6906-5986"))
-Maintainer: Ahmed Homoudi <ahmed.homoudi@tu-dresden.de>
 Description: Analysis the Agricultural Simulations performed within of the Projekt KlimaKonform (TB C3 Landwirtschaft).
 License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
-URL: https://github.com/ahmathlete/KlimaKonformC3/
-BugReports: https://github.com/ahmathlete/KlimaKonformC3/issues
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-Depends: 
-    R (>= 3.5.0)
 Imports: 
     crunch,
     dplyr,
+    ggnewscale,
     ggplot2,
     lubridate,
     magick,
     magrittr,
-    parallel,
     purrr,
     readr,
     robustbase,
@@ -30,3 +24,6 @@ Imports:
     stringr,
     terra,
     tidyr
+Depends: 
+    R (>= 2.10)
+LazyData: true

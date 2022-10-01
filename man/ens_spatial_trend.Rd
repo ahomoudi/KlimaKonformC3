@@ -50,7 +50,7 @@ PNG
 \description{
 A function that receives three netCDF files, and variable name,
 statistical ensemble member and plot three maps of spatial linear trend,
- considering 3 RCPs and placed in the desired the out put directory.
+considering 3 RCPs and placed in the desired the out put directory.
 }
 \author{
 Ahmed Homoudi

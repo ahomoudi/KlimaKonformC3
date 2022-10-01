@@ -7,8 +7,8 @@
 \format{
 A tibble with 3 rows and 2 variables:
 \describe{
-  \item{Name}{Name of the political district}
-  \item{geometry}{geometry of the political districte}
+\item{Name}{Name of the political district}
+\item{geometry}{geometry of the political districte}
 }
 }
 \source{

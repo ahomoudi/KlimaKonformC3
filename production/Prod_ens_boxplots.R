@@ -1,5 +1,4 @@
 
-library(KlimaKonformC3)
 library(stringr)
 # 2ter --------------------------------------------------------------------
 
@@ -13,8 +12,8 @@ nc.files <- list.files(
 )
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/2ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/2ter_lauf_ensemble"
+output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/2ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -118,15 +117,19 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_boxplots(netCDF.files = sub_files,
-                         variable = vars[ivar,1],
-                         region = regions[iregion],
-                         landcover = landcover_variables[ilandcover],
-                         language = "DE",
-                         stat_var = stat_variables[istat],
-                         run_id = "2ter",
-                         output_path = output_folder,
-                         output_csv = output_csv_folder)
+        writeLines(text = c(sub_files,
+                            vars[ivar,1],
+                            regions[iregion],
+                            landcover_variables[ilandcover],
+                            "DE",
+                            stat_variables[istat],
+                            "2ter",
+                            output_folder,
+                            output_csv_folder), "input_text_boxplots" )
+
+        system("R CMD BATCH sub_ens_boxplots.R")
+
+        gc()
       }
     }
   }
@@ -156,8 +159,8 @@ nc.files <- list.files(
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/3ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/3ter_lauf_ensemble"
+output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/3ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -261,15 +264,19 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_boxplots(netCDF.files = sub_files,
-                         variable = vars[ivar,1],
-                         region = regions[iregion],
-                         landcover = landcover_variables[ilandcover],
-                         language = "DE",
-                         stat_var = stat_variables[istat],
-                         run_id = "3ter",
-                         output_path = output_folder,
-                         output_csv = output_csv_folder)
+        writeLines(text = c(sub_files,
+                            vars[ivar,1],
+                            regions[iregion],
+                            landcover_variables[ilandcover],
+                            "DE",
+                            stat_variables[istat],
+                            "3ter",
+                            output_folder,
+                            output_csv_folder), "input_text_boxplots" )
+
+        system("R CMD BATCH sub_ens_boxplots.R")
+
+                         gc()
       }
     }
   }
@@ -299,8 +306,8 @@ nc.files <- list.files(
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
-output_path <- "/media/ahmed/Daten/WHK2/Plotting/linear_trend_3RCPs/4ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Daten/WHK2/Plotting_data/linear_trend_3RCPs/4ter_lauf_ensemble"
+output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble"
+output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -404,15 +411,19 @@ for (ivar in 1:nrow(vars)) {
         print(c(output_folder,
                 output_csv_folder))
 
-        ens_boxplots(netCDF.files = sub_files,
-                         variable = vars[ivar,1],
-                         region = regions[iregion],
-                         landcover = landcover_variables[ilandcover],
-                         language = "DE",
-                         stat_var = stat_variables[istat],
-                         run_id = "4ter",
-                         output_path = output_folder,
-                         output_csv = output_csv_folder)
+        writeLines(text = c(sub_files,
+                            vars[ivar,1],
+                            regions[iregion],
+                            landcover_variables[ilandcover],
+                            "DE",
+                            stat_variables[istat],
+                            "4ter",
+                            output_folder,
+                            output_csv_folder), "input_text_boxplots" )
+
+        system("R CMD BATCH sub_ens_boxplots.R")
+
+                         gc()
       }
     }
   }

@@ -1,7 +1,7 @@
-#' @title Plotting three maps from 3 RCP scenario from ensemble files
+#' @title Plotting Density of three RCPs scenarios  for four different periods
 #' @description A function that receives three netCDF files, and variable name,
-#' statistical ensemble member and plot three maps of spatial linear trend,
-#'  considering 3 RCPs and placed in the desired the out put directory.
+#' statistical ensemble member and plot density plots of the three scenarios for
+#' four differrnt periods.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
 #' @param variable inside these netCDf files, e.g., AET
@@ -23,18 +23,17 @@
 #' @author Ahmed Homoudi
 #' @return  PNG
 #' @import stats
-#' @importFrom utils write.table
-#' @importFrom grDevices rgb
+#' @importFrom utils globalVariables write.table
 #' @export
-ens_spatial_trend <- function(netCDF.files,
-                              variable,
-                              region,
-                              landcover,
-                              stat_var,
-                              language,
-                              run_id,
-                              output_path,
-                              output_csv) {
+ens_density_3RCPs_4Periods <- function(netCDF.files,
+                         variable,
+                         region,
+                         landcover,
+                         stat_var,
+                         language,
+                         run_id,
+                         output_path,
+                         output_csv) {
 
 
   # check files
@@ -45,13 +44,13 @@ ens_spatial_trend <- function(netCDF.files,
     message("Producing Plots in German")
 
     utils::data("standard_output_de",
-      envir = environment()
+                envir = environment()
     )
   } else if (language == "EN") {
     message("Producing Plots in English")
 
     utils::data("standard_output_en",
-      envir = environment()
+                envir = environment()
     )
   } else {
     stop("Please select a language, either \"EN\" or \"DE\"")
@@ -64,15 +63,12 @@ ens_spatial_trend <- function(netCDF.files,
   names(r.rast) <- c("RCP2.6", "RCP4.5", "RCP8.5")
 
   # load spatial data -------------------------------------------------------
-  utils::data("Bundeslaender",
-    envir = environment()
-  )
-  utils::data("Landkreise",
-    envir = environment()
-  )
-  utils::data("land_cover",
-    envir = environment()
-  )
+
+  # spatial data
+  utils::data("Bundeslaender", envir = environment())
+  utils::data("Landkreise", envir = environment())
+  utils::data("land_cover", envir = environment())
+
   # project shapefiles
   sf::st_crs(Landkreise) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   sf::st_crs(Bundeslaender) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -87,8 +83,6 @@ ens_spatial_trend <- function(netCDF.files,
   # crop the data to the region
   if (region == "total") {
     message("Producing Plots considering the Whole model region")
-
-    shp_lk <- Landkreise
   } else if (region != "total") {
     message(paste0("Producing Plots considering only: ", region))
 
@@ -97,8 +91,8 @@ ens_spatial_trend <- function(netCDF.files,
     shp_ext <- sf::st_bbox(shp_lk)
 
     r.rast <- lapply(r.rast,
-      FUN = terra::mask,
-      mask = terra::vect(shp_lk)
+                     FUN = terra::mask,
+                     mask = terra::vect(shp_lk)
     )
 
     LC <- terra::mask(
@@ -136,10 +130,7 @@ ens_spatial_trend <- function(netCDF.files,
     # terra::plot(r.rast[[1]][[1]])
 
     # get the name of specific land cover
-
-    utils::data("land_cover_legend",
-      envir = environment()
-    )
+    utils::data("land_cover_legend", envir = environment())
 
     if (language == "DE") {
       LC_name <- paste0(
@@ -154,26 +145,26 @@ ens_spatial_trend <- function(netCDF.files,
     }
   }
 
-  # prepare maps data-----------------------------------------------------
+  # prepare boxplots data-----------------------------------------------------
 
-  r.trend <- lapply(r.rast, linear_spatial_trend)
-
-  r.trend <- r.trend %>%
-    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", "variables", .y))) %>%
-    purrr::reduce(dplyr::left_join, by = c("x", "y", "variables"))
-
-  r.trend <- r.trend %>%
+  var_plotting <- lapply(r.rast, boxplot_df) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("ID", "Period", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("ID", "Period")) %>%
     tidyr::pivot_longer(
-      cols = (-c(x, y, variables)),
-      values_to = "Kvalue",
-      names_to = "Scenario"
+      cols = -c("ID", "Period"),
+      names_to = "Scenario",
+      values_to = "Kvalue"
     )
 
-  var_plotting <- r.trend[r.trend$variables == "Slope", ]
+  var_plotting2 <- var_plotting%>%
+    dplyr::group_by(Period,Scenario) %>%
+    dplyr::summarise(Kvalue = mean(Kvalue))
 
+  # clean some memory
   gc(verbose = F)
 
   # meta data ---------------------------------------------------------------
+
 
 
   if (language == "DE") {
@@ -288,12 +279,10 @@ ens_spatial_trend <- function(netCDF.files,
 
   if (language == "DE") {
     legend.title <- "Szenario"
-    var_decade <- "/Jahrzehnt"
   }
 
   if (language == "EN") {
     legend.title <- "Scenario"
-    var_decade <- "/decade"
   }
 
   #
@@ -306,14 +295,14 @@ ens_spatial_trend <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_SpTr_.png"
+      "3XRCPs_Density_.png"
     )
   } else {
     plot_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_SpTr.png"
+      "3XRCPs_Density_.png"
     )
   }
   # define csv name
@@ -323,19 +312,17 @@ ens_spatial_trend <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_SpTr_.csv.gz"
+      "3XRCPs_Density_.csv.gz"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_SpTr_.csv.gz"
+      "3XRCPs_Density_.csv.gz"
     )
   }
 
-  # conver trend from per year to per decade
-  var_plotting$Kvalue <- var_plotting$Kvalue * 10.0
   # pre-plot --------------------------------------------------------------------
   # read logo
   # KlimaKonform_img <- project_logo()
@@ -343,124 +330,89 @@ ens_spatial_trend <- function(netCDF.files,
 
   # y axis
 
-  y.axis.max <- max(var_plotting$Kvalue, na.rm = T)
-  y.axis.min <- min(var_plotting$Kvalue, na.rm = T)
+  x.axis.max <- max(var_plotting$Kvalue, na.rm = T)
+  x.axis.min <- min(var_plotting$Kvalue, na.rm = T)
 
-  y.limits <- setting_nice_limits(y.axis.min, y.axis.max)
-  y.axis.max <- y.limits[2]
-  y.axis.min <- y.limits[1]
+  x.limits <- setting_nice_limits(x.axis.min, x.axis.max)
 
-  shp_lk <- sf::st_as_sf(shp_lk)
-  Bundeslaender <- sf::st_as_sf(Bundeslaender)
+ x.axis.max <- x.limits[2]
+  x.axis.min <- x.limits[1]
 
-  # get extent
-  if (region == "total") {
-    xlim_sf <- c(min(var_plotting$x, na.rm = T), max(var_plotting$x, na.rm = T))
-    ylim_sf <- c(min(var_plotting$y, na.rm = T), max(var_plotting$y, na.rm = T))
-  } else {
-    xlim_sf <- sf::st_bbox(shp_lk)[c(1, 3)]
-    ylim_sf <- sf::st_bbox(shp_lk)[c(2, 4)]
-  }
+  # colors
+  rcps_colours <- c("#003466", "#70A0CD", "#990002")
+
   # plot --------------------------------------------------------------------
+  figure <-  ggplot2::ggplot(
+    data = var_plotting,
+    mapping = ggplot2::aes(
+      x = Kvalue,
+      color = Scenario
+    ))+
+    ggplot2::geom_density(size=0.25)+
+    ggplot2::geom_vline(
+      data = var_plotting2,
+      ggplot2::aes(xintercept=Kvalue,
+                   group = Period,
+                   color=Scenario),
+                 linetype="longdash",
+                 size=0.25)+
 
-  figure <- ggplot2::ggplot() +
-    ggplot2::geom_tile(
-      data = var_plotting,
-      mapping = ggplot2::aes(
-        x = x,
-        y = y,
-        fill = Kvalue
-      )
-    ) +
-    ggplot2::facet_grid(~Scenario) +
-    ggplot2::geom_sf(Bundeslaender,
-      mapping = ggplot2::aes(),
-      fill = NA,
-      size = 0.2,
-      color = "grey31"
-    ) +
-    ggplot2::geom_sf(shp_lk,
-      mapping = ggplot2::aes(),
-      fill = NA,
-      size = 0.3,
-      color = "black"
-    ) +
-    ggplot2::coord_sf(
-      xlim = xlim_sf,
-      ylim = ylim_sf,
-      expand = FALSE
-    ) +
-    ggplot2::scale_fill_gradientn(
-      colors = rcps_colours_temp(50),
-      limits = c(y.axis.min, y.axis.max),
-      expand = c(0, 0),
-      trans = "log1p"
-    ) +
-    ggplot2::theme_bw(base_size = 6) +
+    ggplot2::facet_wrap(~Period,
+                        nrow = 1)+
+
+    ggplot2::scale_color_manual(values = rcps_colours) +
+    ggplot2::theme_bw(base_size = 6)+
 
     # add axis title
-    ggplot2::xlab("") +
-    ggplot2::ylab("") +
+    ggplot2::ylab("KDE") +
+    ggplot2::xlab(paste0(
+      var_name,
+      " [", var_units, "]"
+    )) +
+
+    # set axis breaks
+    ggplot2::scale_x_continuous(
+      limits = c(x.axis.min, x.axis.max),
+      expand = c(0, 0)
+    ) +
     ggplot2::labs(
       title = plot.title,
       caption = plot.caption,
     ) +
-
-    # format plot title and caption
     ggplot2::theme(
       plot.title = ggplot2::element_text(
         hjust = 0.5,
-        size = 5,
-        margin = ggplot2::margin(2, 0, 2, 0, "mm")
+        size = 6
       ),
-      axis.text = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank(),
+      axis.title = ggplot2::element_text(
+        hjust = 0.5,
+        size = 5,
+        margin = ggplot2::margin(rep(2,4), unit = "mm")
+      ),
+      axis.text = ggplot2::element_text(
+        hjust = 0.5,
+        size = 5,
+        colour = "black"
+      ),
+      axis.text.x =  ggplot2::element_text(
+        angle = 90
+      ),
+      panel.spacing = ggplot2::unit(2, "mm"),
       plot.caption = ggplot2::element_text(
         hjust = c(0),
         size = 4,
         colour = "blue",
-        margin = ggplot2::margin(2, 0, 2, 0, "mm")
+        margin = ggplot2::margin(2, 0, 0, 0, unit = "mm")
       )
     ) +
 
-
-    # format plot background
+    # set legend
     ggplot2::theme(
-      panel.background = ggplot2::element_rect(fill = "grey77")
-    ) +
-
-    # legend formatting
-    ggplot2::theme(
-      legend.position = "bottom",
-      legend.direction = "horizontal",
-      legend.key.width = ggplot2::unit(10, "mm"),
-      legend.key.height = ggplot2::unit(2, "mm"),
-      legend.text = ggplot2::element_text(
-        colour = "black",
-        size = 3.5,
-        family = "sans"
-      ),
-      legend.title = ggplot2::element_text(
-        colour = "black",
-        size = 4,
-        family = "sans"
-      ),
-      legend.margin = ggplot2::margin(0, 0, 0, 0, "mm"),
-      legend.box.margin = ggplot2::margin(0, 0, 0, 0, "mm"),
-      plot.margin = ggplot2::margin(0, 2, 0, 0, "mm")
-    ) +
-
-    # legend title and position
-    ggplot2::guides(fill = ggplot2::guide_colourbar(
-      title.position = "bottom",
-      title.hjust = 0.5,
-      label.position = "top",
-      ticks = FALSE,
-      title = paste0(
-        "Slope von ", var_name,
-        " [", var_units, var_decade, "]"
-      )
-    ))
+      legend.title = ggplot2::element_blank(),
+      legend.key.size = ggplot2::unit(4, "mm"),
+      legend.margin = ggplot2::margin(rep(0,4), unit = "mm"),
+      legend.text = ggplot2::element_text(size = 5)
+    )
 
   # # add logo
   # ggplot2::annotation_custom(KlimaKonform_img
@@ -472,20 +424,14 @@ ens_spatial_trend <- function(netCDF.files,
     plot = figure,
     filename = plot_name,
     units = "mm",
-    width = 60,
-    height = 50,
+    width = 120,
+    height = 60,
     dpi = 300,
     device = "png"
   )
 
   # write csv to disk
-  crunch::write.csv.gz(
-    x = r.trend %>%
-      dplyr::mutate_if(is.numeric, round, digits = 3),
-    quote = FALSE,
-    file = csv_name,
-    row.names = F
-  )
+  # no need boxplots csv files works as well
 
   # End ---------------------------------------------------------------------
   # clean

@@ -10,5 +10,5 @@
 #'   \item{Code_18}{values describing the land cover in SpatRaster}
 #' }
 #' @source Copernicus Land Monitoring Service – part of the Copernicus Programme \url{https://land.copernicus.eu/pan-european/corine-land-cover}
-#' 
+#'
 "land_cover"

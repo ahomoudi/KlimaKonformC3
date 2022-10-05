@@ -10,6 +10,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports: 
+    cowplot,
     crunch,
     dplyr,
     ggnewscale,
@@ -27,3 +28,6 @@ Imports:
 Depends: 
     R (>= 2.10)
 LazyData: true
+Suggests: 
+    spelling
+Language: en-GB

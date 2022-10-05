@@ -180,25 +180,94 @@ robust_spatial_trend <- function(x) {
   return(r.subtrend)
 }
 
+
+# clacuate mean, min, max for plotting
+linear_trend_df <- function(x) {
+  # x<-r.rast
+
+  r.time <- as.Date(terra::time(x))
+
+  r.array <- terra::as.array(x)
+
+  r.mean <- apply(r.array, c(3), mean, na.rm = T)
+  r.max <- apply(r.array, c(3), max, na.rm = T)
+  r.min <- apply(r.array, c(3), min, na.rm = T)
+
+
+  r.df <- data.frame(
+    YEAR = r.time,
+    Kmean = r.mean,
+    Kmax = r.max,
+    Kmin = r.min
+  )
+  return(r.df)
+}
+
+# boxplots_df
+boxplot_df <- function(x) {
+  # x<-r.rast[[1]]
+
+  r.time <- as.Date(terra::time(x))
+
+  periods <- list(
+    period1 = which(r.time > as.Date("1970-12-31") &
+      r.time < as.Date("2000-02-01")),
+    period2 = which(r.time > as.Date("1990-12-31") &
+      r.time < as.Date("2020-02-01")),
+    period3 = which(r.time > as.Date("2020-12-31") &
+      r.time < as.Date("2050-02-01")),
+    period4 = which(r.time > as.Date("2069-12-31") &
+      r.time < as.Date("2099-02-01"))
+  )
+
+  r.periods <- lapply(X = periods, FUN = function(y) {
+
+    # y<-periods[[1]]
+    terra::subset(x = x, subset = y) %>%
+      terra::values(
+        mat = F,
+        dataframe = F,
+        na.rm = T
+      )
+  })
+
+  rm(periods)
+
+  # https://stackoverflow.com/a/53969052/13818750
+  r.periods <- Reduce(cbind.data.frame, r.periods)
+
+  r.periods$ID <- 1:nrow(r.periods)
+
+  colnames(r.periods) <- c(
+    "1971-2000",
+    "1991-2020",
+    "2021-2050",
+    "2070-2099",
+    "ID"
+  )
+  r.periods <- tidyr::pivot_longer(r.periods,
+    cols = -c("ID"),
+    names_to = "Period",
+    values_to = "Kvalue"
+  )
+  return(r.periods)
+}
+
 lm_fun <- function(x, x.time) {
-
-  if(all(is.na(x))){
-
-    lm_coeff<-rep(NA,7)
-
-  }else{
-
+  if (all(is.na(x))) {
+    lm_coeff <- rep(NA, 7)
+  } else {
     res <- lm(x ~ x.time)
 
-    lm_coeff<-
-      c(coefficients(res),
-        summary(res)$coefficients[2,4],
-        confint(res, level = 0.95))
-
+    lm_coeff <-
+      c(
+        coefficients(res),
+        summary(res)$coefficients[2, 4],
+        confint(res, level = 0.95)
+      )
   }
 
   return(unname(lm_coeff))
-
 }
 
 linear_spatial_trend <- function(x) {
@@ -209,9 +278,9 @@ linear_spatial_trend <- function(x) {
 
   r.year <- as.numeric(format(r.time, "%Y"))
 
-  r.subtrend <- terra::app(x, lm_fun, x.time =r.time)
+  r.subtrend <- terra::app(x, lm_fun, x.time = r.time)
 
-  names(r.subtrend)<-c(
+  names(r.subtrend) <- c(
     "Intercept", "Slope",
     "p-value",
     "Intercept2.5", "Slope2.5",
@@ -222,16 +291,62 @@ linear_spatial_trend <- function(x) {
 
   # test
   r.subtrend <- tidyr::pivot_longer(as.data.frame(r.subtrend),
-    cols = -c("x","y" ),
+    cols = -c("x", "y"),
     names_to = "variables",
     values_to = "Kvalue"
   )
 
 
   return(r.subtrend)
-}
 
+  # test
+  # test.df<-read.csv(file = "~/Downloads/data-marketing-budget-12mo.csv", header=T,
+  #                   colClasses = c("numeric", "numeric", "numeric"))
+  #
+  # res = lm(Sales~Spend, data=test.df)
+  # summary(res)
+  # multi.fit = lm(Sales~Spend+Month, data=test.df)
+  # summary(multi.fit)
+}
 # calculate the mean for four periods
+mean_four_periods <- function(x) {
+
+  # x<-r.rast[[1]]
+
+  r.time <- as.Date(terra::time(x))
+
+  periods <- list(
+    period1 = which(r.time > as.Date("1970-12-31") &
+      r.time < as.Date("2000-02-01")),
+    period2 = which(r.time > as.Date("1990-12-31") &
+      r.time < as.Date("2020-02-01")),
+    period3 = which(r.time > as.Date("2020-12-31") &
+      r.time < as.Date("2050-02-01")),
+    period4 = which(r.time > as.Date("2069-12-31") &
+      r.time < as.Date("2099-02-01"))
+  )
+
+  r.periods <- lapply(X = periods, FUN = function(y) {
+
+    # y<-periods[[1]]
+    terra::subset(x = x, subset = y) %>%
+      terra::mean()
+  })
+
+  rm(periods)
+
+  # https://stackoverflow.com/a/53969052/13818750
+  r.periods <- lapply(r.periods, terra::as.data.frame, xy = TRUE) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("x", "y")) %>%
+    tidyr::pivot_longer(
+      cols = -c("x", "y"),
+      names_to = "Periods"
+    )
+
+  return(r.periods)
+}
+# calculate the mean and relative change for four periods
 relative_change_four_periods <- function(x) {
 
   # x<-r.rast[[1]]
@@ -272,15 +387,6 @@ relative_change_four_periods <- function(x) {
 
   return(r.periods)
 }
-
-
-
-# complete a df of expnded grid
-complete_df_of_expanded_grid <- function(x) {
-
-
-}
-
 
 # colors ------------------------------------------------------------------
 
@@ -324,29 +430,3 @@ rcps_colours_precip <- function(n) {
 
   return(rcps_colours(n))
 }
-
-
-
-# internal data -----------------------------------------------------------
-
-Bundeslaender<-  utils::data("Bundeslaender",
-                             envir = environment())
-Landkreise<-utils::data("Landkreise",
-                        envir = environment())
-land_cover<-utils::data("land_cover",
-                        envir = environment())
-
-standard_output_de<- utils::data("standard_output_de",
-                                 envir = environment()
-)
-standard_output_en<- utils::data("standard_output_en",
-                                 envir = environment()
-)
-land_cover_legend<-utils::data("land_cover_legend",
-                               envir = environment())
-# creat robust lm
-# library(robustbase)
-# res <- lmrob(light ~ temperature,
-#              data=currentDataset)
-# summary(res)
-# cbind(coef(res),confint(res, level = 0.95))

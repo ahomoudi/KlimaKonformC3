@@ -46,16 +46,18 @@ ens_12maps_relative_change <- function(netCDF.files,
   if (language == "DE") {
     message("Producing Plots in German")
 
-    standard_output<-standard_output_de
-
+    utils::data("standard_output_de",
+      envir = environment()
+    )
   } else if (language == "EN") {
     message("Producing Plots in English")
 
-    standard_output<-standard_output_en
+    utils::data("standard_output_en",
+      envir = environment()
+    )
   } else {
     stop("Please select a language, either \"EN\" or \"DE\"")
   }
-
   netCDF.files <- sort(netCDF.files, decreasing = F)
   # read files
   r.rast <- lapply(X = netCDF.files, FUN = terra::rast, subds = stat_var)
@@ -63,6 +65,16 @@ ens_12maps_relative_change <- function(netCDF.files,
   names(r.rast) <- c("RCP2.6", "RCP4.5", "RCP8.5")
 
   # load spatial data -------------------------------------------------------
+
+  utils::data("Bundeslaender",
+    envir = environment()
+  )
+  utils::data("Landkreise",
+    envir = environment()
+  )
+  utils::data("land_cover",
+    envir = environment()
+  )
 
   # project shapefiles
   sf::st_crs(Landkreise) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -125,7 +137,9 @@ ens_12maps_relative_change <- function(netCDF.files,
 
     # test
     # terra::plot(r.rast[[1]][[1]])
-
+    utils::data("land_cover_legend",
+      envir = environment()
+    )
     if (language == "DE") {
       LC_name <- paste0(
         " ", enc2utf8("F\u00FCr"), " CORINE-LB: ",
@@ -174,12 +188,13 @@ ens_12maps_relative_change <- function(netCDF.files,
 
   # meta data ---------------------------------------------------------------
 
-  # index of the variable in standard output
-  variable_index <- which(standard_output$variable == variable)
+
 
   if (language == "DE") {
-    var_units <- standard_output$units[variable_index]
-    var_name <- standard_output$longname[variable_index]
+    # index of the variable in standard output
+    variable_index <- which(standard_output_de$variable == variable)
+    var_units <- standard_output_de$units[variable_index]
+    var_name <- standard_output_de$longname[variable_index]
 
     if (region == "total") {
       plot.title <- paste0(var_name, " ", enc2utf8("f\u00FCr"), " die Gesamtmodellregion")
@@ -195,8 +210,10 @@ ens_12maps_relative_change <- function(netCDF.files,
     sep = "\n"
     )
   } else if (language == "EN") {
-    var_units <- standard_output$units[variable_index]
-    var_name <- standard_output$longname[variable_index]
+    # index of the variable in standard output
+    variable_index <- which(standard_output_en$variable == variable)
+    var_units <- standard_output_en$units[variable_index]
+    var_name <- standard_output_en$longname[variable_index]
 
     if (region == "total") {
       plot.title <- paste0(var_name, " for the Total Model Region")
@@ -395,7 +412,8 @@ ens_12maps_relative_change <- function(netCDF.files,
       expand = c(0, 0),
       name = legend.title1,
       guide = ggplot2::guide_colourbar(
-        title.position = "bottom"
+        title.position = "bottom",
+        order = 1
       )
     ) +
     ggnewscale::new_scale_fill() +
@@ -411,7 +429,8 @@ ens_12maps_relative_change <- function(netCDF.files,
       expand = c(0, 0),
       name = legend.title2,
       guide = ggplot2::guide_colourbar(
-        title.position = "bottom"
+        title.position = "bottom",
+        order = 2
       )
     ) +
     ggplot2::facet_grid(Period ~ Scenario) +
@@ -447,10 +466,8 @@ ens_12maps_relative_change <- function(netCDF.files,
         size = 8,
         margin = ggplot2::margin(2, 0, 2, 0, "mm")
       ),
-
       axis.text = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
-
       plot.caption = ggplot2::element_text(
         hjust = c(0),
         size = 6,
@@ -474,7 +491,7 @@ ens_12maps_relative_change <- function(netCDF.files,
         family = "sans"
       ),
       legend.title.align = 0.5
-    )+
+    ) +
     # format plot background
     ggplot2::theme(
       panel.background = ggplot2::element_rect(fill = "grey77"),

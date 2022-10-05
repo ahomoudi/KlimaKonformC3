@@ -18,12 +18,12 @@ Bodenuebersichts <- terra::as.data.frame(Bodenuebersichts, xy = TRUE)
 # crs(land_cover) <- NA
 rm(x1, x2)
 gc()
-sysdata_filenames <- load("R/sysdata.rda")
-save(
-  list = c(sysdata_filenames, "Bodenuebersichts"),
-  file = "R/sysdata.rda",
-  compress = "xz"
-)
+# sysdata_filenames <- load("R/sysdata.rda")
+# save(
+#   list = c(sysdata_filenames, "Bodenuebersichts"),
+#   file = "R/sysdata.rda",
+#   compress = "xz"
+# )
 #
 usethis::use_data(Bodenuebersichts, overwrite = TRUE)
-usethis::use_data(Bodenuebersichts, overwrite = TRUE, internal = TRUE)
+# usethis::use_data(Bodenuebersichts, overwrite = TRUE, internal = TRUE)

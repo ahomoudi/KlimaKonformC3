@@ -25,12 +25,12 @@ for (i in 1:length(land_cover_legend$RGB)) {
 }
 rm(i, RGB, rgb2hex)
 
-sysdata_filenames <- load("R/sysdata.rda")
-save(
-  list = c(sysdata_filenames, "land_cover_legend"),
-  file = "R/sysdata.rda",
-  compress = "xz"
-)
+# sysdata_filenames <- load("R/sysdata.rda")
+# save(
+#   list = c(sysdata_filenames, "land_cover_legend"),
+#   file = "R/sysdata.rda",
+#   compress = "xz"
+# )
 
 usethis::use_data(land_cover_legend, overwrite = TRUE)
-usethis::use_data(land_cover_legend, overwrite = TRUE, internal = TRUE)
+# usethis::use_data(land_cover_legend, overwrite = TRUE, internal = TRUE)

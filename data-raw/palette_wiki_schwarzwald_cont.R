@@ -17,15 +17,15 @@ palette_wiki_schwarzwald_cont <- rev(palette_wiki_schwarzwald_cont)
 
 # use it in r package
 
-sysdata_filenames <- load("R/sysdata.rda")
-save(
-  list = c(sysdata_filenames, "palette_wiki_schwarzwald_cont"),
-  file = "R/sysdata.rda",
-  compress = "xz"
-)
+# sysdata_filenames <- load("R/sysdata.rda")
+# save(
+#   list = c(sysdata_filenames, "palette_wiki_schwarzwald_cont"),
+#   file = "R/sysdata.rda",
+#   compress = "xz"
+# )
 
 usethis::use_data(palette_wiki_schwarzwald_cont, overwrite = TRUE)
-usethis::use_data(palette_wiki_schwarzwald_cont, overwrite = TRUE, internal = TRUE)
+# usethis::use_data(palette_wiki_schwarzwald_cont, overwrite = TRUE, internal = TRUE)
 
 # plot(NULL, xlim=c(0,length(palette_wiki_schwarzwald_cont)), ylim=c(0,1),
 #      xlab="", ylab="", xaxt="n", yaxt="n")

@@ -16,5 +16,5 @@
 #'   \item{upper_limit}{upper_limit}
 #'   \item{interval}{interval}
 #' }
-#' @source The KlimaKonform CThe KlimaKnofrom Report
+#' @source The KlimaKonform Conventions or The KlimaKonform Report
 "standard_output_de"

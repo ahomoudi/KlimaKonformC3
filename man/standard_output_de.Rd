@@ -20,7 +20,7 @@ A tibble with 10 rows and 12 variables:
 }
 }
 \source{
-The KlimaKonform CThe KlimaKnofrom Report
+The KlimaKonform Conventions or The KlimaKonform Report
 }
 \usage{
 standard_output_de

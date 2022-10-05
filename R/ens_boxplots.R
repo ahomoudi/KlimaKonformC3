@@ -147,73 +147,25 @@ ens_boxplots <- function(netCDF.files,
 
   # prepare boxplots data-----------------------------------------------------
 
-  # r.time<-as.data.frame(do.call(cbind, lapply(r.rast, terra::time)))
-  r.time <- as.Date(terra::time(r.rast[[1]]))
-
-  period1 <- which(r.time > as.Date("1970-12-31") &
-    r.time < as.Date("2000-02-01"))
-  r.period1 <- lapply(r.rast, terra::subset, subset = period1)
-  r.period1 <- lapply(r.period1, terra::values, mat = F, col = 1)
-  r.period1 <- as.data.frame(Reduce(cbind, r.period1)) %>%
-    dplyr::mutate(Period = "1971-2000")
-
-  period2 <- which(r.time > as.Date("1990-12-31") &
-    r.time < as.Date("2020-02-01"))
-  r.period2 <- lapply(r.rast, terra::subset, subset = period2)
-  r.period2 <- lapply(r.period2, terra::values, mat = F, col = 1)
-  r.period2 <- as.data.frame(Reduce(cbind, r.period2)) %>%
-    dplyr::mutate(Period = "1991-2020")
-
-  period3 <- which(r.time > as.Date("2020-12-31") &
-    r.time < as.Date("2050-02-01"))
-  r.period3 <- lapply(r.rast, terra::subset, subset = period3)
-  r.period3 <- lapply(r.period3, terra::values, mat = F, col = 1)
-  r.period3 <- as.data.frame(Reduce(cbind, r.period3)) %>%
-    dplyr::mutate(Period = "2021-2050")
-
-  period4 <- which(r.time > as.Date("2069-12-31") &
-    r.time < as.Date("2099-02-01"))
-  r.period4 <- lapply(r.rast, terra::subset, subset = period4)
-  r.period4 <- lapply(r.period4, terra::values, mat = F, col = 1)
-  r.period4 <- as.data.frame(Reduce(cbind, r.period4)) %>%
-    dplyr::mutate(Period = "2070-2099")
-
-  colnames(r.period1) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-  colnames(r.period2) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-  colnames(r.period3) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-  colnames(r.period4) <- c("RCP2.6", "RCP4.5", "RCP8.5", "Period")
-
-  var_plotting <- rbind(
-    r.period1,
-    r.period2,
-    r.period3,
-    r.period4
-  )
-
-  var_plotting <- var_plotting %>%
+  var_plotting <- lapply(r.rast, boxplot_df) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("ID", "Period", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("ID", "Period")) %>%
     tidyr::pivot_longer(
-      cols = (-Period),
+      cols = -c("ID", "Period"),
+      names_to = "Scenario",
       values_to = "Kvalue"
     )
 
   # clean some memory
-  rm(
-    r.period1,
-    r.period2,
-    r.period3,
-    r.period4,
-    r.rast
-  )
-
   gc(verbose = F)
 
   # meta data ---------------------------------------------------------------
 
 
-  # index of the variable in standard output
-  variable_index <- which(standard_output_en$variable == variable)
 
   if (language == "DE") {
+    # index of the variable in standard output
+    variable_index <- which(standard_output_de$variable == variable)
     var_units <- standard_output_de$units[variable_index]
     var_name <- standard_output_de$longname[variable_index]
 
@@ -231,6 +183,8 @@ ens_boxplots <- function(netCDF.files,
     sep = "\n"
     )
   } else if (language == "EN") {
+    # index of the variable in standard output
+    variable_index <- which(standard_output_en$variable == variable)
     var_units <- standard_output_en$units[variable_index]
     var_name <- standard_output_en$longname[variable_index]
 
@@ -370,36 +324,18 @@ ens_boxplots <- function(netCDF.files,
   # KlimaKonform_img <- project_logo()
   # grid::rasterGrob(KlimaKonform_img)
 
-  # remove na.
-  var_plotting <- na.omit(var_plotting)
   # y axis
 
   y.axis.max <- max(var_plotting$Kvalue, na.rm = T)
   y.axis.min <- min(var_plotting$Kvalue, na.rm = T)
 
-  if (y.axis.max - y.axis.min > 100) {
-    # round up/down to next 50
-    y.axis.max <- round_custom(y.axis.max, 50, 1)
-    y.axis.min <- round_custom(y.axis.min, 50, 0)
-  } else if (y.axis.max - y.axis.min < 100 & y.axis.max - y.axis.min > 50) {
-    # round up/down to next 10
-    y.axis.max <- round_custom(y.axis.max, 10, 1)
-    y.axis.min <- round_custom(y.axis.min, 10, 0)
-  } else {
-    # round to next 5
-    # round up/down to next 50
-    y.axis.max <- round_custom(y.axis.max, 5, 1)
-    y.axis.min <- round_custom(y.axis.min, 5, 0)
-  }
+  y.limits <- setting_nice_limits(y.axis.min, y.axis.max)
 
-  # y.axis.interval<-setting_nice_intervals(minval = y.axis.min,
-  #                        maxval = y.axis.max)
-
+  y.axis.max <- y.limits[2]
+  y.axis.min <- y.limits[1]
 
   # colors
   rcps_colours <- c("#003466", "#70A0CD", "#990002")
-
-  colnames(var_plotting) <- c("Period", "Scenario", "Kvalue")
 
   # plot --------------------------------------------------------------------
 
@@ -490,7 +426,7 @@ ens_boxplots <- function(netCDF.files,
 
   # write csv to disk
   crunch::write.csv.gz(
-    x = var_plotting %>%
+    x = var_plotting[, -1] %>% # remove ID columns
       dplyr::mutate_if(is.numeric, round, digits = 3),
     quote = FALSE,
     file = csv_name,

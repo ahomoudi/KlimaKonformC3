@@ -12,9 +12,6 @@
 #'   \item{standardname}{standardname}
 #'   \item{frequency}{frequency}
 #'   \item{comment}{comment}
-#'   \item{lowe_limit}{lowe_limit}
-#'   \item{upper_limit}{upper_limit}
-#'   \item{interval}{interval}
 #' }
 #' @source The KlimaKonform Conventions or The KlimaKonform Report
 "standard_output_de"

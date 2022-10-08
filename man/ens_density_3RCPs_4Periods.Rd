@@ -20,7 +20,7 @@ ens_density_3RCPs_4Periods(
 \item{netCDF.files}{The netCDF files that contain similar simulation
 variables. They should be provided including the full path to the files}
 
-\item{variable}{inside these netCDf files, e.g., AET}
+\item{variable}{inside these netCDF files, e.g., AET}
 
 \item{region}{A string referring to the region to plot; "total",
 "Vogtlandkreis", "Burgenlandkreis", "Greiz", and "Altenburger Land".}
@@ -50,7 +50,7 @@ PNG
 \description{
 A function that receives three netCDF files, and variable name,
 statistical ensemble member and plot density plots of the three scenarios for
-four differrnt periods.
+four different periods.
 }
 \author{
 Ahmed Homoudi

@@ -8,7 +8,7 @@
 A tibble with 3 rows and 2 variables:
 \describe{
 \item{Name}{Name of the political district}
-\item{geometry}{geometry of the political districte}
+\item{geometry}{geometry of the political district}
 }
 }
 \source{
@@ -19,6 +19,7 @@ Landkreise
 }
 \description{
 Data of shapefile of the political districts will be used for plotting
-Included the political districts: Vogtlandkreis, Burgenlandkreis, and Greiz
+Included the political districts: Altenburger Land, Burgenlandkreis, Greiz,
+and Vogtlandkreis.
 }
 \keyword{datasets}

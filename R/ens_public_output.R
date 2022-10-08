@@ -1,7 +1,7 @@
 #' @title Plotting one informative plot containing, relative change maps,
-#' boxplots and time series.
+#' box plots and time series.
 #' @description A function that receives one netCDF files, and variable name,
-#' statistical ensemble member and plot 4 maps, boxplots, & timeseries considering one RCPs.
+#' statistical ensemble member and plot 4 maps, box plots, & time series considering one RCPs.
 #' it in the desired the out put directory in which the output is placed.
 #' the first three maps represents the mean of the historical period, and the rest
 #' represents the relative change to the historical period
@@ -494,7 +494,7 @@ ens_public_output <- function(netCDF.file,
     # format plot background
     ggplot2::theme(
       panel.background = ggplot2::element_rect(fill = "grey77"),
-      plot.margin = ggplot2::margin(rep(1.25,4), "mm"),
+      plot.margin = ggplot2::margin(rep(1.25, 4), "mm"),
       axis.text = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank()
     )
@@ -537,7 +537,7 @@ ens_public_output <- function(netCDF.file,
     ) +
     ggplot2::theme(
       legend.position = "none",
-      plot.margin = ggplot2::margin(rep(1.25,4), "mm"),
+      plot.margin = ggplot2::margin(rep(1.25, 4), "mm"),
       axis.title.y = ggplot2::element_text(
         hjust = 0.5,
         size = 5,
@@ -605,7 +605,6 @@ ens_public_output <- function(netCDF.file,
         hjust = 0.5,
         size = 5,
         colour = "black"
-
       ),
       plot.margin = ggplot2::margin(1.25, 1.25, -2, 1.25, "mm")
     )
@@ -614,7 +613,7 @@ ens_public_output <- function(netCDF.file,
   title <- cowplot::ggdraw() +
     cowplot::draw_label(
       plot.title,
-      #fontface = 'bold',
+      # fontface = 'bold',
       x = 0.5,
       hjust = 0.5,
       y = 0.5,
@@ -622,29 +621,32 @@ ens_public_output <- function(netCDF.file,
       size = 8,
     )
 
-  figure <-cowplot::plot_grid(
+  figure <- cowplot::plot_grid(
     title,
     fig_a,
     fig_b,
     fig_c,
     ncol = 1,
     nrow = 4,
-    axis = 'A',
+    axis = "A",
     align = "v",
     labels = c(
-               NA,'A', 'B', 'C'
-               ),
+      NA, "A", "B", "C"
+    ),
     label_size = 8,
     label_x = 0,
     label_y = 1.1,
-    rel_heights = c(0.15,1.2,0.85,0.85))
+    rel_heights = c(0.15, 1.2, 0.85, 0.85)
+  )
 
 
-  figure <-cowplot::add_sub(plot = figure,
-      label = plot.caption,
-                     color = "blue",
-                     size = 6,
-      x = 0.30)
+  figure <- cowplot::add_sub(
+    plot = figure,
+    label = plot.caption,
+    color = "blue",
+    size = 6,
+    x = 0.30
+  )
   # ggplot2::grid.a
   #
   # figure <- gridExtra::arrangeGrob(fig_a, fig_b,

@@ -1,9 +1,7 @@
-#' @title Plotting 12 maps (3 historical + 9 relative change) from 3 RCP scenarios
+#' @title Plotting Density of three RCPs scenarios  for four different periods
 #' @description A function that receives three netCDF files, and variable name,
-#' statistical ensemble member and plot 12 maps, considering 3 RCPs X four periods
-#' it in the desired the out put directory in which the output is placed.
-#' the first three maps represents the mean of the historical period, and the rest
-#' represents the relative change to the historical period
+#' statistical ensemble member and plot density plots of the three scenarios for
+#' four different periods.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
 #' @param variable inside these netCDF files, e.g., AET
@@ -25,10 +23,9 @@
 #' @author Ahmed Homoudi
 #' @return  PNG
 #' @import stats
-#' @importFrom utils write.table
-#' @importFrom grDevices rgb
+#' @importFrom utils globalVariables write.table
 #' @export
-ens_12maps_relative_change <- function(netCDF.files,
+ens_yearly_boxplots <- function(netCDF.files,
                                        variable,
                                        region,
                                        landcover,
@@ -47,17 +44,18 @@ ens_12maps_relative_change <- function(netCDF.files,
     message("Producing Plots in German")
 
     utils::data("standard_output_de",
-      envir = environment()
+                envir = environment()
     )
   } else if (language == "EN") {
     message("Producing Plots in English")
 
     utils::data("standard_output_en",
-      envir = environment()
+                envir = environment()
     )
   } else {
     stop("Please select a language, either \"EN\" or \"DE\"")
   }
+
   netCDF.files <- sort(netCDF.files, decreasing = F)
   # read files
   r.rast <- lapply(X = netCDF.files, FUN = terra::rast, subds = stat_var)
@@ -66,15 +64,10 @@ ens_12maps_relative_change <- function(netCDF.files,
 
   # load spatial data -------------------------------------------------------
 
-  utils::data("Bundeslaender",
-    envir = environment()
-  )
-  utils::data("Landkreise",
-    envir = environment()
-  )
-  utils::data("land_cover",
-    envir = environment()
-  )
+  # spatial data
+  utils::data("Bundeslaender", envir = environment())
+  utils::data("Landkreise", envir = environment())
+  utils::data("land_cover", envir = environment())
 
   # project shapefiles
   sf::st_crs(Landkreise) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -90,8 +83,6 @@ ens_12maps_relative_change <- function(netCDF.files,
   # crop the data to the region
   if (region == "total") {
     message("Producing Plots considering the Whole model region")
-
-    shp_lk <- Landkreise
   } else if (region != "total") {
     message(paste0("Producing Plots considering only: ", region))
 
@@ -100,8 +91,8 @@ ens_12maps_relative_change <- function(netCDF.files,
     shp_ext <- sf::st_bbox(shp_lk)
 
     r.rast <- lapply(r.rast,
-      FUN = terra::mask,
-      mask = terra::vect(shp_lk)
+                     FUN = terra::mask,
+                     mask = terra::vect(shp_lk)
     )
 
     LC <- terra::mask(
@@ -137,9 +128,10 @@ ens_12maps_relative_change <- function(netCDF.files,
 
     # test
     # terra::plot(r.rast[[1]][[1]])
-    utils::data("land_cover_legend",
-      envir = environment()
-    )
+
+    # get the name of specific land cover
+    utils::data("land_cover_legend", envir = environment())
+
     if (language == "DE") {
       LC_name <- paste0(
         " ", enc2utf8("F\u00FCr"), " CORINE-LB: ",
@@ -153,35 +145,20 @@ ens_12maps_relative_change <- function(netCDF.files,
     }
   }
 
-  # prepare maps data-----------------------------------------------------
+  # prepare boxplots data-----------------------------------------------------
 
-  var_plotting <- lapply(r.rast, relative_change_four_periods)
-
-  # https://stackoverflow.com/a/53969052/13818750
-
-  var_plotting <- var_plotting %>%
-    purrr::imap(.x = ., ~ purrr::set_names(.x, c("x", "y", "Periods", .y))) %>%
-    purrr::reduce(dplyr::left_join, by = c("x", "y", "Periods")) %>%
+  var_plotting <- lapply(r.rast, boxplot_df) %>%
+    purrr::imap(.x = ., ~ purrr::set_names(.x, c("ID", "Period", .y))) %>%
+    purrr::reduce(dplyr::left_join, by = c("ID", "Period")) %>%
     tidyr::pivot_longer(
-      cols = -c("x", "y", "Periods"),
+      cols = -c("ID", "Period"),
       names_to = "Scenario",
       values_to = "Kvalue"
     )
 
-  # replace periods with actual years
-  var_plotting$Periods <- ifelse(var_plotting$Periods == "period1",
-    "1971-2000",
-    ifelse(var_plotting$Periods == "period2",
-      "1991-2020",
-      ifelse(var_plotting$Periods == "period3",
-        "2021-2050",
-        ifelse(var_plotting$Periods == "period4",
-          "2070-2099",
-          NA
-        )
-      )
-    )
-  )
+  var_plotting2 <- var_plotting %>%
+    dplyr::group_by(Period, Scenario) %>%
+    dplyr::summarise(Kvalue = mean(Kvalue))
 
   # clean some memory
   gc(verbose = F)
@@ -301,15 +278,11 @@ ens_12maps_relative_change <- function(netCDF.files,
   }
 
   if (language == "DE") {
-    # legend.title <- "Szenario"
-    legend.title1 <- paste0(var_name, " [", var_units, "]")
-    legend.title2 <- paste0("Veraenderung [", var_units, "]")
+    legend.title <- "Szenario"
   }
 
   if (language == "EN") {
-    # legend.title <- "Scenario"
-    legend.title1 <- paste0(var_name, " [", var_units, "]")
-    legend.title2 <- paste0("Change [", var_units, "]")
+    legend.title <- "Scenario"
   }
 
   #
@@ -322,14 +295,14 @@ ens_12maps_relative_change <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_12maps_relCh_.png"
+      "3XRCPs_Density_.png"
     )
   } else {
     plot_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_12maps_relCh_.png"
+      "3XRCPs_Density_.png"
     )
   }
   # define csv name
@@ -339,18 +312,16 @@ ens_12maps_relative_change <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_12maps_relCh_.csv.gz"
+      "3XRCPs_Density_.csv.gz"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_12maps_relCh_.csv.gz"
+      "3XRCPs_Density_.csv.gz"
     )
   }
-
-  colnames(var_plotting) <- c("x", "y", "Period", "Scenario", "Kvalue")
 
   # pre-plot --------------------------------------------------------------------
   # read logo
@@ -359,103 +330,54 @@ ens_12maps_relative_change <- function(netCDF.files,
 
   # y axis
 
-  # fix limts for historical
-  y.axis.max_hist <- max(var_plotting$Kvalue[var_plotting$Period == "1971-2000"],
-    na.rm = T
-  )
-  y.axis.min_hist <- min(var_plotting$Kvalue[var_plotting$Period == "1971-2000"],
-    na.rm = T
-  )
-  y.limits <- setting_nice_limits(y.axis.min_hist, y.axis.max_hist)
+  x.axis.max <- max(var_plotting$Kvalue, na.rm = T)
+  x.axis.min <- min(var_plotting$Kvalue, na.rm = T)
 
-  y.axis.max_hist <- y.limits[2]
-  y.axis.min_hist <- y.limits[1]
+  x.limits <- setting_nice_limits(x.axis.min, x.axis.max)
 
-  # fix limits for the relative change
-  y.axis.max_relCh <- max(var_plotting$Kvalue[var_plotting$Period != "1971-2000"],
-    na.rm = T
-  )
-  y.axis.min_relCh <- min(var_plotting$Kvalue[var_plotting$Period != "1971-2000"],
-    na.rm = T
-  )
-  y.limits <- setting_nice_limits(y.axis.min_relCh, y.axis.max_relCh)
+  x.axis.max <- x.limits[2]
+  x.axis.min <- x.limits[1]
 
-  y.axis.max_relCh <- y.limits[2]
-  y.axis.min_relCh <- y.limits[1]
+  # colors
+  rcps_colours <- c("#003466", "#70A0CD", "#990002")
 
-  shp_lk <- sf::st_as_sf(shp_lk)
-  Bundeslaender <- sf::st_as_sf(Bundeslaender)
-
-  # get extent
-  if (region == "total") {
-    xlim_sf <- c(min(var_plotting$x, na.rm = T), max(var_plotting$x, na.rm = T))
-    ylim_sf <- c(min(var_plotting$y, na.rm = T), max(var_plotting$y, na.rm = T))
-  } else {
-    xlim_sf <- sf::st_bbox(shp_lk)[c(1, 3)]
-    ylim_sf <- sf::st_bbox(shp_lk)[c(2, 4)]
-  }
-
-  # scales::show_col(rcps_colours_temp(50))
-  # scales::show_col(rcps_colours_precip(50))
   # plot --------------------------------------------------------------------
+  figure <- ggplot2::ggplot(
+    data = var_plotting,
+    mapping = ggplot2::aes(
+      x = Kvalue,
+      color = Scenario
+    )
+  ) +
+    ggplot2::geom_density(size = 0.25) +
+    ggplot2::geom_vline(
+      data = var_plotting2,
+      ggplot2::aes(
+        xintercept = Kvalue,
+        group = Period,
+        color = Scenario
+      ),
+      linetype = "longdash",
+      size = 0.25
+    ) +
+    ggplot2::facet_wrap(~Period,
+                        nrow = 1
+    ) +
+    ggplot2::scale_color_manual(values = rcps_colours) +
+    ggplot2::theme_bw(base_size = 6) +
 
-  figure <- ggplot2::ggplot() +
-    ggplot2::geom_tile(
-      data = var_plotting %>%
-        dplyr::filter(Period == "1971-2000"),
-      ggplot2::aes(x, y, fill = Kvalue)
+    # add axis title
+    ggplot2::ylab("KDE") +
+    ggplot2::xlab(paste0(
+      var_name,
+      " [", var_units, "]"
+    )) +
+
+    # set axis breaks
+    ggplot2::scale_x_continuous(
+      limits = c(x.axis.min, x.axis.max),
+      expand = c(0, 0)
     ) +
-    ggplot2::scale_fill_gradientn(
-      colors = rcps_colours_temp(50),
-      na.value = "grey77",
-      limits = c(y.axis.min_hist, y.axis.max_hist),
-      expand = c(0, 0),
-      name = legend.title1,
-      guide = ggplot2::guide_colourbar(
-        title.position = "bottom",
-        order = 1
-      )
-    ) +
-    ggnewscale::new_scale_fill() +
-    ggplot2::geom_tile(
-      data = var_plotting %>%
-        dplyr::filter(Period != "1971-2000"),
-      ggplot2::aes(x, y, fill = Kvalue)
-    ) +
-    ggplot2::scale_fill_gradientn(
-      colors = rcps_colours_precip(50),
-      na.value = "grey77",
-      limits = c(y.axis.min_relCh, y.axis.max_relCh),
-      expand = c(0, 0),
-      name = legend.title2,
-      guide = ggplot2::guide_colourbar(
-        title.position = "bottom",
-        order = 2
-      )
-    ) +
-    ggplot2::facet_grid(Period ~ Scenario) +
-    ggplot2::geom_sf(
-      data = Bundeslaender,
-      mapping = ggplot2::aes(),
-      fill = NA,
-      size = 0.5,
-      color = "grey31"
-    ) +
-    ggplot2::geom_sf(
-      data = shp_lk,
-      mapping = ggplot2::aes(),
-      fill = NA,
-      size = 0.3,
-      color = "black"
-    ) +
-    ggplot2::coord_sf(
-      xlim = xlim_sf,
-      ylim = ylim_sf,
-      expand = FALSE
-    ) +
-    ggplot2::theme_bw(base_size = 8) +
-    ggplot2::xlab("") +
-    ggplot2::ylab("") +
     ggplot2::labs(
       title = plot.title,
       caption = plot.caption,
@@ -463,40 +385,41 @@ ens_12maps_relative_change <- function(netCDF.files,
     ggplot2::theme(
       plot.title = ggplot2::element_text(
         hjust = 0.5,
-        size = 8,
-        margin = ggplot2::margin(2, 0, 2, 0, "mm")
+        size = 6
       ),
-      axis.text = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank(),
+      axis.title = ggplot2::element_text(
+        hjust = 0.5,
+        size = 5,
+        margin = ggplot2::margin(rep(2, 4), unit = "mm")
+      ),
+      axis.text = ggplot2::element_text(
+        hjust = 0.5,
+        size = 5,
+        colour = "black"
+      ),
+      axis.text.x = ggplot2::element_text(
+        angle = 90
+      ),
+      panel.spacing = ggplot2::unit(2, "mm"),
       plot.caption = ggplot2::element_text(
         hjust = c(0),
-        size = 6,
+        size = 4,
         colour = "blue",
-        margin = ggplot2::margin(2, 0, 2, 0, "mm")
+        margin = ggplot2::margin(2, 0, 0, 0, unit = "mm")
       )
     ) +
+
+    # set legend
     ggplot2::theme(
-      legend.position = "bottom",
-      legend.direction = "horizontal",
-      legend.key.width = ggplot2::unit(10, "mm"),
-      legend.key.height = ggplot2::unit(2, "mm"),
-      legend.text = ggplot2::element_text(
-        colour = "black",
-        size = 5,
-        family = "sans"
-      ),
-      legend.title = ggplot2::element_text(
-        colour = "black",
-        size = 6,
-        family = "sans"
-      ),
-      legend.title.align = 0.5
-    ) +
-    # format plot background
-    ggplot2::theme(
-      panel.background = ggplot2::element_rect(fill = "grey77"),
-      plot.margin = ggplot2::margin(0, 0, 0, 0, "mm")
+      legend.title = ggplot2::element_blank(),
+      legend.key.size = ggplot2::unit(4, "mm"),
+      legend.margin = ggplot2::margin(rep(0, 4), unit = "mm"),
+      legend.text = ggplot2::element_text(size = 5)
     )
+
+  # # add logo
+  # ggplot2::annotation_custom(KlimaKonform_img
+  # )
 
   # post-plot ---------------------------------------------------------------
 
@@ -505,20 +428,13 @@ ens_12maps_relative_change <- function(netCDF.files,
     filename = plot_name,
     units = "mm",
     width = 120,
-    height = 150,
+    height = 60,
     dpi = 300,
     device = "png"
   )
 
   # write csv to disk
-
-  crunch::write.csv.gz(
-    x = na.omit(var_plotting) %>%
-      dplyr::mutate_if(is.numeric, round, digits = 3),
-    quote = FALSE,
-    file = csv_name,
-    row.names = F
-  )
+  # no need boxplots csv files works as well
 
   # End ---------------------------------------------------------------------
   # clean

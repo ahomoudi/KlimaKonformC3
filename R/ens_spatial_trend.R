@@ -4,7 +4,7 @@
 #'  considering 3 RCPs and placed in the desired the out put directory.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
-#' @param variable inside these netCDf files, e.g., AET
+#' @param variable inside these netCDF files, e.g., AET
 #' @param region A string referring to the region to plot; "total",
 #' "Vogtlandkreis", "Burgenlandkreis", "Greiz", and "Altenburger Land".
 #' @param landcover A numeric variable indicating which land cover should be

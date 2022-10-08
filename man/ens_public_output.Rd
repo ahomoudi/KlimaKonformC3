@@ -3,7 +3,7 @@
 \name{ens_public_output}
 \alias{ens_public_output}
 \title{Plotting one informative plot containing, relative change maps,
-boxplots and time series.}
+box plots and time series.}
 \usage{
 ens_public_output(
   netCDF.file,
@@ -50,7 +50,7 @@ PNG
 }
 \description{
 A function that receives one netCDF files, and variable name,
-statistical ensemble member and plot 4 maps, boxplots, & timeseries considering one RCPs.
+statistical ensemble member and plot 4 maps, box plots, & time series considering one RCPs.
 it in the desired the out put directory in which the output is placed.
 the first three maps represents the mean of the historical period, and the rest
 represents the relative change to the historical period

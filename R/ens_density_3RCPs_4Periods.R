@@ -1,10 +1,10 @@
 #' @title Plotting Density of three RCPs scenarios  for four different periods
 #' @description A function that receives three netCDF files, and variable name,
 #' statistical ensemble member and plot density plots of the three scenarios for
-#' four differrnt periods.
+#' four different periods.
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
-#' @param variable inside these netCDf files, e.g., AET
+#' @param variable inside these netCDF files, e.g., AET
 #' @param region A string referring to the region to plot; "total",
 #' "Vogtlandkreis", "Burgenlandkreis", "Greiz", and "Altenburger Land".
 #' @param landcover A numeric variable indicating which land cover should be
@@ -26,14 +26,14 @@
 #' @importFrom utils globalVariables write.table
 #' @export
 ens_density_3RCPs_4Periods <- function(netCDF.files,
-                         variable,
-                         region,
-                         landcover,
-                         stat_var,
-                         language,
-                         run_id,
-                         output_path,
-                         output_csv) {
+                                       variable,
+                                       region,
+                                       landcover,
+                                       stat_var,
+                                       language,
+                                       run_id,
+                                       output_path,
+                                       output_csv) {
 
 
   # check files
@@ -44,13 +44,13 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
     message("Producing Plots in German")
 
     utils::data("standard_output_de",
-                envir = environment()
+      envir = environment()
     )
   } else if (language == "EN") {
     message("Producing Plots in English")
 
     utils::data("standard_output_en",
-                envir = environment()
+      envir = environment()
     )
   } else {
     stop("Please select a language, either \"EN\" or \"DE\"")
@@ -91,8 +91,8 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
     shp_ext <- sf::st_bbox(shp_lk)
 
     r.rast <- lapply(r.rast,
-                     FUN = terra::mask,
-                     mask = terra::vect(shp_lk)
+      FUN = terra::mask,
+      mask = terra::vect(shp_lk)
     )
 
     LC <- terra::mask(
@@ -156,8 +156,8 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
       values_to = "Kvalue"
     )
 
-  var_plotting2 <- var_plotting%>%
-    dplyr::group_by(Period,Scenario) %>%
+  var_plotting2 <- var_plotting %>%
+    dplyr::group_by(Period, Scenario) %>%
     dplyr::summarise(Kvalue = mean(Kvalue))
 
   # clean some memory
@@ -335,33 +335,36 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
 
   x.limits <- setting_nice_limits(x.axis.min, x.axis.max)
 
- x.axis.max <- x.limits[2]
+  x.axis.max <- x.limits[2]
   x.axis.min <- x.limits[1]
 
   # colors
   rcps_colours <- c("#003466", "#70A0CD", "#990002")
 
   # plot --------------------------------------------------------------------
-  figure <-  ggplot2::ggplot(
+  figure <- ggplot2::ggplot(
     data = var_plotting,
     mapping = ggplot2::aes(
       x = Kvalue,
       color = Scenario
-    ))+
-    ggplot2::geom_density(size=0.25)+
+    )
+  ) +
+    ggplot2::geom_density(size = 0.25) +
     ggplot2::geom_vline(
       data = var_plotting2,
-      ggplot2::aes(xintercept=Kvalue,
-                   group = Period,
-                   color=Scenario),
-                 linetype="longdash",
-                 size=0.25)+
-
+      ggplot2::aes(
+        xintercept = Kvalue,
+        group = Period,
+        color = Scenario
+      ),
+      linetype = "longdash",
+      size = 0.25
+    ) +
     ggplot2::facet_wrap(~Period,
-                        nrow = 1)+
-
+      nrow = 1
+    ) +
     ggplot2::scale_color_manual(values = rcps_colours) +
-    ggplot2::theme_bw(base_size = 6)+
+    ggplot2::theme_bw(base_size = 6) +
 
     # add axis title
     ggplot2::ylab("KDE") +
@@ -387,14 +390,14 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
       axis.title = ggplot2::element_text(
         hjust = 0.5,
         size = 5,
-        margin = ggplot2::margin(rep(2,4), unit = "mm")
+        margin = ggplot2::margin(rep(2, 4), unit = "mm")
       ),
       axis.text = ggplot2::element_text(
         hjust = 0.5,
         size = 5,
         colour = "black"
       ),
-      axis.text.x =  ggplot2::element_text(
+      axis.text.x = ggplot2::element_text(
         angle = 90
       ),
       panel.spacing = ggplot2::unit(2, "mm"),
@@ -410,7 +413,7 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
     ggplot2::theme(
       legend.title = ggplot2::element_blank(),
       legend.key.size = ggplot2::unit(4, "mm"),
-      legend.margin = ggplot2::margin(rep(0,4), unit = "mm"),
+      legend.margin = ggplot2::margin(rep(0, 4), unit = "mm"),
       legend.text = ggplot2::element_text(size = 5)
     )
 

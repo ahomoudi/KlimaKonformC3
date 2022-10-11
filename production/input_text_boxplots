@@ -1,11 +1,11 @@
-/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble/rcp26/rcp26_AET_ensemble-stats_1970-01-01_2099-12-31.nc
-/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble/rcp45/rcp45_AET_ensemble-stats_1970-01-01_2099-12-31.nc
-/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble/rcp85/rcp85_AET_ensemble-stats_1970-01-01_2099-12-31.nc
-AET
+/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble/rcp26/rcp26_yield-zr_ensemble-stats_1970-01-01_2099-12-31.nc
+/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble/rcp45/rcp45_yield-zr_ensemble-stats_1970-01-01_2099-12-31.nc
+/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf_ensemble/rcp85/rcp85_yield-zr_ensemble-stats_1970-01-01_2099-12-31.nc
+yield-zr
 Altenburger Land
 211
 DE
 min
 4ter
-/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble/211/AltenburgerLand/min/AET/AET/
-/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble/211/AltenburgerLand/min/AET/AET/
+/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble/211/AltenburgerLand/min/Yield/Yield-zr/
+/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble/211/AltenburgerLand/min/Yield/Yield-zr/

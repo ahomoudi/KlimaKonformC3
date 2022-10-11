@@ -23,7 +23,7 @@ plot_name <- paste0(
   "3XRCPs_LT_.png"
 )
 
-if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
+#if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
 ens_linear_trend(netCDF.files,
                  variable,
                  region,
@@ -33,4 +33,4 @@ ens_linear_trend(netCDF.files,
                  run_id,
                  output_path,
                  output_csv)
-}
+#}

@@ -15,6 +15,7 @@ Imports:
     dplyr,
     ggnewscale,
     ggplot2,
+    ggridges,
     lubridate,
     magick,
     magrittr,

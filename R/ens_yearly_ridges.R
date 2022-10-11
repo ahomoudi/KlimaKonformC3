@@ -1,7 +1,6 @@
-#' @title Plotting boxplot time series of the three RCPs scenarios
+#' @title Plotting ridges of the three RCPs scenarios for each decade
 #' @description A function that receives three netCDF files, and variable name,
-#' statistical ensemble member and plot three plots of the three scenarios for
-#' each year
+#' statistical ensemble member and plot ridges of the three RCPs scenarios for each decade
 #' @param netCDF.files The netCDF files that contain similar simulation
 #' variables. They should be provided including the full path to the files
 #' @param variable inside these netCDF files, e.g., AET
@@ -25,15 +24,15 @@
 #' @import stats
 #' @importFrom utils globalVariables write.table
 #' @export
-ens_yearly_boxplots <- function(netCDF.files,
-                                variable,
-                                region,
-                                landcover,
-                                stat_var,
-                                language,
-                                run_id,
-                                output_path,
-                                output_csv) {
+ens_yearly_ridges <- function(netCDF.files,
+                              variable,
+                              region,
+                              landcover,
+                              stat_var,
+                              language,
+                              run_id,
+                              output_path,
+                              output_csv) {
 
 
   # check files
@@ -295,14 +294,14 @@ ens_yearly_boxplots <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_yearly_BP_.png"
+      "3XRCPs_yearly_ridges_.png"
     )
   } else {
     plot_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_yearly_BP_.png"
+      "3XRCPs_yearly_ridges_.png"
     )
   }
   # define csv name
@@ -312,14 +311,14 @@ ens_yearly_boxplots <- function(netCDF.files,
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_yearly_BP_.csv.gz"
+      "3XRCPs_yearly_ridges_.csv.gz"
     )
   } else {
     csv_name <- paste0(
       variable, "_",
       "ensemble_",
       run_id, "_lauf_",
-      "3XRCPs_yearly_BP_.csv.gz"
+      "3XRCPs_yearly_ridges_.csv.gz"
     )
   }
 
@@ -345,40 +344,36 @@ ens_yearly_boxplots <- function(netCDF.files,
   figure <- ggplot2::ggplot(
     data = var_plotting,
     mapping = ggplot2::aes(
-      x = Period,
-      y = Kvalue,
+      x = Kvalue,
+      y = Period,
       color = Scenario,
       group = Period
     )
   ) +
-    ggplot2::geom_boxplot(
-      outlier.shape = 4,
-      outlier.size = 0.05,
-      outlier.alpha = 0.5,
-      fatten = 0.3, size = 0.2
-    ) +
-    ggplot2::stat_boxplot(
-      geom = "errorbar",
-      size = 0.2
+    ggridges::geom_density_ridges(
+      inherit.aes = T,
+      scale = 1.0,
+      size = 0.3,
+      # color =Scenario,
     ) +
     ggplot2::facet_wrap(~Scenario,
-      nrow = 3
+      nrow = 1
     ) +
     ggplot2::scale_color_manual(values = rcps_colours) +
     ggplot2::theme_bw(base_size = 6) +
 
     # add axis title
-    ggplot2::ylab(paste0(
+    ggplot2::xlab(paste0(
       var_name,
       " [", var_units, "]"
     )) +
-    ggplot2::xlab("") +
+    ggplot2::ylab("") +
     # set axis breaks
-    ggplot2::scale_y_continuous(
+    ggplot2::scale_x_continuous(
       limits = c(y.axis.min, y.axis.max),
       expand = c(0, 0)
     ) +
-    ggplot2::scale_x_continuous(
+    ggplot2::scale_y_continuous(
       limits = c(1960, 2100),
       expand = c(0, 0),
       breaks = seq(1960, 2100, 10)
@@ -403,7 +398,7 @@ ens_yearly_boxplots <- function(netCDF.files,
         size = 5,
         colour = "black"
       ),
-      panel.spacing = ggplot2::unit(2, "mm"),
+      panel.spacing = ggplot2::unit(5, "mm"),
       plot.caption = ggplot2::element_text(
         hjust = c(0),
         size = 4,
@@ -423,7 +418,7 @@ ens_yearly_boxplots <- function(netCDF.files,
     plot = figure,
     filename = plot_name,
     units = "mm",
-    width = 100,
+    width = 115,
     height = 100,
     dpi = 300,
     device = "png"

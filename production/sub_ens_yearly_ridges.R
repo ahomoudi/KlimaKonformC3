@@ -1,5 +1,5 @@
 unlink(".RData")
-args_in<-readLines("input_text_boxplots")
+args_in<-readLines("input_text_yearly_boxplots")
 
 netCDF.files <-args_in[1:3]
 variable <- args_in[4]
@@ -14,16 +14,8 @@ output_csv <- args_in[11]
 
 library(KlimaKonformC3)
 
-plot_name <- paste0(
-  output_path,
-  variable, "_",
-  "ensemble_",
-  run_id, "_lauf_",
-  "3XRCPs_BP_.png"
-)
-
 #if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
-ens_boxplots(netCDF.files,
+ens_yearly_ridges(netCDF.files,
                  variable,
                  region,
                  landcover,

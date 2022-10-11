@@ -252,6 +252,25 @@ boxplot_df <- function(x) {
   )
   return(r.periods)
 }
+# yearly_boxplots_df
+yearly_boxplot_df <- function(x) {
+  # x<-r.rast[[1]]
+
+  r.df <- terra::as.data.frame(x)
+
+  r.time <- as.Date(terra::time(x))
+
+  colnames(r.df) <- lubridate::year(r.time)
+
+  r.df$ID <- 1:nrow(r.df)
+
+  r.df <- tidyr::pivot_longer(r.df,
+    cols = -c("ID"),
+    names_to = "Period",
+    values_to = "Kvalue"
+  )
+  return(r.df)
+}
 
 lm_fun <- function(x, x.time) {
   if (all(is.na(x))) {

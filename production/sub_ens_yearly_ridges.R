@@ -1,5 +1,5 @@
 unlink(".RData")
-args_in<-readLines("input_text_yearly_boxplots")
+args_in<-readLines("input_text_yearly_ridges")
 
 netCDF.files <-args_in[1:3]
 variable <- args_in[4]

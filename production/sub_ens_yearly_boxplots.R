@@ -13,8 +13,14 @@ output_csv <- args_in[11]
 
 
 library(KlimaKonformC3)
-
-#if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
+plot_name <- paste0(
+  output_path,
+  variable, "_",
+  "ensemble_",
+  run_id, "_lauf_",
+  "3XRCPs_yearly_BP_.png"
+)
+if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
 ens_yearly_boxplots(netCDF.files,
                  variable,
                  region,
@@ -24,5 +30,5 @@ ens_yearly_boxplots(netCDF.files,
                  run_id,
                  output_path,
                  output_csv)
-#}
+}
 warnings()

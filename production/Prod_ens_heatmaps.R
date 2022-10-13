@@ -10,7 +10,7 @@ nc.files <- list.files(
   recursive = T,
   full.names = T
 )
-stat_variables <- c("mean", "sd", "median", "max", "min")
+stat_variables <- c("mean")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/2ter_lauf_ensemble"
 output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
@@ -31,8 +31,6 @@ meta_df_prod <- as.data.frame(do.call(rbind, lapply(nc.files, FUN = str_split_cu
 vars <- unique(meta_df_prod[c("V2")])
 
 regions <- c("total", "Vogtlandkreis", "Burgenlandkreis", "Greiz", "Altenburger Land")
-
-stat_variables <- c("mean", "sd", "median", "max", "min")
 
 landcover_variables <- c(1000, 211)
 
@@ -122,12 +120,11 @@ for (ivar in 1:nrow(vars)) {
                             regions[iregion],
                             landcover_variables[ilandcover],
                             "DE",
-                            stat_variables[istat],
                             "2ter",
                             output_folder,
-                            output_csv_folder), "input_text_yearly_ridges" )
+                            output_csv_folder), "input_text_heatmaps" )
 
-        system("R CMD BATCH sub_ens_yearly_ridges.R")
+        system("R CMD BATCH sub_ens_heatmaps.R")
 
         gc()
       }
@@ -157,7 +154,7 @@ nc.files <- list.files(
 
 # remove SOC files
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
-stat_variables <- c("mean", "sd", "median", "max", "min")
+stat_variables <- c("mean")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/3ter_lauf_ensemble"
 output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
@@ -178,8 +175,6 @@ meta_df_prod <- as.data.frame(do.call(rbind, lapply(nc.files, FUN = str_split_cu
 vars <- unique(meta_df_prod[c("V2")])
 
 regions <- c("total", "Vogtlandkreis", "Burgenlandkreis", "Greiz", "Altenburger Land")
-
-stat_variables <- c("mean", "sd", "median", "max", "min")
 
 landcover_variables <- c(1000, 211)
 
@@ -269,14 +264,13 @@ for (ivar in 1:nrow(vars)) {
                             regions[iregion],
                             landcover_variables[ilandcover],
                             "DE",
-                            stat_variables[istat],
                             "3ter",
                             output_folder,
-                            output_csv_folder), "input_text_yearly_ridges" )
+                            output_csv_folder), "input_text_heatmaps" )
 
-        system("R CMD BATCH sub_ens_yearly_ridges.R")
+        system("R CMD BATCH sub_ens_heatmaps.R")
+
         gc()
-
       }
     }
   }
@@ -304,7 +298,7 @@ nc.files <- list.files(
 
 # remove SOC files
 nc.files<-nc.files[-grep("_SOC_", nc.files)]
-stat_variables <- c("mean", "sd", "median", "max", "min")
+stat_variables <- c("mean")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble"
 output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
@@ -325,8 +319,6 @@ meta_df_prod <- as.data.frame(do.call(rbind, lapply(nc.files, FUN = str_split_cu
 vars <- unique(meta_df_prod[c("V2")])
 
 regions <- c("total", "Vogtlandkreis", "Burgenlandkreis", "Greiz", "Altenburger Land")
-
-stat_variables <- c("mean", "sd", "median", "max", "min")
 
 landcover_variables <- c(1000, 211)
 
@@ -416,14 +408,13 @@ for (ivar in 1:nrow(vars)) {
                             regions[iregion],
                             landcover_variables[ilandcover],
                             "DE",
-                            stat_variables[istat],
                             "4ter",
                             output_folder,
-                            output_csv_folder), "input_text_yearly_ridges" )
+                            output_csv_folder), "input_text_heatmaps" )
 
-        system("R CMD BATCH sub_ens_yearly_ridges.R")
+        system("R CMD BATCH sub_ens_heatmaps.R")
 
-                         gc()
+        gc()
       }
     }
   }

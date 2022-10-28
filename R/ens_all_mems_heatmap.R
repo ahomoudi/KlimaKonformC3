@@ -238,7 +238,6 @@ ens_all_mems_heatmap <- function(netCDF.files,
       run_id, "_lauf_",
       "3XRCPs_heatmaps_.csv.gz"
     )
-
   } else {
     csv_name <- paste0(
       variable, "_",
@@ -246,7 +245,6 @@ ens_all_mems_heatmap <- function(netCDF.files,
       run_id, "_lauf_",
       "3XRCPs_heatmaps_.csv.gz"
     )
-
   }
 
   # pre-plot --------------------------------------------------------------------
@@ -291,9 +289,10 @@ ens_all_mems_heatmap <- function(netCDF.files,
       )
     ) +
     ggplot2::theme_bw(base_size = 6) +
-
-    ggplot2::labs(title = plot.title,
-                  caption = plot.caption)+
+    ggplot2::labs(
+      title = plot.title,
+      caption = plot.caption
+    ) +
 
     # set axis breaks
     ggplot2::scale_x_date(
@@ -360,7 +359,7 @@ ens_all_mems_heatmap <- function(netCDF.files,
   ) +
     ggplot2::geom_tile() +
     ggplot2::facet_wrap(~Ensemble,
-                        nrow = 5
+      nrow = 5
     ) +
     ggplot2::scale_fill_gradientn(
       colors = rcps_colours_temp(50),
@@ -376,11 +375,12 @@ ens_all_mems_heatmap <- function(netCDF.files,
       )
     ) +
     ggplot2::theme_bw(base_size = 6) +
-
-    ggplot2::labs(title = plot.title,
-                  caption = plot.caption)+
-    ggplot2::xlab("")+
-    ggplot2::ylab("")+
+    ggplot2::labs(
+      title = plot.title,
+      caption = plot.caption
+    ) +
+    ggplot2::xlab("") +
+    ggplot2::ylab("") +
 
     # set axis breaks
     ggplot2::scale_x_date(

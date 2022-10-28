@@ -411,18 +411,18 @@ relative_change_four_periods <- function(x) {
 heatmaps_5vars_3RCP <- function(x) {
 
   # x<-r.rast[[1]]
-  #x<- terra::rast(netCDF.files[1])
+  # x<- terra::rast(netCDF.files[1])
 
   r.time <- as.Date(terra::time(x))
 
-  r.mean<-vector(length = terra::nlyr(x))
+  r.mean <- vector(length = terra::nlyr(x))
 
-  for(ilyr in 1:terra::nlyr(x)){
-    r.mean[ilyr]<-terra::global(x[[ilyr]], fun="mean", na.rm=T)
+  for (ilyr in 1:terra::nlyr(x)) {
+    r.mean[ilyr] <- terra::global(x[[ilyr]], fun = "mean", na.rm = T)
   }
-  r.mean<-unlist(r.mean)
-  #old approach, not time consuming rather memory
-  #r.mean <- apply(terra::as.array(x), MARGIN = c(3), mean, na.rm = T)
+  r.mean <- unlist(r.mean)
+  # old approach, not time consuming rather memory
+  # r.mean <- apply(terra::as.array(x), MARGIN = c(3), mean, na.rm = T)
 
   r.names <- stringr::str_to_title(sub("_.*", "", names(x)))
 

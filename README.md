@@ -3,6 +3,8 @@
 
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License: GPL v3.0](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![R-CMD-check](https://github.com/ahmathlete/KlimaKonformC3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ahmathlete/KlimaKonformC3/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of KlimaKonformC3 is to analyse the Agricultural Simulations performed within of the Projekt KlimaKonform (TB C3 Landwirtschaft)

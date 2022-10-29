@@ -30,3 +30,7 @@ library(KlimaKonformC3)
 ## basic example code
 ```
 
+## Contact
+
+Please file bug reports and feature requests at
+<https://github.com/ahmathlete/KlimaKonformC3/issues>

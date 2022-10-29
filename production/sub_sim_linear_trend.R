@@ -13,12 +13,35 @@ output_csv <- args_in[7]
 
 library(KlimaKonformC3)
 
-sim_linear_trend(netCDF.file,
-                 variable,
-                 region,
-                 landcover,
-                 language,
-                 run_id,
-                 output_path,
-                 output_csv)
+tmp <- unlist(stringr::str_split(netCDF.file, "/"))
+netCDF.file_withoutpath <- tmp[length(tmp)]
 
+plot_name <- paste0(
+  output_path,
+  gsub(".nc", "_LT_.png", x = netCDF.file_withoutpath)
+)
+
+if(!file.exists(plot_name)){
+  print(plot_name)
+
+  sim_linear_trend(netCDF.file = netCDF.file,
+                   region = region,
+                   landcover = landcover,
+                   y.axis.limits = NA,
+                   language = language,
+                   run_id = run_id,
+                   output_path = output_path,
+                   output_csv = output_csv)
+
+}
+
+
+
+#test
+# netCDF.file = netCDF.file
+# region = region
+# landcover = landcover
+# language = language
+# run_id = run_id
+# output_path = output_path
+# output_csv = output_csv

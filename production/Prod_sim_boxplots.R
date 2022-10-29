@@ -110,9 +110,9 @@ for (ifile in 1:length(nc.files)){
                           "DE",
                           "2ter",
                           output_folder,
-                          output_csv_folder), "input_text_linear_trend" )
+                          output_csv_folder), "input_text_boxplots" )
 
-      system("R CMD BATCH sub_sim_linear_trend.R")
+      system("R CMD BATCH sub_sim_boxplots.R")
 
     }
   }
@@ -232,9 +232,9 @@ for (ifile in 1:length(nc.files)){
                           "DE",
                           "3ter",
                           output_folder,
-                          output_csv_folder), "input_text_linear_trend" )
+                          output_csv_folder), "input_text_boxplots" )
 
-      system("R CMD BATCH sub_sim_linear_trend.R")
+      system("R CMD BATCH sub_sim_boxplots.R")
 
     }
   }
@@ -353,9 +353,9 @@ for (ifile in 1:length(nc.files)){
                           "DE",
                           "4ter",
                           output_folder,
-                          output_csv_folder), "input_text_linear_trend" )
+                          output_csv_folder), "input_text_boxplots" )
 
-      system("R CMD BATCH sub_sim_linear_trend.R")
+      system("R CMD BATCH sub_sim_boxplots.R")
 
     }
   }

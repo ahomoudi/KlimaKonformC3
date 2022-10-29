@@ -24,8 +24,6 @@ str_split_custom <- function(X) {
 
 # convert NetCDF files to metada dataframe
 meta_df_prod <- as.data.frame(do.call(rbind, lapply(nc.files, FUN = str_split_custom)))
-meta_df_prod$minimum<-NA
-meta_df_prod$maximum<-NA
 
 start_time <- Sys.time()
 minmax_df<-lapply(nc.files, function(x){
@@ -134,19 +132,41 @@ nc.files<-nc.files[-grep("_SOC_", nc.files)]
 # convert NetCDF files to metada dataframe
 meta_df_prod <- as.data.frame(do.call(rbind, lapply(nc.files, FUN = str_split_custom)))
 
-meta_df_prod$minimum<-NA
-meta_df_prod$maximum<-NA
+start_time <- Sys.time()
+minmax_df<-lapply(nc.files, function(x){
 
-for(ifile in 1:length(nc.files)){
-  r<-terra::rast(nc.files[ifile])
+  r<-terra::rast(x)
 
-  meta_df_prod$minimum[ifile]<-min(terra::values(r), na.rm = T)
-  meta_df_prod$maximum[ifile]<-max(terra::values(r), na.rm = T)
+  y<-c(min(terra::values(r), na.rm = T),
+       max(terra::values(r), na.rm = T))
 
-  rm(r);gc()
-}
+  #rm(r);gc()
+  return(y)
+})
+
+minmax_df<-Reduce(minmax_df, f = rbind)
+
+meta_df_prod<-cbind(meta_df_prod,minmax_df)
+end_time <- Sys.time()
+end_time - start_time
 
 colnames(meta_df_prod)<-c("sim_id","variable","GCM","RCM", "rcp",
                           "ensemble", "version","start", "end","minimum","maximum")
-data.table::fwrite(meta_df_prod,
+data.table::fwrite(meta_df_prod %>%
+                     dplyr::mutate_if(is.numeric, round, digits = 3),
                    "~/CloudStore/Nextcloud/Shared/KlimaKonform-Results/info_simulations/4ter_lauf.csv")
+
+
+#ätest
+rbenchmark::benchmark("values" = {
+  x<-max(r[1:ncell(r)], na.rm = T)
+
+
+},
+
+"access" = {
+
+  y <- max(terra::values(r), na.rm = T)
+
+},
+replications = 10)

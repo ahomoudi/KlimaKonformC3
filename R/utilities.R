@@ -2,9 +2,7 @@
 
 # mean of SpatRaster
 f1_mean <- function(x) {
-  y <- terra::as.array(x) %>%
-    apply(MARGIN = c(3), FUN = mean, na.rm = TRUE)
-
+  y <- terra::global(x, "mean", na.rm = T)
   return(y)
 }
 
@@ -12,16 +10,14 @@ f1_mean <- function(x) {
 
 # max of spatRaster in vector forum
 f1_max <- function(x) {
-  y <- terra::as.array(x) %>%
-    apply(MARGIN = c(3), FUN = max, na.rm = TRUE)
+  y <- terra::global(x, "max", na.rm = T)
 
   return(y)
 }
 
 # min
 f1_min <- function(x) {
-  y <- terra::as.array(x) %>%
-    apply(MARGIN = c(3), FUN = min, na.rm = TRUE)
+  y <- terra::global(x, "min", na.rm = T)
 
   return(y)
 }

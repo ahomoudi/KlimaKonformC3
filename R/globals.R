@@ -15,5 +15,7 @@ utils::globalVariables(c(
   "land_cover_legend",
   "standard_output_de",
   "standard_output_en",
-  "Ensemble"
+  "Ensemble",
+  "Date",
+  "corners"
 ))

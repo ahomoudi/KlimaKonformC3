@@ -6,3 +6,4 @@
 ^production
 ^.github
 ^\.github$
+^README.html

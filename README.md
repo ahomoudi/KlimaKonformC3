@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # KlimaKonformC3
 
 <!-- badges: start -->
@@ -19,7 +13,6 @@ version](https://img.shields.io/github/r-package/v/ahmathlete/KlimaKonformC3)
 ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/ahmathlete/KlimaKonformC3/v2.0.0?style=plastic)
 
 <!-- badges: end -->
-<p align="right"; style="font-size:11px">Original project logo was modified with @ColinFay's awesome [hexmake](https://connect.thinkr.fr/hexmake/) tool</p>
 <img align="right" width="200" src="man/figures/logo.png">
 
 The goal of KlimaKonformC3 is to analyse the Agricultural Simulations
@@ -66,3 +59,7 @@ library(KlimaKonformC3)
 
 Please file bug reports and feature requests at
 <https://github.com/ahmathlete/KlimaKonformC3/issues>
+
+
+## Disclaimer: 
+The Original project is on the official project website mentioned above. The logo here is modified with @ColinFay's awesome [hexmake](https://connect.thinkr.fr/hexmake/) tool.

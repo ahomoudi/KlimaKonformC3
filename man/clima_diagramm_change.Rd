@@ -2,7 +2,7 @@
 % Please edit documentation in R/clima_diagramm_change.R
 \name{clima_diagramm_change}
 \alias{clima_diagramm_change}
-\title{Plot the relative change as climate diagram for grid points from the climate data used to run the Monica models.}
+\title{Climate Diagram (Relative)}
 \usage{
 clima_diagramm_change(data, run_id, output_path)
 }
@@ -19,7 +19,8 @@ to the simulation setup file.}
 PNG
 }
 \description{
-The function receives a data frame, preferable prepared by the
+Plot the relative change as climate diagram for grid points from the climate
+data used to run the Monica model. The function receives a data frame, preferable prepared by the
 R code '/production/Prod_klima_diagramm_4corners.R'. The input data are representing grids
 the KlimaKonform model region. All meta data required to plot this are either
 the production script or the function here.

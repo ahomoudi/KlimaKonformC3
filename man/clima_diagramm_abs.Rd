@@ -2,13 +2,13 @@
 % Please edit documentation in R/clima_diagramm_abs.R
 \name{clima_diagramm_abs}
 \alias{clima_diagramm_abs}
-\title{Plot the absolute climate diagram for grid points from the climate data used to run the Monica models.}
+\title{Climate Diagram (Absolute)}
 \usage{
 clima_diagramm_abs(data, run_id, output_path)
 }
 \arguments{
 \item{data}{A data frame containing the daily data to be plotted. The data should contain
-min, max, and mean temperature and precipitation. For only three locations, e.g., MO, MM, and MU.}
+min, max, and mean temperature and precipitation. For only three locations, e.g., MO or Greiz.}
 
 \item{run_id}{A character variable either pointing out the run id, please refer
 to the simulation setup file.}
@@ -19,9 +19,10 @@ to the simulation setup file.}
 PNG
 }
 \description{
-The function receives a data frame, preferable prepared by the
-R code '/production/Prod_klima_diagramm_4corners.R'. The input data are representing grids
-the KlimaKonform model region. All meta data required to plot this are either
+Plot the absolute climate diagram for grid points from the climate data used to run the Monica models.
+The function receives a data frame, preferable prepared by the R code
+'/production/Prod_klima_diagramm_4corners.R'. The input data are representing grids
+in the KlimaKonform model region or at least Regions. All meta data required to plot this are either
 the production script or the function here.
 }
 \seealso{

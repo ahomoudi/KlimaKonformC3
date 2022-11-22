@@ -7,7 +7,7 @@
 clima_plot_cornors(data, run_id, output_path)
 }
 \arguments{
-\item{data}{A data frame containg the data to be plotted.}
+\item{data}{A data frame containing the data to be plotted.}
 
 \item{run_id}{A character variable either pointing out the run id, please refer
 to the simulation setup file.}
@@ -18,8 +18,8 @@ to the simulation setup file.}
 PNG
 }
 \description{
-The function receives a data frame, preferable prepaped by the
-R code '/production/Prod_klima_corners.R'. The input data are rpresenting  grids
+The function receives a data frame, preferable prepared by the
+R code '/production/Prod_klima_corners.R'. The input data are representing  grids
 the KlimaKonform model region. All meta data required to plot this are either
 the production script or the function here.
 }

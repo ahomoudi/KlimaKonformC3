@@ -61,5 +61,5 @@ Please file bug reports and feature requests at
 <https://github.com/ahmathlete/KlimaKonformC3/issues>
 
 
-## Disclaimer: 
-The Original project is on the official project website mentioned above. The logo here is modified with @ColinFay's awesome [hexmake](https://connect.thinkr.fr/hexmake/) tool.
+## Disclaimer
+The Original project logo is on the official project website mentioned above. The logo here is modified with @ColinFay's awesome [hexmake](https://connect.thinkr.fr/hexmake/) tool.

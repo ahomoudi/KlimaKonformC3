@@ -80,8 +80,19 @@ for(idir in 1:length(dirs)){
            "RO", #0,133
            "RM")
 
-  clima_plot_cornors(data=klima_df%>%dplyr::filter(corners=="MO"|corners=="MM"|corners=="MU"),
-                     run_id = run_id,
-                     output_path = paste0(dirs[idir],"/"))
+  corners<-unique(klima_df$corners)
+
+  for( icorner in 1:length(corners)){
+    #icorner<-1
+    sub_df<-klima_df%>%dplyr::filter(corners==corners[icorner])
+
+
+    # calculate statistics
+
+    clima_plot_cornors(data=,
+                       run_id = run_id,
+                       output_path = paste0(dirs[idir],"/"))
+  }
+
 
 }

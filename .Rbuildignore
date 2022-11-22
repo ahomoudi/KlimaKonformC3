@@ -7,3 +7,5 @@
 ^.github
 ^\.github$
 ^README.html
+^_pkgdown\.yml$
+^pkgdown$

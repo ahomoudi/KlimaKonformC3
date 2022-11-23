@@ -9,4 +9,3 @@
 ^README.html
 ^_pkgdown\.yml$
 ^pkgdown$
-^\.travis\.yml$

@@ -11,7 +11,6 @@ v3.0](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.or
 version](https://img.shields.io/github/r-package/v/ahmathlete/KlimaKonformC3)
 ![GitHub last commit](https://img.shields.io/github/last-commit/ahmathlete/KlimaKonformC3)
 ![GitHub commits since tagged version](https://img.shields.io/github/commits-since/ahmathlete/KlimaKonformC3/v2.0.0?style=plastic)
-[![Travis build status](https://travis-ci.com/ahmathlete/KlimaKonformC3.svg?branch=main)](https://travis-ci.com/ahmathlete/KlimaKonformC3)
 <!-- badges: end -->
 
 The goal of KlimaKonformC3 is to analyse the Agricultural Simulations

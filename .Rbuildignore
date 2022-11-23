@@ -2,10 +2,8 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^LICENSE\.md$
-^docs$
 ^production
 ^.github
 ^\.github$
 ^README.html
 ^_pkgdown\.yml$
-^pkgdown$

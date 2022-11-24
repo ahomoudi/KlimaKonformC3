@@ -1,9 +1,9 @@
 #' @title Plot climate data used to run the Monica models.
-#' @description  The function receives a data frame, preferable prepaped by the
-#' R code '/production/Prod_klima_corners.R'. The input data are rpresenting  grids
+#' @description  The function receives a data frame, preferable prepared by the
+#' R code '/production/Prod_klima_corners.R'. The input data are representing  grids
 #' the KlimaKonform model region. All meta data required to plot this are either
 #' the production script or the function here.
-#' @param data A data frame containg the data to be plotted.
+#' @param data A data frame containing the data to be plotted.
 #' @param run_id A character variable either pointing out the run id, please refer
 #'  to the simulation setup file.
 #' @param output_path A string pointing to the output directory for output plot

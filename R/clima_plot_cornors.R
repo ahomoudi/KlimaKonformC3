@@ -67,7 +67,7 @@ clima_plot_cornors <- function(data,
           col = corners,
           group = corners
         ),
-        size = 0.2
+        size = 0.35
       ) +
       ggplot2::theme_bw(base_size = 6) +
       ggplot2::scale_y_continuous(

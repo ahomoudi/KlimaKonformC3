@@ -4,19 +4,23 @@
 \alias{clima_diagramm_abs}
 \title{Climate Diagram (Absolute)}
 \usage{
-clima_diagramm_abs(data, run_id, output_path)
+clima_diagramm_abs(data, temp_precip_mean, location, language, run_id)
 }
 \arguments{
-\item{data}{A data frame containing the daily data to be plotted. The data should contain
-min, max, and mean temperature and precipitation. For only three locations, e.g., MO or Greiz.}
+\item{data}{A data frame containing the data to be plotted. The data should contain
+min, max, and mean temperature and precipitation.}
+
+\item{temp_precip_mean}{A vector of the long term average of temperature and precipitation.}
+
+\item{location}{A character referring to the location of the data, e.g., "Greiz".}
+
+\item{language}{A character variable either "EN" or "DE", to specify the languages of plots.}
 
 \item{run_id}{A character variable either pointing out the run id, please refer
 to the simulation setup file.}
-
-\item{output_path}{A string pointing to the output directory for output plot}
 }
 \value{
-PNG
+ggplot2 plot
 }
 \description{
 Plot the absolute climate diagram for grid points from the climate data used to run the Monica models.

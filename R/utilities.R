@@ -473,3 +473,10 @@ rcps_colours_precip <- function(n) {
 
   return(rcps_colours(n))
 }
+
+month.abb.DE <- c(
+  "Jan", "Feb", "Mrz",
+  "Apr", "Mai", "Jun",
+  "Jul", "Aug", "Sep",
+  "Okt", "Nov", "Dez"
+)

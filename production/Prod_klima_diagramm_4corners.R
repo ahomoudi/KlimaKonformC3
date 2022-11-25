@@ -184,8 +184,10 @@ for(idir in 1:length(dirs)){
 
 
     # get P1
-    clima_diagramm_abs(data = data_seasonal%>% dplyr::filter(Period =="1971-2000"),
+    p1<-clima_diagramm_abs(data = data_seasonal%>% dplyr::filter(Period =="1971-2000"),
                        temp_precip_mean = data_longterm[1,c(4,2)],
+                       location =corners[icorner],
+                       language = "DE",
                        run_id = run_id)
 
 
@@ -197,27 +199,6 @@ for(idir in 1:length(dirs)){
 
 
 
-
-
-    ggplot2::ggplot(data = data_seasonal,
-                    mapping = ggplot2::aes(x = MONTH))+
-
-      ggplot2::geom_col(mapping = ggplot2::aes(
-        y = Precip))+
-
-      ggplot2::geom_line(mapping = ggplot2::aes(
-        y = Tmin))+
-
-      ggplot2::facet_grid(Period~corners)+
-
-      ggplot2::scale_y_continuous(breaks = seq(-10,50,5),
-                                  sec.axis = ggplot2::sec_axis(~.*100))
-
-    # calculate statistics
-
-    clima_plot_cornors(data=,
-                       run_id = run_id,
-                       output_path = paste0(dirs[idir],"/"))
   }
 
 

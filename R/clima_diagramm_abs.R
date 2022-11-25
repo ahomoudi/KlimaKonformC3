@@ -8,10 +8,11 @@
 #'
 #' @param data A data frame containing the data to be plotted. The data should contain
 #' min, max, and mean temperature and precipitation.
-#' @param temp_precip_mean A vector of the long term average of temperature and pürecipition
+#' @param temp_precip_mean A vector of the long term average of temperature and precipitation.
+#' @param location A character referring to the location of the data, e.g., "Greiz".
 #' @param run_id A character variable either pointing out the run id, please refer
 #'  to the simulation setup file.
-#' @param output_path A string pointing to the output directory for output plot.
+#' @param language A character variable either "EN" or "DE", to specify the languages of plots.
 #'
 #' @author Ahmed Homoudi
 #' @return  ggplot2 plot
@@ -22,54 +23,141 @@
 #'
 clima_diagramm_abs <- function(data,
                                temp_precip_mean,
+                               location,
+                               language,
                                run_id) {
 
 
 
-  # change to month
-
-  data$MONTH<-month.abb[data$MONTH]
-  data$MONTH<-factor(data$MONTH, levels = month.abb)
-
-
+  # Niederschlagssumme (mm)  Rainfall Sum (mm)
+  # Lufttemperatur max, mit, min Air temperature max, mean, min
 
 
   # plot
+  ylim.prim <- c(-5, 50) # in this example, temperature
+  ylim.sec <- c(-10, 100) # in this example, precipitation
 
-  ylim.prim <- c(-5,50)   # in this example, temperature
-  ylim.sec <- c(-10,100)    # in this example, precipitation
+  b <- diff(ylim.prim) / diff(ylim.sec)
+  a <- ylim.prim[1] - b * ylim.sec[1] # there was a bug here
 
-  b <- diff(ylim.prim)/diff(ylim.sec)
-  a <- ylim.prim[1] - b*ylim.sec[1] # there was a bug here
+  # language
+  if (language == "DE") {
+    message("Producing Plots in German")
 
-ggplot(climate, aes(Month, Precip)) +
-  geom_col() +
-  geom_line(aes(y = a + Temp*b), color = "red") +
-  scale_y_continuous("Precipitation", sec.axis = sec_axis(~ (. - a)/b, name = "Temperature")) +
-  scale_x_continuous("Month", breaks = 1:12) +
-  ggtitle("Climatogram for Oslo (1961-1990)")
+    # change to month
+    data$MONTH <- month.abb.DE[data$MONTH]
+    data$MONTH <- factor(data$MONTH, levels = month.abb.DE)
 
+    labels_replace <- function(x) {
+      stringr::str_replace(
+        pattern = "Precip",
+        replacement = "N",
+        x
+      )
+    }
+    # Melt
+    data <- data %>%
+      tidyr::pivot_longer(-c("Period", "MONTH"),
+        names_to = "variables",
+        values_to = "Kvalue"
+      )
 
-  unique(data$Period)
+    data$variables <- paste(data$variables, data$Period)
 
-  ggplot2::ggplot(data = data)+
-    ggplot2::geom_col(mapping = ggplot2::aes(x = MONTH,
-                                             y = Precip))+
-    ggplot2::geom_path(mapping = ggplot2::aes(x = MONTH,
-                                              y = Tmin,
-                                              group=1),
-                       linetype = "dotted")+
-    ggplot2::geom_path(mapping = ggplot2::aes(x = MONTH,
-                                              y = Tavg,
-                                              group=1),
-                       linetype = "solid")+
-    ggplot2::geom_path(mapping = ggplot2::aes(x = MONTH,
-                                              y = Tmax,
-                                              group=1),
-                       linetype = "dashed")+
-
-    ggplot2::scale_y_continuous(limits = ylim.prim,
-                                sec.axis = ggplot2::sec_axis(~ (. - a)/b, name = "precipitation") )
+    # subtitles
+    Tavg <- unname(unlist(round(temp_precip_mean[1], digits = 1)))
+    Pavg <- unname(unlist(round(temp_precip_mean[2], digits = 0)))
 
 
+    # plotting
+    fig <- ggplot2::ggplot() +
+      ggplot2::geom_col(
+        data = data %>%
+          dplyr::filter(stringr::str_detect(pattern = "Precip", variables)),
+        mapping = ggplot2::aes(
+          x = as.numeric(MONTH),
+          y = Kvalue * b,
+          fill = variables
+        )
+      ) +
+      ggplot2::coord_fixed(ylim = c(-5, 70), clip = "off") +
+      ggplot2::scale_fill_manual(
+        values = "blue",
+        labels = labels_replace,
+        guide = ggplot2::guide_legend(title = NULL)
+      ) +
+      ggplot2::geom_path(
+        data = data %>%
+          dplyr::filter(!stringr::str_detect(pattern = "Precip", variables)) %>%
+          dplyr::mutate(variables = factor(variables, levels = rev(unique(data$variables)))),
+        mapping = ggplot2::aes(
+          x = as.numeric(MONTH),
+          y = Kvalue,
+          group = variables,
+          linetype = variables
+        ),
+        color = "red"
+      ) +
+      ggplot2::scale_linetype_manual(
+        values = c("dashed", "solid", "dotted"),
+        guide = ggplot2::guide_legend(title = NULL)
+      ) +
+      ggplot2::scale_y_continuous(
+        limits = ylim.prim,
+        name = expression("Lufttemperatur max, mit, min "(degree * C)),
+        breaks = seq(-5, 50, 5),
+        sec.axis = ggplot2::sec_axis(~ . / b,
+          breaks = seq(-5, 50, 5) / b,
+          name = "Niederschlagssumme (mm)"
+        )
+      ) +
+      ggplot2::scale_x_continuous(
+        labels = month.abb.DE,
+        breaks = 1:12
+      ) +
+      ggplot2::theme_linedraw(base_size = 8) +
+      ggplot2::xlab("") +
+      ggplot2::theme(axis.title.y.right = ggplot2::element_text(angle = 90)) +
+      ggplot2::theme(
+        legend.position = "bottom",
+        plot.margin = ggplot2::margin(5, 2, 2, 2, "pt"),
+        plot.title = ggplot2::element_text(
+          color = "black",
+          hjust = 0.5,
+          vjust = 1
+        )
+      ) +
+
+
+      # title and subtitles
+      ggplot2::labs(title = unique(data$Period)) +
+      ggplot2::annotate("text",
+        x = 0.75,
+        y = 54,
+        color = "red",
+        label = as.expression(eval(bquote(.(Tavg) ~ degree * C), envir = list(x = 0)))
+      ) +
+      ggplot2::annotate("text",
+        x = 12,
+        y = 50,
+        color = "blue",
+        label = as.expression(eval(bquote(.(Pavg) ~ "mm"), envir = list(x = 0)))
+      ) +
+      ggplot2::annotate("text",
+        x = 6,
+        y = 50,
+        color = "black",
+        label = location
+      )
+
+
+
+    fig
+  } else if (language == "EN") {
+    message("Producing Plots in English")
+  } else {
+    stop("Please select a language, either \"EN\" or \"DE\"")
+  }
+
+  return(fig)
 }

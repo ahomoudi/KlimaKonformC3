@@ -17,5 +17,6 @@ utils::globalVariables(c(
   "standard_output_en",
   "Ensemble",
   "Date",
+  "MONTH",
   "corners"
 ))

@@ -25,8 +25,7 @@ Imports:
     sf,
     stringr,
     terra,
-    tidyr,
-    zoo
+    tidyr
 Depends: 
     R (>= 2.10)
 LazyData: true

@@ -78,7 +78,7 @@ clima_diagramm_change <- function(data,
       ) +
       ggplot2::scale_fill_manual(
         values = "blue",
-        labels = "\\u00c4nderung N", ,
+        labels = "\u00c4nderung N", ,
         guide = ggplot2::guide_legend(
           title = NULL,
           keywidth = grid::unit(5, "mm"),

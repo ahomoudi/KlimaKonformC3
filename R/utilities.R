@@ -480,3 +480,11 @@ month.abb.DE <- c(
   "Jul", "Aug", "Sep",
   "Okt", "Nov", "Dez"
 )
+
+labels_replace <- function(x) {
+  stringr::str_replace(
+    pattern = "Precip",
+    replacement = "N",
+    x
+  )
+}

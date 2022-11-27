@@ -1,6 +1,6 @@
 
 library(KlimaKonformC3)
-
+library(patchwork)
 dirs<-list.dirs(path = "/media/ahmed/Daten/WHK2/Data/climate", full.names = T, recursive = F)
 dirs<-list.dirs(path = "D:/AHomoudi/KlimaKonform/5ter_Lauf_2022-10-28", full.names = T, recursive = F)
 idir =1
@@ -182,7 +182,8 @@ for(idir in 1:length(dirs)){
     data_longterm<-na.omit(data_longterm)
 
 
-
+    devtools::document()
+    devtools::load_all()
     # get P1
     p1<-clima_diagramm_abs(data = data_seasonal%>% dplyr::filter(Period =="1971-2000"),
                        temp_precip_mean = data_longterm[1,c(4,2)],
@@ -191,13 +192,55 @@ for(idir in 1:length(dirs)){
                        run_id = run_id)
 
 
+
     # get P2
+    data <-  ((data_seasonal%>% dplyr::filter(Period =="1991-2020"))[,-1] -
+      (data_seasonal%>% dplyr::filter(Period =="1971-2000"))[,-1] ) %>%
+      dplyr::mutate(Period ="1991-2020")%>%
+      dplyr::mutate(MONTH =1:12)
+
+    p2<-clima_diagramm_change(data = data,
+                           temp_precip_mean = (data_longterm[2,c(4,2)]-data_longterm[1,c(4,2)]),
+                           location =corners[icorner],
+                           language = "DE",
+                           run_id = run_id)
 
     # get P3
+    data <-  ((data_seasonal%>% dplyr::filter(Period =="2021-2050"))[,-1] -
+                (data_seasonal%>% dplyr::filter(Period =="1971-2000"))[,-1] ) %>%
+      dplyr::mutate(Period ="2021-2050")%>%
+      dplyr::mutate(MONTH =1:12)
+
+    p3<-clima_diagramm_change(data = data,
+                           temp_precip_mean = (data_longterm[3,c(4,2)]-data_longterm[1,c(4,2)]),
+                           location =corners[icorner],
+                           language = "DE",
+                           run_id = run_id)
 
     # get P4
+    data <-  ((data_seasonal%>% dplyr::filter(Period =="2070-2099"))[,-1] -
+                (data_seasonal%>% dplyr::filter(Period =="1971-2000"))[,-1] ) %>%
+      dplyr::mutate(Period ="2070-2099")%>%
+      dplyr::mutate(MONTH =1:12)
+
+    p4<-clima_diagramm_change(data = data,
+                           temp_precip_mean = (data_longterm[4,c(4,2)]-data_longterm[1,c(4,2)]),
+                           location =corners[icorner],
+                           language = "DE",
+                           run_id = run_id)
 
 
+    ggplot2::ggsave(plot = cowplot::plot_grid(p1,p2,
+                                              p3,p4,
+                                              ncol = 2,
+                                              nrow = 2),
+                    path = dirs[idir],
+                    filename = paste0(corners[icorner],".png"),
+                    height = 150,
+                    width = 150,
+                    units = "mm",
+                    bg = "white",
+                    dpi = 600)
 
   }
 

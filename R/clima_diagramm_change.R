@@ -100,9 +100,9 @@ clima_diagramm_change <- function(data,
       ggplot2::scale_linetype_manual(
         values = c("dashed", "solid", "dotted"),
         labels = c(
-          "\\u00c4nderung Tmax",
-          "\\u00c4nderung Tmit",
-          "\\u00c4nderung Tmin"
+          "\u00c4nderung Tmax",
+          "\u00c4nderung Tmit",
+          "\u00c4nderung Tmin"
         ),
         guide = ggplot2::guide_legend(
           title = NULL,
@@ -148,7 +148,7 @@ clima_diagramm_change <- function(data,
     # title
     figt <- grid::textGrob(
       label = paste0(
-        "\\u00c4nderung mittl. Temperatur, Niederschlag \n ",
+        "\u00c4nderung mittl. Temperatur, Niederschlag \n ",
         unique(data$Period),
         " vs. 1971-2000"
       ),

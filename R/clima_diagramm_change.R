@@ -75,8 +75,8 @@ clima_diagramm_change <- function(data,
     Tavg <- unname(unlist(round(temp_precip_mean[1], digits = 1)))
     Pavg <- unname(unlist(round(temp_precip_mean[2], digits = 0)))
 
-    Tavg <- ifelse(Tavg > 0, paste0("+", Tavg), paste0("-", Tavg))
-    Pavg <- ifelse(Pavg > 0, paste0("+", Pavg), paste0("-", Pavg))
+    Tavg <- ifelse(Tavg > 0, paste0("+", Tavg), Tavg)
+    Pavg <- ifelse(Pavg > 0, paste0("+", Pavg), Pavg)
 
     # plotting
     fig <- ggplot2::ggplot() +

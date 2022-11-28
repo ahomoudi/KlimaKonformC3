@@ -488,3 +488,22 @@ labels_replace <- function(x) {
     x
   )
 }
+
+
+set_sec_axis<-function(y.prim, y.sec.range){
+
+  # y.sec.range<-range(data$Precip)
+  # y.prim<-ylim.prim
+
+  y.sec.range<-setting_nice_limits(y.sec.range[1],y.sec.range[2])
+  b<- 1
+
+  while(y.sec.range[1]< left | y.sec.range[2]>right){
+    left<- y.prim[1] * b
+    right <- y.prim[2] * b
+
+    b <- b +0.1
+  }
+
+  return(c(left,right))
+}

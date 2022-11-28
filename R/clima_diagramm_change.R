@@ -34,9 +34,22 @@ clima_diagramm_change <- function(data,
 
 
   # plot
+  y.axis.max <- max(data[,c("Tmin","Tavg","Tmax")], na.rm = T)
+  y.axis.min <- min(data[,c("Tmin","Tavg","Tmax")], na.rm = T)
 
-  ylim.prim <- c(-3, 3) # in this example, temperature
-  ylim.sec <- c(-15, 15) # in this example, precipitation
+  ylim.prim <- setting_nice_limits(y.axis.min, y.axis.max)
+
+  #getting which is greater
+  if(abs(ylim.prim[1])>abs(ylim.prim[2])){
+    ylim.prim[2]<-abs(ylim.prim[1])
+  }else{
+    ylim.prim[1]<- -1 * ylim.prim[2]
+  }
+
+  ylim.sec<-set_sec_axis(ylim.prim,y.sec.range = range(data$Precip))
+
+  # ylim.prim <- c(-3, 3) # in this example, temperature
+  # ylim.sec <- c(-15, 15) # in this example, precipitation
 
   b <- diff(ylim.prim) / diff(ylim.sec)
   a <- ylim.prim[1] - b * ylim.sec[1] # there was a bug here

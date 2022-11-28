@@ -1,6 +1,5 @@
 
 library(KlimaKonformC3)
-library(patchwork)
 dirs<-list.dirs(path = "/media/ahmed/Daten/WHK2/Data/climate", full.names = T, recursive = F)
 dirs<-list.dirs(path = "D:/AHomoudi/KlimaKonform/5ter_Lauf_2022-10-28", full.names = T, recursive = F)
 idir =1
@@ -181,9 +180,6 @@ for(idir in 1:length(dirs)){
     # clean the data
     data_longterm<-na.omit(data_longterm)
 
-
-    devtools::document()
-    devtools::load_all()
     # get P1
     p1<-clima_diagramm_abs(data = data_seasonal%>% dplyr::filter(Period =="1971-2000"),
                        temp_precip_mean = data_longterm[1,c(4,2)],

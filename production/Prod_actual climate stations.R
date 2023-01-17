@@ -1,7 +1,10 @@
 
 #plot climate diagramms for "Plauen", "Gera-Leumnitz" und "Zeitz"
 library(rdwd)
+library(KlimaKonformC3)
+
 stations<-c("Plauen", "Gera-Leumnitz","Zeitz" )
+setwd("D:/AHomoudi/NextCloud/Shared/KlimaKonform-Results/Klima_gitter/")
 
 for (istation in stations){
 
@@ -16,14 +19,13 @@ for (istation in stations){
   # Read the file from the zip folder:
   clim <- readDWD(file, varnames=TRUE)
 
-  clim<- clim[c(1,4)]
+  clim<- clim[[1]]
 
-  names(clim$daily_kl_historical_tageswerte_KL_05750_19520901_20211231_hist)
-  names(clim$daily_water_equiv_historical_tageswerte_Wa_05750_19930129_20211227_hist)
-  names(clim$daily_more_precip_historical_tageswerte_RR_05750_19520901_20211231_hist)
-  clim_df<-dplyr::bind_rows(clim)
+  clim<-clim[c("STATIONS_ID", "MESS_DATUM", "RSK.Niederschlagshoehe", "TMK.Lufttemperatur",
+         "TXK.Lufttemperatur_Max", "TNK.Lufttemperatur_Min")]
 
-  names(clim_df)
+  clim$MESS_DATUM<-as.Date(clim$MESS_DATUM)
 
-  c("TMK.Lufttemperatur", "TXK.Lufttemperatur_Max", "TNK.Lufttemperatur_Min")
+
+
 }

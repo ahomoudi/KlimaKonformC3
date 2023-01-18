@@ -8,7 +8,7 @@ Description: Analysis the Agricultural Simulations performed within of the Proje
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     cowplot,
     crunch,

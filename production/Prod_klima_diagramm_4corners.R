@@ -1,6 +1,6 @@
 
 library(KlimaKonformC3)
-dirs<-list.dirs(path = "/media/ahmed/Daten/WHK2/Data/climate", full.names = T, recursive = F)
+dirs<-list.dirs(path = "/media/HDD/Daten/WHK2/Data/climate", full.names = T, recursive = F)
 dirs<-list.dirs(path = "D:/AHomoudi/KlimaKonform/5ter_Lauf_2022-10-28", full.names = T, recursive = F)
 idir =1
 for(idir in 1:length(dirs)){

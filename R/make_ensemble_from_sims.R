@@ -15,7 +15,6 @@
 make_ensemble_from_sims <- name <- function(nc.files,
                                             variable,
                                             output_path) {
-
   # first get meta data
   # meta data
   str_split_custom <- function(X) {

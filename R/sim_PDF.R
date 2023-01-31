@@ -1,6 +1,6 @@
-#' @title Plotting linear trend from one simulation from KlimaKonform TB C3.
-#' @description A function that receives one netCDF files, variable name,
-#' and, custom y axis limits and plot linear trend plot.
+#' @title Plotting PDF from one simulation from KlimaKonform TB C3 for four periods.
+#' @description A function that receives one netCDF files, custom y axis limits,
+#'  and produce PDF plot for four periods.
 #' The desired the out put directory in which the output is placed.
 #' @param netCDF.file The netCDF file provided including the full path to the file
 #' @param region A string referring to the region to plot; "total","Vogtlandkreis",
@@ -20,14 +20,14 @@
 #' @import stats
 #' @importFrom utils globalVariables write.table
 #' @export
-sim_linear_trend <- function(netCDF.file,
-                             region,
-                             landcover,
-                             y.axis.limits,
-                             language,
-                             run_id,
-                             output_path,
-                             output_csv) {
+sim_PDF <- function(netCDF.file,
+                    region,
+                    landcover,
+                    y.axis.limits,
+                    language,
+                    run_id,
+                    output_path,
+                    output_csv) {
   # check files
   if (!file.exists(netCDF.file)) stop("The netCDF.file does not exist")
 
@@ -137,15 +137,10 @@ sim_linear_trend <- function(netCDF.file,
     }
   }
 
-  # prepare timeseries  -----------------------------------------------------
+  # prepare PDF data-----------------------------------------------------
 
-  # obtain time series
-  var_plotting <- data.frame(YEAR = as.Date(terra::time(r.rast)))
-
-  var_plotting$Kmean <- unlist(terra::global(r.rast, "mean", na.rm = T))
-  var_plotting$Kmax <- unlist(terra::global(r.rast, "max", na.rm = T))
-  var_plotting$Kmin <- unlist(terra::global(r.rast, "min", na.rm = T))
-
+  var_plotting <- pdf_df(r.rast)
+  # clean some memory
   gc(verbose = F)
 
   # meta data ---------------------------------------------------------------
@@ -198,10 +193,10 @@ sim_linear_trend <- function(netCDF.file,
   if (exists("output_path")) {
     plot_name <- paste0(
       output_path,
-      gsub(".nc", "_LT_.png", x = netCDF.file_withoutpath)
+      gsub(".nc", "_PDF_.png", x = netCDF.file_withoutpath)
     )
   } else {
-    plot_name <- gsub(".nc", "_LT_.png", x = netCDF.file_withoutpath)
+    plot_name <- gsub(".nc", "_PDF_.png", x = netCDF.file_withoutpath)
   }
 
 
@@ -209,10 +204,10 @@ sim_linear_trend <- function(netCDF.file,
   if (exists("output_path")) {
     csv_name <- paste0(
       output_csv,
-      gsub(".nc", "_LT_.csv.gz", x = netCDF.file_withoutpath)
+      gsub(".nc", "_PDF_.csv.gz", x = netCDF.file_withoutpath)
     )
   } else {
-    csv_name <- gsub(".nc", "_LT_.csv.gz", x = netCDF.file_withoutpath)
+    csv_name <- gsub(".nc", "_PDF_.csv.gz", x = netCDF.file_withoutpath)
   }
 
   # pre-plot --------------------------------------------------------------------
@@ -268,34 +263,24 @@ sim_linear_trend <- function(netCDF.file,
 
 
   # plot --------------------------------------------------------------------
+  pcolors <- c(
+    "#fef0d9",
+    "#fdcc8a",
+    "#fc8d59",
+    "#d7301f"
+  )
 
-  figure <- ggplot2::ggplot(var_plotting) +
-
-    # ribbon
-    ggplot2::geom_ribbon(
-      mapping = ggplot2::aes(
-        x = YEAR,
-        ymin = Kmin,
-        ymax = Kmax,
-        fill = rcps_colours
-      ),
-      alpha = 0.25
-    ) +
-    ggplot2::geom_line(
-      mapping = ggplot2::aes(x = YEAR, y = Kmean, color = rcps_colours),
-      size = 0.3,
-      show.legend = T
-    ) +
-    # mean trend line
-    ggplot2::geom_smooth(
-      mapping = ggplot2::aes(x = YEAR, y = Kmean, color = rcps_colours),
-      method = "lm",
-      linetype = "longdash",
-      size = 0.3,
-      se = F
-    ) +
-    ggplot2::scale_color_manual(values = rcps_colours) +
-    ggplot2::scale_fill_manual(values = rcps_colours) +
+  figure <- ggplot2::ggplot(
+    data = var_plotting,
+    mapping = ggplot2::aes(
+      x = Kvar,
+      y = Kvalue,
+      linetype = Period,
+      group = Period
+    )
+  ) +
+    ggplot2::geom_line(linewidth = 0.3) +
+    # ggplot2::scale_color_manual(values = pcolors) +
     ggplot2::theme_bw(base_size = 6) +
 
     # add axis title
@@ -306,15 +291,9 @@ sim_linear_trend <- function(netCDF.file,
     )) +
 
     # set axis breaks
-    ggplot2::scale_y_continuous(
+    ggplot2::scale_x_continuous(
       limits = y.axis.limits,
       expand = c(0, 0)
-    ) +
-    ggplot2::scale_x_date(
-      date_breaks = "10 years",
-      minor_breaks = "5 years",
-      expand = c(0, 0),
-      date_labels = "%Y"
     ) +
     ggplot2::labs(
       title = plot.title,
@@ -345,7 +324,7 @@ sim_linear_trend <- function(netCDF.file,
 
     # set legend
     ggplot2::theme(
-      legend.position = "none"
+      legend.position = "right"
     )
 
   # # add logo

@@ -1,4 +1,3 @@
-
 library(stringr)
 # 2ter --------------------------------------------------------------------
 
@@ -13,7 +12,7 @@ nc.files <- list.files(
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/2ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
+output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -42,7 +41,7 @@ iregion <- 1
 istat <- 1
 ilandcover <- 2
 
-for(ifile in 1:length(nc.files)){
+for (ifile in 1:length(nc.files)) {
   # get var-path
   sub_var <- unlist(stringr::str_split(meta_df_prod$V2[ifile], "-"))
 
@@ -54,7 +53,7 @@ for(ifile in 1:length(nc.files)){
 
     var_path <- paste0(sub_var[1], "/", sub_var[1], "-", sub_var[2])
   } else {
-    if (sub_var== "yield") {
+    if (sub_var == "yield") {
       sub_var <- stringr::str_to_title(sub_var)
     }
     var_path <- paste0(sub_var, "/", sub_var)
@@ -63,28 +62,24 @@ for(ifile in 1:length(nc.files)){
   for (iregion in 1:length(regions)) {
     # loop over landcover
     for (ilandcover in 1:length(landcover_variables)) {
-
       # loop over statistical ensemble members
       for (istat in 1:length(stat_variables)) {
-
         if (stringr::str_detect(regions[iregion], pattern = " ")) {
-
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
           output_csv_folder <- paste0(
             output_plotting_data, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
-
-        }else{
+        } else {
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
@@ -102,26 +97,29 @@ for(ifile in 1:length(nc.files)){
         }
 
         # create dir
-        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
-        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
+        if (!dir.exists(output_folder)) dir.create(output_folder, recursive = T)
+        if (!dir.exists(output_csv_folder)) dir.create(output_csv_folder, recursive = T)
 
-        print(c(output_folder,
-                output_csv_folder))
+        print(c(
+          output_folder,
+          output_csv_folder
+        ))
 
-        writeLines(text = c(nc.files[ifile],
-                            meta_df_prod$V2[ifile],
-                            regions[iregion],
-                            landcover_variables[ilandcover],
-                            "DE",
-                            stat_variables[istat],
-                            "2ter",
-                            output_folder,
-                            output_csv_folder), "input_text_public_output" )
+        writeLines(text = c(
+          nc.files[ifile],
+          meta_df_prod$V2[ifile],
+          regions[iregion],
+          landcover_variables[ilandcover],
+          "DE",
+          stat_variables[istat],
+          "2ter",
+          output_folder,
+          output_csv_folder
+        ), "input_text_public_output")
 
         system("R CMD BATCH sub_ens_public_output.R")
 
         gc()
-
       }
     }
   }
@@ -148,13 +146,13 @@ nc.files <- list.files(
 )
 
 # remove SOC files
-nc.files<-nc.files[-grep("_SOC_", nc.files)]
+nc.files <- nc.files[-grep("_SOC_", nc.files)]
 
 
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/3ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
+output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -183,7 +181,7 @@ iregion <- 1
 istat <- 1
 ilandcover <- 2
 
-for(ifile in 1:length(nc.files)){
+for (ifile in 1:length(nc.files)) {
   # get var-path
   sub_var <- unlist(stringr::str_split(meta_df_prod$V2[ifile], "-"))
 
@@ -195,7 +193,7 @@ for(ifile in 1:length(nc.files)){
 
     var_path <- paste0(sub_var[1], "/", sub_var[1], "-", sub_var[2])
   } else {
-    if (sub_var== "yield") {
+    if (sub_var == "yield") {
       sub_var <- stringr::str_to_title(sub_var)
     }
     var_path <- paste0(sub_var, "/", sub_var)
@@ -204,28 +202,24 @@ for(ifile in 1:length(nc.files)){
   for (iregion in 1:length(regions)) {
     # loop over landcover
     for (ilandcover in 1:length(landcover_variables)) {
-
       # loop over statistical ensemble members
       for (istat in 1:length(stat_variables)) {
-
         if (stringr::str_detect(regions[iregion], pattern = " ")) {
-
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
           output_csv_folder <- paste0(
             output_plotting_data, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
-
-        }else{
+        } else {
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
@@ -243,26 +237,29 @@ for(ifile in 1:length(nc.files)){
         }
 
         # create dir
-        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
-        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
+        if (!dir.exists(output_folder)) dir.create(output_folder, recursive = T)
+        if (!dir.exists(output_csv_folder)) dir.create(output_csv_folder, recursive = T)
 
-        print(c(output_folder,
-                output_csv_folder))
+        print(c(
+          output_folder,
+          output_csv_folder
+        ))
 
-        writeLines(text = c(nc.files[ifile],
-                            meta_df_prod$V2[ifile],
-                            regions[iregion],
-                            landcover_variables[ilandcover],
-                            "DE",
-                            stat_variables[istat],
-                            "3ter",
-                            output_folder,
-                            output_csv_folder), "input_text_public_output" )
+        writeLines(text = c(
+          nc.files[ifile],
+          meta_df_prod$V2[ifile],
+          regions[iregion],
+          landcover_variables[ilandcover],
+          "DE",
+          stat_variables[istat],
+          "3ter",
+          output_folder,
+          output_csv_folder
+        ), "input_text_public_output")
 
         system("R CMD BATCH sub_ens_public_output.R")
 
         gc()
-
       }
     }
   }
@@ -278,11 +275,11 @@ nc.files <- list.files(
   full.names = T
 )
 # remove SOC files
-nc.files<-nc.files[-grep("_SOC_", nc.files)]
+nc.files <- nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
+output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -311,7 +308,7 @@ iregion <- 2
 istat <- 1
 ilandcover <- 2
 
-for(ifile in 1:length(nc.files)){
+for (ifile in 1:length(nc.files)) {
   # get var-path
   sub_var <- unlist(stringr::str_split(meta_df_prod$V2[ifile], "-"))
 
@@ -323,7 +320,7 @@ for(ifile in 1:length(nc.files)){
 
     var_path <- paste0(sub_var[1], "/", sub_var[1], "-", sub_var[2])
   } else {
-    if (sub_var== "yield") {
+    if (sub_var == "yield") {
       sub_var <- stringr::str_to_title(sub_var)
     }
     var_path <- paste0(sub_var, "/", sub_var)
@@ -332,28 +329,24 @@ for(ifile in 1:length(nc.files)){
   for (iregion in 1:length(regions)) {
     # loop over landcover
     for (ilandcover in 1:length(landcover_variables)) {
-
       # loop over statistical ensemble members
       for (istat in 1:length(stat_variables)) {
-
         if (stringr::str_detect(regions[iregion], pattern = " ")) {
-
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
           output_csv_folder <- paste0(
             output_plotting_data, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
-
-        }else{
+        } else {
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
@@ -371,26 +364,29 @@ for(ifile in 1:length(nc.files)){
         }
 
         # create dir
-        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
-        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
+        if (!dir.exists(output_folder)) dir.create(output_folder, recursive = T)
+        if (!dir.exists(output_csv_folder)) dir.create(output_csv_folder, recursive = T)
 
-        print(c(output_folder,
-                output_csv_folder))
+        print(c(
+          output_folder,
+          output_csv_folder
+        ))
 
-        writeLines(text = c(nc.files[ifile],
-                            meta_df_prod$V2[ifile],
-                            regions[iregion],
-                            landcover_variables[ilandcover],
-                            "DE",
-                            stat_variables[istat],
-                            "4ter",
-                            output_folder,
-                            output_csv_folder), "input_text_public_output" )
+        writeLines(text = c(
+          nc.files[ifile],
+          meta_df_prod$V2[ifile],
+          regions[iregion],
+          landcover_variables[ilandcover],
+          "DE",
+          stat_variables[istat],
+          "4ter",
+          output_folder,
+          output_csv_folder
+        ), "input_text_public_output")
 
         system("R CMD BATCH sub_ens_public_output.R")
 
         gc()
-
       }
     }
   }

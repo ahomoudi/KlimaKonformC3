@@ -1,10 +1,10 @@
 unlink(".RData")
-args_in<-readLines("input_text_linear_trend")
+args_in <- readLines("input_text_linear_trend")
 
-netCDF.file <-args_in[1]
+netCDF.file <- args_in[1]
 region <- args_in[2]
 landcover <- args_in[3]
-#y.axis.limits<-c(args_in[4],args_in[5])
+# y.axis.limits<-c(args_in[4],args_in[5])
 language <- args_in[4]
 run_id <- args_in[5]
 output_path <- args_in[6]
@@ -21,23 +21,24 @@ plot_name <- paste0(
   gsub(".nc", "_LT_.png", x = netCDF.file_withoutpath)
 )
 
-if(!file.exists(plot_name)){
+if (!file.exists(plot_name)) {
   print(plot_name)
 
-  sim_linear_trend(netCDF.file = netCDF.file,
-                   region = region,
-                   landcover = landcover,
-                   y.axis.limits = NA,
-                   language = language,
-                   run_id = run_id,
-                   output_path = output_path,
-                   output_csv = output_csv)
-
+  sim_linear_trend(
+    netCDF.file = netCDF.file,
+    region = region,
+    landcover = landcover,
+    y.axis.limits = NA,
+    language = language,
+    run_id = run_id,
+    output_path = output_path,
+    output_csv = output_csv
+  )
 }
 
 
 
-#test
+# test
 # netCDF.file = netCDF.file
 # region = region
 # landcover = landcover

@@ -1,5 +1,3 @@
-
-
 # mean of SpatRaster
 f1_mean <- function(x) {
   y <- terra::global(x, "mean", na.rm = T)
@@ -128,7 +126,6 @@ compress_csv <- function(csv_file) {
 }
 
 robust_spatial_trend <- function(x) {
-
   # x<-r.rast[[1]]
 
   r.time <- as.Date(terra::time(x))
@@ -138,7 +135,6 @@ robust_spatial_trend <- function(x) {
   r.df <- terra::as.data.frame(x, xy = TRUE)
 
   r.subtrend <- apply(r.df[, -c(1, 2)], c(1), function(y) {
-
     # test
     # y<-unlist(r.df[1,-c(1,2)])
 
@@ -217,7 +213,6 @@ boxplot_df <- function(x) {
   )
 
   r.periods <- lapply(X = periods, FUN = function(y) {
-
     # y<-periods[[1]]
     terra::subset(x = x, subset = y) %>%
       terra::values(
@@ -286,7 +281,6 @@ lm_fun <- function(x, x.time) {
 }
 
 linear_spatial_trend <- function(x) {
-
   # x<-r.rast[[1]]
 
   r.time <- as.Date(terra::time(x))
@@ -325,7 +319,6 @@ linear_spatial_trend <- function(x) {
 }
 # calculate the mean for four periods
 mean_four_periods <- function(x) {
-
   # x<-r.rast[[1]]
 
   r.time <- as.Date(terra::time(x))
@@ -342,7 +335,6 @@ mean_four_periods <- function(x) {
   )
 
   r.periods <- lapply(X = periods, FUN = function(y) {
-
     # y<-periods[[1]]
     terra::subset(x = x, subset = y) %>%
       terra::mean()
@@ -363,7 +355,6 @@ mean_four_periods <- function(x) {
 }
 # calculate the mean and relative change for four periods
 relative_change_four_periods <- function(x) {
-
   # x<-r.rast[[1]]
 
   r.time <- as.Date(terra::time(x))
@@ -380,7 +371,6 @@ relative_change_four_periods <- function(x) {
   )
 
   r.periods <- lapply(X = periods, FUN = function(y) {
-
     # y<-periods[[1]]
     terra::subset(x = x, subset = y) %>%
       terra::mean()
@@ -405,7 +395,6 @@ relative_change_four_periods <- function(x) {
 
 # heat maps from all ennsemble members
 heatmaps_5vars_3RCP <- function(x) {
-
   # x<-r.rast[[1]]
   # x<- terra::rast(netCDF.files[1])
 
@@ -429,6 +418,77 @@ heatmaps_5vars_3RCP <- function(x) {
   )
 
   return(r.df)
+}
+
+
+# boxplots_df
+pdf_df <- function(x) {
+  # x<-r.rast[[1]]
+
+  r.time <- as.Date(terra::time(x))
+
+  periods <- list(
+    period1 = which(r.time > as.Date("1970-12-31") &
+      r.time < as.Date("2000-02-01")),
+    period2 = which(r.time > as.Date("1990-12-31") &
+      r.time < as.Date("2020-02-01")),
+    period3 = which(r.time > as.Date("2020-12-31") &
+      r.time < as.Date("2050-02-01")),
+    period4 = which(r.time > as.Date("2069-12-31") &
+      r.time < as.Date("2099-02-01"))
+  )
+
+  r.periods <- lapply(X = periods, FUN = function(y) {
+    # y<-periods[[1]]
+    terra::subset(x = x, subset = y) %>%
+      terra::values(
+        mat = F,
+        dataframe = F,
+        na.rm = T
+      )
+  })
+
+  rm(periods)
+
+  # https://stackoverflow.com/a/53969052/13818750
+  r.periods <- Reduce(cbind.data.frame, r.periods)
+  colnames(r.periods) <- c(
+    "1971-2000",
+    "1991-2020",
+    "2021-2050",
+    "2070-2099"
+  )
+
+  r.means <- colMeans(r.periods)
+  r.sd <- sapply(r.periods, sd)
+  r.x.axis <- seq(0, 500, 1)
+
+  r.result <- data.frame(x = r.x.axis)
+
+  r.pdf <- lapply(1:4, function(x) {
+    dnorm(x = r.x.axis, mean = r.means[x], sd = r.sd[x])
+  })
+
+
+  r.pdf <- Reduce(cbind.data.frame, r.pdf)
+
+  names(r.pdf) <- c(
+    "1971-2000",
+    "1991-2020",
+    "2021-2050",
+    "2070-2099"
+  )
+
+
+  r.pdf$Kvar <- r.x.axis
+
+
+  r.pdf <- tidyr::pivot_longer(r.pdf,
+    cols = -c("Kvar"),
+    names_to = "Period",
+    values_to = "Kvalue"
+  )
+  return(r.pdf)
 }
 
 # colors ------------------------------------------------------------------
@@ -491,7 +551,6 @@ labels_replace <- function(x) {
 
 
 set_sec_axis <- function(y.prim, y.sec.range) {
-
   # y.sec.range<-range(data$Precip)
   # y.prim<-ylim.prim
 

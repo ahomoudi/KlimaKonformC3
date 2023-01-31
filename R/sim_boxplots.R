@@ -28,8 +28,6 @@ sim_boxplots <- function(netCDF.file,
                          run_id,
                          output_path,
                          output_csv) {
-
-
   # check files
   if (!file.exists(netCDF.file)) stop("The netCDF.file does not exist")
 
@@ -159,13 +157,14 @@ sim_boxplots <- function(netCDF.file,
     } else {
       plot.title <- paste0(var_name, " f\u00fcr ", region)
     }
-    plot.caption <- paste(paste0(
-      "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
-      ". ",
-      LC_name
-    ),
-    paste0("Quelle: ", netCDF.file_withoutpath),
-    sep = "\n"
+    plot.caption <- paste(
+      paste0(
+        "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
+        ". ",
+        LC_name
+      ),
+      paste0("Quelle: ", netCDF.file_withoutpath),
+      sep = "\n"
     )
   } else if (language == "EN") {
     var_units <- standard_output_en$units[variable_index]
@@ -176,13 +175,14 @@ sim_boxplots <- function(netCDF.file,
     } else {
       plot.title <- paste0(var_name, " for ", region)
     }
-    plot.caption <- paste(paste0(
-      "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
-      ". ",
-      LC_name
-    ),
-    paste0("Source: ", netCDF.file_withoutpath),
-    sep = "\n"
+    plot.caption <- paste(
+      paste0(
+        "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
+        ". ",
+        LC_name
+      ),
+      paste0("Source: ", netCDF.file_withoutpath),
+      sep = "\n"
     )
   }
 

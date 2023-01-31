@@ -1,5 +1,5 @@
 unlink(".RData")
-args_in <- readLines("input_text_boxplots")
+args_in <- readLines("input_text_PDF")
 
 netCDF.file <- args_in[1]
 region <- args_in[2]
@@ -13,7 +13,7 @@ output_csv <- args_in[7]
 
 library(KlimaKonformC3)
 
-sim_boxplots(
+sim_PDF(
   netCDF.file = netCDF.file,
   region = region,
   landcover = landcover,

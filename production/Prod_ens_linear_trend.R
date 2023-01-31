@@ -1,4 +1,3 @@
-
 library(stringr)
 # 2ter --------------------------------------------------------------------
 
@@ -13,7 +12,7 @@ nc.files <- list.files(
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/2ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
+output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -70,29 +69,25 @@ for (ivar in 1:nrow(vars)) {
   for (iregion in 1:length(regions)) {
     # loop over landcover
     for (ilandcover in 1:length(landcover_variables)) {
-
       # loop over statistical ensemble members
 
       for (istat in 1:length(stat_variables)) {
-
         if (stringr::str_detect(regions[iregion], pattern = " ")) {
-
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
           output_csv_folder <- paste0(
             output_plotting_data, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
-
-        }else{
+        } else {
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
@@ -111,21 +106,23 @@ for (ivar in 1:nrow(vars)) {
 
 
         # create dir
-        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
-        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
+        if (!dir.exists(output_folder)) dir.create(output_folder, recursive = T)
+        if (!dir.exists(output_csv_folder)) dir.create(output_csv_folder, recursive = T)
 
         # print(c(output_folder,
         #         output_csv_folder))
 
-        writeLines(text = c(sub_files,
-                            vars[ivar,1],
-                            regions[iregion],
-                            landcover_variables[ilandcover],
-                            "DE",
-                            stat_variables[istat],
-                            "2ter",
-                            output_folder,
-                            output_csv_folder), "input_text_linear_trend" )
+        writeLines(text = c(
+          sub_files,
+          vars[ivar, 1],
+          regions[iregion],
+          landcover_variables[ilandcover],
+          "DE",
+          stat_variables[istat],
+          "2ter",
+          output_folder,
+          output_csv_folder
+        ), "input_text_linear_trend")
 
         system("R CMD BATCH sub_ens_linear_trend.R")
 
@@ -159,11 +156,11 @@ nc.files <- list.files(
 )
 
 # remove SOC files
-nc.files<-nc.files[-grep("_SOC_", nc.files)]
+nc.files <- nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/3ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
+output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -220,29 +217,25 @@ for (ivar in 1:nrow(vars)) {
   for (iregion in 1:length(regions)) {
     # loop over landcover
     for (ilandcover in 1:length(landcover_variables)) {
-
       # loop over statistical ensemble memebers
 
       for (istat in 1:length(stat_variables)) {
-
         if (stringr::str_detect(regions[iregion], pattern = " ")) {
-
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
           output_csv_folder <- paste0(
             output_plotting_data, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
-
-        }else{
+        } else {
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
@@ -261,11 +254,13 @@ for (ivar in 1:nrow(vars)) {
 
 
         # create dir
-        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
-        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
+        if (!dir.exists(output_folder)) dir.create(output_folder, recursive = T)
+        if (!dir.exists(output_csv_folder)) dir.create(output_csv_folder, recursive = T)
 
-        print(c(output_folder,
-                output_csv_folder))
+        print(c(
+          output_folder,
+          output_csv_folder
+        ))
 
         # profvis::profvis({
         #   ens_linear_trend(netCDF.files = sub_files,
@@ -279,19 +274,21 @@ for (ivar in 1:nrow(vars)) {
         #                    output_csv = output_csv_folder)
         # })
 
-        writeLines(text = c(sub_files,
-                            vars[ivar,1],
-                            regions[iregion],
-                            landcover_variables[ilandcover],
-                            "DE",
-                            stat_variables[istat],
-                            "3ter",
-                            output_folder,
-                            output_csv_folder), "input_text_linear_trend" )
+        writeLines(text = c(
+          sub_files,
+          vars[ivar, 1],
+          regions[iregion],
+          landcover_variables[ilandcover],
+          "DE",
+          stat_variables[istat],
+          "3ter",
+          output_folder,
+          output_csv_folder
+        ), "input_text_linear_trend")
 
         system("R CMD BATCH sub_ens_linear_trend.R")
 
-                         gc()
+        gc()
       }
     }
   }
@@ -318,11 +315,11 @@ nc.files <- list.files(
 )
 
 # remove SOC files
-nc.files<-nc.files[-grep("_SOC_", nc.files)]
+nc.files <- nc.files[-grep("_SOC_", nc.files)]
 stat_variables <- c("mean", "sd", "median", "max", "min")
 
 output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf_ensemble"
-output_plotting_data<-"/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
+output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf_ensemble"
 # meta data
 str_split_custom <- function(X) {
   first <- unlist(stringr::str_split(X, pattern = "/"))
@@ -379,29 +376,25 @@ for (ivar in 1:nrow(vars)) {
   for (iregion in 1:length(regions)) {
     # loop over landcover
     for (ilandcover in 1:length(landcover_variables)) {
-
       # loop over statistical ensemble memebers
 
       for (istat in 1:length(stat_variables)) {
-
         if (stringr::str_detect(regions[iregion], pattern = " ")) {
-
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
           output_csv_folder <- paste0(
             output_plotting_data, "/",
             landcover_variables[ilandcover], "/",
-            stringr::str_replace(regions[iregion]," ",""), "/",
+            stringr::str_replace(regions[iregion], " ", ""), "/",
             stat_variables[istat], "/",
             var_path, "/"
           )
-
-        }else{
+        } else {
           output_folder <- paste0(
             output_path, "/",
             landcover_variables[ilandcover], "/",
@@ -420,21 +413,25 @@ for (ivar in 1:nrow(vars)) {
 
 
         # create dir
-        if(!dir.exists(output_folder)) dir.create(output_folder,recursive = T)
-        if(!dir.exists(output_csv_folder)) dir.create(output_csv_folder,recursive = T)
+        if (!dir.exists(output_folder)) dir.create(output_folder, recursive = T)
+        if (!dir.exists(output_csv_folder)) dir.create(output_csv_folder, recursive = T)
 
-        print(c(output_folder,
-                output_csv_folder))
+        print(c(
+          output_folder,
+          output_csv_folder
+        ))
 
-        writeLines(text = c(sub_files,
-                            vars[ivar,1],
-                            regions[iregion],
-                            landcover_variables[ilandcover],
-                            "DE",
-                            stat_variables[istat],
-                            "4ter",
-                            output_folder,
-                            output_csv_folder), "input_text_linear_trend" )
+        writeLines(text = c(
+          sub_files,
+          vars[ivar, 1],
+          regions[iregion],
+          landcover_variables[ilandcover],
+          "DE",
+          stat_variables[istat],
+          "4ter",
+          output_folder,
+          output_csv_folder
+        ), "input_text_linear_trend")
 
         system("R CMD BATCH sub_ens_linear_trend.R")
 

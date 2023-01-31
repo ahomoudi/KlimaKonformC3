@@ -1,4 +1,3 @@
-
 library(stringr)
 # 2ter --------------------------------------------------------------------
 
@@ -11,8 +10,7 @@ csv.files <- list.files(
   full.names = T
 )
 
-for(ifile in 1:length(csv.files)){
-
+for (ifile in 1:length(csv.files)) {
   compress_csv(csv_file = csv.files[ifile])
 
   file.remove(csv.files[ifile])
@@ -29,8 +27,7 @@ csv.files <- list.files(
   full.names = T
 )
 
-for(ifile in 1:length(csv.files)){
-
+for (ifile in 1:length(csv.files)) {
   compress_csv(csv_file = csv.files[ifile])
 
   file.remove(csv.files[ifile])
@@ -47,10 +44,8 @@ csv.files <- list.files(
   full.names = T
 )
 
-for(ifile in 1:length(csv.files)){
-
+for (ifile in 1:length(csv.files)) {
   compress_csv(csv_file = csv.files[ifile])
 
   file.remove(csv.files[ifile])
 }
-

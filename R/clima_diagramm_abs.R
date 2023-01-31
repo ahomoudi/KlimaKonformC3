@@ -26,9 +26,6 @@ clima_diagramm_abs <- function(data,
                                location,
                                language,
                                run_id) {
-
-
-
   # Niederschlagssumme (mm)  Rainfall Sum (mm)
   # Lufttemperatur max, mit, min Air temperature max, mean, min
 

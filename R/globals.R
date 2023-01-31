@@ -1,10 +1,10 @@
-
 utils::globalVariables(c(
   "YEAR",
   "Kmean",
   "Kmax",
   "Kmin",
   "Kvalue",
+  "Kvar",
   "Period",
   "Scenario",
   "x",

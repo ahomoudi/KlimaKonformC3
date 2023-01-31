@@ -1,7 +1,7 @@
 unlink(".RData")
-args_in<-readLines("input_text_linear_trend")
+args_in <- readLines("input_text_linear_trend")
 
-netCDF.files <-args_in[1:3]
+netCDF.files <- args_in[1:3]
 variable <- args_in[4]
 region <- args_in[5]
 landcover <- args_in[6]
@@ -23,14 +23,16 @@ plot_name <- paste0(
   "3XRCPs_LT_.png"
 )
 
-#if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
-ens_linear_trend(netCDF.files,
-                 variable,
-                 region,
-                 landcover,
-                 stat_var,
-                 language,
-                 run_id,
-                 output_path,
-                 output_csv)
-#}
+# if(!file.exists(plot_name) ){#| file.size(plot_name)==0){
+ens_linear_trend(
+  netCDF.files,
+  variable,
+  region,
+  landcover,
+  stat_var,
+  language,
+  run_id,
+  output_path,
+  output_csv
+)
+# }

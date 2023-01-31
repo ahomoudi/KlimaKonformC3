@@ -1,7 +1,7 @@
 library(stringr)
 # 2ter --------------------------------------------------------------------
 
-input_dir <- "/media/ahmed/Daten/WHK2/Data/netCDF/2ter_lauf"
+input_dir <- "/media/HDD/Daten/WHK2/Data/netCDF/2ter_lauf/"
 
 nc.files <- list.files(
   path = input_dir,
@@ -14,8 +14,8 @@ nc.files <- list.files(
 nc.files <- nc.files[grep("yield", nc.files)]
 
 
-output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/2ter_lauf"
-output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/2ter_lauf"
+output_path <- "/media/HDD/Volume/WHK2-tmp/Plotting/2ter_lauf"
+output_plotting_data <- "/media/HDD/Volume/WHK2-tmp/Plotting_data/2ter_lauf"
 
 # meta data
 str_split_custom <- function(X) {
@@ -107,9 +107,9 @@ for (ifile in 1:length(nc.files)) {
         "2ter",
         output_folder,
         output_csv_folder
-      ), "input_text_boxplots")
+      ), "input_text_PDF")
 
-      system("R CMD BATCH sub_sim_boxplots.R")
+      system("R CMD BATCH sub_sim_PDF.R")
     }
   }
 }
@@ -129,8 +129,8 @@ nc.files <- list.files(
 nc.files <- nc.files[grep("yield", nc.files)]
 
 
-output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/3ter_lauf"
-output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/3ter_lauf"
+output_path <- "/media/HDD/Volume/WHK2-tmp/Plotting/3ter_lauf"
+output_plotting_data <- "/media/HDD/Volume/WHK2-tmp/Plotting_data/3ter_lauf"
 
 # meta data
 str_split_custom <- function(X) {
@@ -222,9 +222,9 @@ for (ifile in 1:length(nc.files)) {
         "3ter",
         output_folder,
         output_csv_folder
-      ), "input_text_boxplots")
+      ), "input_text_PDF")
 
-      system("R CMD BATCH sub_sim_boxplots.R")
+      system("R CMD BATCH sub_sim_PDF.R")
     }
   }
 }
@@ -243,8 +243,8 @@ nc.files <- list.files(
 nc.files <- nc.files[grep("yield", nc.files)]
 
 
-output_path <- "/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf"
-output_plotting_data <- "/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf"
+output_path <- "/media/HDD/Volume/WHK2-tmp/Plotting/4ter_lauf"
+output_plotting_data <- "/media/HDD/Volume/WHK2-tmp/Plotting_data/4ter_lauf"
 
 # meta data
 str_split_custom <- function(X) {
@@ -336,9 +336,9 @@ for (ifile in 1:length(nc.files)) {
         "4ter",
         output_folder,
         output_csv_folder
-      ), "input_text_boxplots")
+      ), "input_text_PDF")
 
-      system("R CMD BATCH sub_sim_boxplots.R")
+      system("R CMD BATCH sub_sim_PDF.R")
     }
   }
 }

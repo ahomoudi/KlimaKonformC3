@@ -35,8 +35,6 @@ ens_spatial_trend <- function(netCDF.files,
                               run_id,
                               output_path,
                               output_csv) {
-
-
   # check files
   if (length(netCDF.files) != 3) stop("not all RCPs files has been provided")
 
@@ -187,13 +185,14 @@ ens_spatial_trend <- function(netCDF.files,
     } else {
       plot.title <- paste0(var_name, " f\u00fcr ", region)
     }
-    plot.caption <- paste(paste0(
-      "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
-      ". ",
-      LC_name
-    ),
-    paste0("Quelle: Ensemble no. ", run_id),
-    sep = "\n"
+    plot.caption <- paste(
+      paste0(
+        "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
+        ". ",
+        LC_name
+      ),
+      paste0("Quelle: Ensemble no. ", run_id),
+      sep = "\n"
     )
   } else if (language == "EN") {
     # index of the variable in standard output
@@ -206,13 +205,14 @@ ens_spatial_trend <- function(netCDF.files,
     } else {
       plot.title <- paste0(var_name, " for ", region)
     }
-    plot.caption <- paste(paste0(
-      "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
-      ". ",
-      LC_name
-    ),
-    paste0("Source: Ensemble no.", run_id),
-    sep = "\n"
+    plot.caption <- paste(
+      paste0(
+        "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
+        ". ",
+        LC_name
+      ),
+      paste0("Source: Ensemble no.", run_id),
+      sep = "\n"
     )
   }
 

@@ -1,11 +1,13 @@
 project_logo <- function() {
-  grid::rasterGrob(magick::image_read_svg(system.file("logos/KlimaKonform_Logo_lang_farbig.svg",
-    package = "KlimaKonformC3"
-  ),
-  width = 240,
-  height = 125
-  ),
-  interpolate = TRUE
+  grid::rasterGrob(
+    magick::image_read_svg(
+      system.file("logos/KlimaKonform_Logo_lang_farbig.svg",
+        package = "KlimaKonformC3"
+      ),
+      width = 240,
+      height = 125
+    ),
+    interpolate = TRUE
   )
 }
 

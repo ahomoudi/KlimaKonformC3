@@ -38,8 +38,6 @@ ens_public_output <- function(netCDF.file,
                               run_id,
                               output_path,
                               output_csv) {
-
-
   # check files
   if (length(netCDF.file) != 1) stop("not all RCPs files has been provided")
 
@@ -206,13 +204,14 @@ ens_public_output <- function(netCDF.file,
     } else {
       plot.title <- paste0(var_name, " f\u00fcr ", region)
     }
-    plot.caption <- paste(paste0(
-      "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
-      ". ",
-      LC_name
-    ),
-    paste0("Quelle: ", netCDF.file),
-    sep = "\n"
+    plot.caption <- paste(
+      paste0(
+        "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
+        ". ",
+        LC_name
+      ),
+      paste0("Quelle: ", netCDF.file),
+      sep = "\n"
     )
   } else if (language == "EN") {
     # index of the variable in standard output
@@ -225,13 +224,14 @@ ens_public_output <- function(netCDF.file,
     } else {
       plot.title <- paste0(var_name, " for ", region)
     }
-    plot.caption <- paste(paste0(
-      "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
-      ". ",
-      LC_name
-    ),
-    paste0("Source: ", netCDF.file),
-    sep = "\n"
+    plot.caption <- paste(
+      paste0(
+        "\u00a9 KlimaKonform ", lubridate::year(Sys.time()),
+        ". ",
+        LC_name
+      ),
+      paste0("Source: ", netCDF.file),
+      sep = "\n"
     )
   }
 

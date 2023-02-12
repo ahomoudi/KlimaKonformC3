@@ -116,7 +116,7 @@ for (ifile in 1:length(nc.files)) {
 
 # 3ter --------------------------------------------------------------------
 
-input_dir <- "/media/ahmed/Daten/WHK2/Data/netCDF/3ter_lauf"
+input_dir <- "/media/HDD/Daten/WHK2/Data/netCDF/3ter_lauf"
 
 nc.files <- list.files(
   path = input_dir,
@@ -230,7 +230,7 @@ for (ifile in 1:length(nc.files)) {
 }
 # 4ter --------------------------------------------------------------------
 
-input_dir <- "/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf"
+input_dir <- "/media/HDD/Daten/WHK2/Data/netCDF/4ter_lauf"
 
 nc.files <- list.files(
   path = input_dir,

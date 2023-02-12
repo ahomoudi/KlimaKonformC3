@@ -255,3 +255,6 @@ values(r) <- runif(ncell(r) * nlyr(r))
 x <-
 # note how this returns one layer
 x <- sum(c(r, r[[2]]), 5)
+
+copy linux
+find -type f -name \*PDF_.png -exec install -D {} /home/ahmed/NextCloud/DATA/Shared/KlimaKonform-Results/PDF_Function/{} \;

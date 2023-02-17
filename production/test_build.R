@@ -62,7 +62,7 @@ usethis::use_r("clima_diagramm_change")
 print("                   ***                   ")
 usethis::use_data_raw("standard_output_en")
 print("                   ***                   ")
-usethis::use_package("zoo")
+usethis::use_package("ggformula")
 print("                   ***                   ")
 
 # inst --------------------------------------------------------------------

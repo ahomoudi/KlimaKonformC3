@@ -3,13 +3,14 @@ library(rdwd)
 library(KlimaKonformC3)
 
 stations <- c("Plauen", "Gera-Leumnitz", "Zeitz")
+stations <- c("Naumburg/Saale-Kreipitzsch", "Dresden-Klotzsche", "Dresden-Hosterwitz")
 
-
+istation <- stations[3]
 for (istation in stations) {
-  rdwd::findID(istation, exactmatch = FALSE)
+  no.station <- rdwd::findID(istation, exactmatch = TRUE)
 
   # select a dataset (e.g. last year's daily climate data from Potsdam city):
-  link <- selectDWD(istation, res = "daily", var = "", per = "historical")
+  link <- selectDWD(no.station, res = "daily", var = "", per = "historical")
 
   # Actually download that dataset, returning the local storage file name:
   file <- dataDWD(link, read = FALSE)

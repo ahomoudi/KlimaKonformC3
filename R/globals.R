@@ -18,5 +18,10 @@ utils::globalVariables(c(
   "Ensemble",
   "Date",
   "MONTH",
-  "corners"
+  "corners",
+  "Datum",
+  "HI",
+  "LAT",
+  "TDMAX",
+  "TDMIN"
 ))

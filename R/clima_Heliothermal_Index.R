@@ -1,29 +1,26 @@
 #' @title Plotting Heliothermal Index
 #'
-#' @param x.df A data frame containing Datum, TDMAX (daily max temp),
-#' TDMIN  (daily min temp)
+#' @param x.df A data frame containing Datum, tmax (daily max temp),
+#' tmean (daily mean temp)
 #' @param lat A single value of latitude
 #' @author Ahmed Homoudi
 #' @return  ggplot2 plot
-#' @import stats
-#' @importFrom utils globalVariables write.table
-#' @importFrom agroclim hi
-#' @importFrom ggformula geom_spline
 #' @export
 clima_Heliothermal_Index <- function(x.df, lat) {
+
+  # test
+
   hi_res <- x.df %>%
     dplyr::mutate(
       YEAR = lubridate::year(as.Date(Datum)),
       LAT = lat
     ) %>%
     dplyr::group_by(YEAR) %>%
-    dplyr::mutate(HI = agroclim::hi(
-      mx = TDMAX,
-      mn = TDMIN,
-      dates = Datum,
-      lati = unique(LAT)
-    )) %>%
+    dplyr::mutate(HI = Heliothermal_Index(tmax, tmean, dates = Datum)) %>%
     dplyr::distinct(YEAR, HI)
+  hi_res<-na.omit(hi_res)
+
+  hi_res<-hi_res[hi_res$HI!=0,]
 
   p <- ggplot2::ggplot(hi_res) +
     ggplot2::geom_point(mapping = ggplot2::aes(x = YEAR, y = HI), size = 1) +
@@ -39,13 +36,13 @@ clima_Heliothermal_Index <- function(x.df, lat) {
       limits = c(1880, 2022)
     ) +
     ggplot2::scale_y_continuous(
-      breaks = seq(0, 2000, 250),
+      breaks = seq(0, 2500, 250),
       expand = c(0, 0),
-      limits = c(0, 2000)
+      limits = c(0, 2500)
     ) +
     ggplot2::xlab("") +
     ggplot2::ylab("Huglin Heliothermal Index (HI)")
 
 
-  return(p)
+  return(list(p, hi_res))
 }

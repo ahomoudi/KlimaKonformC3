@@ -7,8 +7,8 @@
 clima_Heliothermal_Index(x.df, lat)
 }
 \arguments{
-\item{x.df}{A data frame containing Datum, TDMAX (daily max temp),
-TDMIN  (daily min temp)}
+\item{x.df}{A data frame containing Datum, tmax (daily max temp),
+tmean (daily mean temp)}
 
 \item{lat}{A single value of latitude}
 }

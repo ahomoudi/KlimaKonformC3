@@ -568,3 +568,26 @@ set_sec_axis <- function(y.prim, y.sec.range) {
 
   return(c(left, right))
 }
+
+Heliothermal_Index<-function(tmax,
+                             tmean,
+                             k = 1.064,
+                             dates){
+
+  # test<-hi_res[hi_res$YEAR==1882,]
+  # tmax<-test$tmax; tmean = test$tmean
+  # dates<-test$Datum
+
+  #
+  iniday <- '04-01'
+  endday <- '09-30'
+
+  days <- dates[which(as.numeric(substr(dates, 6,7))
+                      %in%
+                        substr(iniday, 1, 2):substr(endday, 1, 2))]
+
+   HI<-sum(k * (0.5 * ((tmax[dates %in% days]-10)+(tmean[dates %in% days] -10))),
+           na.rm = T)
+   return(HI)
+
+}

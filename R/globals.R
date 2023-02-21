@@ -22,6 +22,6 @@ utils::globalVariables(c(
   "Datum",
   "HI",
   "LAT",
-  "TDMAX",
-  "TDMIN"
+  "tmax",
+  "tmean"
 ))

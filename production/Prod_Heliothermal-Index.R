@@ -8,7 +8,7 @@ stations_lat <- c(50.4819, 50.8812, 51.0314, 51.1280, 51.0221)
 
 
 # A -----------------------------------------------------------------------
-Results_A<-list()
+Results_A <- list()
 for (istation in 1:length(stations)) {
   no.station <- rdwd::findID(stations[istation], exactmatch = TRUE)
 
@@ -41,7 +41,7 @@ for (istation in 1:length(stations)) {
   Results_A[[istation]] <- clima_Heliothermal_Index(x.df = x.df, lat = stations_lat[istation])
 
   ggplot2::ggsave(
-    plot = Results_A[[istation]][[1]] ,
+    plot = Results_A[[istation]][[1]],
     path = "~/NextCloud/DATA/Shared/KlimaKonform-Results/Heliothermal-Index/A",
     filename = paste0(stations[istation], ".png"),
     height = 75,
@@ -53,7 +53,7 @@ for (istation in 1:length(stations)) {
 }
 
 # B -----------------------------------------------------------------------
-Results_B<-list()
+Results_B <- list()
 for (istation in 1:length(stations)) {
   no.station <- rdwd::findID(stations[istation], exactmatch = TRUE)
 
@@ -82,12 +82,12 @@ for (istation in 1:length(stations)) {
   ))
 
   colnames(x.df) <- c("Datum", "tmax", "tmean")
-  x.df[,c(1,2)]<-x.df[,c(1,2)]+1.5
+  x.df[, c(1, 2)] <- x.df[, c(1, 2)] + 1.5
 
   Results_B[[istation]] <- clima_Heliothermal_Index(x.df = x.df, lat = stations_lat[istation])
 
   ggplot2::ggsave(
-    plot = Results_B[[istation]][[1]] ,
+    plot = Results_B[[istation]][[1]],
     path = "~/NextCloud/DATA/Shared/KlimaKonform-Results/Heliothermal-Index/B",
     filename = paste0(stations[istation], ".png"),
     height = 75,
@@ -99,7 +99,7 @@ for (istation in 1:length(stations)) {
 }
 
 # C -----------------------------------------------------------------------
-Results_C<-list()
+Results_C <- list()
 for (istation in 1:length(stations)) {
   no.station <- rdwd::findID(stations[istation], exactmatch = TRUE)
 
@@ -128,7 +128,7 @@ for (istation in 1:length(stations)) {
   ))
 
   colnames(x.df) <- c("Datum", "tmax", "tmean")
-  x.df[,c(1,2)]<-x.df[,c(1,2)]+2.0
+  x.df[, c(1, 2)] <- x.df[, c(1, 2)] + 2.0
   Results_C[[istation]] <- clima_Heliothermal_Index(x.df = x.df, lat = stations_lat[istation])
 
   ggplot2::ggsave(
@@ -146,48 +146,62 @@ for (istation in 1:length(stations)) {
 unlink("DWDdata/", recursive = TRUE)
 # others ------------------------------------------------------------------
 
-data<- readRDS("inst/HI_data.RDS")
+data <- readRDS("inst/HI_data.RDS")
 stations <- c("Plauen", "Gera-Leumnitz", "Zeitz", "Dresden-Klotzsche", "Dresden-Hosterwitz")
 library(ggplot2)
 library(patchwork)
 library(ggpmisc)
-for(i in 1:length(stations)){
+for (i in 1:length(stations)) {
+  station_data <- list(
+    data[[1]][[i]][[2]],
+    data[[2]][[i]][[2]],
+    data[[3]][[i]][[2]]
+  )
+  names(station_data) <- c("A", "B", "C")
 
-  station_data<-list(data[[1]][[i]][[2]],
-                      data[[2]][[i]][[2]],
-                      data[[3]][[i]][[2]])
-  names(station_data)<-c("A","B","C")
+  station_data <- data.table::rbindlist(station_data, idcol = "ID")
+  station_data$GROUP <- NA
 
-  station_data<-data.table::rbindlist(station_data, idcol = "ID")
-  station_data$GROUP <-NA
-
-  station_data$GROUP[station_data$YEAR>=1960 & station_data$YEAR<=1990]<- "1960-1990"
-  station_data$GROUP[station_data$YEAR>=1991 & station_data$YEAR<=2020]<- "1991-2020"
-  station_data$HI2<-station_data$HI
-  station_data$HI2[station_data$HI< 500]<- NA
+  station_data$GROUP[station_data$YEAR >= 1960 & station_data$YEAR <= 1990] <- "1960-1990"
+  station_data$GROUP[station_data$YEAR >= 1991 & station_data$YEAR <= 2020] <- "1991-2020"
+  station_data$HI2 <- station_data$HI
+  station_data$HI2[station_data$HI < 500] <- NA
 
   p1 <- ggplot2::ggplot(station_data) +
-    ggplot2::geom_point(mapping = ggplot2::aes(x = YEAR,
-                                               y = HI2,
-                                               color = ID),
-                        size = 0.3) +
-    ggplot2::geom_smooth(mapping = ggplot2::aes(x = YEAR,
-                                                y = HI2,
-                                                color = ID),
-                         method = "lm",
-                         #linetype = "longdash",
-                         size = 0.3,
-                         se = F) +
+    ggplot2::geom_point(
+      mapping = ggplot2::aes(
+        x = YEAR,
+        y = HI2,
+        color = ID
+      ),
+      size = 0.3
+    ) +
+    ggplot2::geom_smooth(
+      mapping = ggplot2::aes(
+        x = YEAR,
+        y = HI2,
+        color = ID
+      ),
+      method = "lm",
+      # linetype = "longdash",
+      size = 0.3,
+      se = F
+    ) +
     # stat_poly_line(aes(x = YEAR,
     #                    y = HI2,
     #                    color = ID)) +
-    stat_poly_eq(size = 1.25,
-                 aes(x = YEAR,
-                     y = HI2,
-                     color = ID,
-
-                     label = paste(after_stat(eq.label),
-                                   after_stat(rr.label), sep = "*\", \"*")))+
+    stat_poly_eq(
+      size = 1.25,
+      aes(
+        x = YEAR,
+        y = HI2,
+        color = ID,
+        label = paste(after_stat(eq.label),
+          after_stat(rr.label),
+          sep = "*\", \"*"
+        )
+      )
+    ) +
     ggplot2::theme_bw(base_size = 5) +
     ggplot2::scale_x_continuous(
       breaks = seq(1880, 2022, 15),
@@ -200,28 +214,30 @@ for(i in 1:length(stations)){
       limits = c(0, 2500)
     ) +
     ggplot2::xlab("") +
-    ggplot2::ylab("Huglin Heliothermal Index (HI)")+
-    theme(legend.title = element_blank())+
-    ggtitle("(a)") #; p1
+    ggplot2::ylab("Huglin Heliothermal Index (HI)") +
+    theme(legend.title = element_blank()) +
+    ggtitle("(a)") # ; p1
 
-  p2<-ggplot(data = subset(station_data, !is.na(GROUP)))+
-    geom_boxplot(mapping = aes(x = GROUP, fill = ID, y = HI2),
-                 size = 0.3,
-                 outlier.size = 0.3,
-                 outlier.colour = "red")+
-    theme_bw(base_size = 5)+
+  p2 <- ggplot(data = subset(station_data, !is.na(GROUP))) +
+    geom_boxplot(
+      mapping = aes(x = GROUP, fill = ID, y = HI2),
+      size = 0.3,
+      outlier.size = 0.3,
+      outlier.colour = "red"
+    ) +
+    theme_bw(base_size = 5) +
     ggplot2::scale_y_continuous(
       breaks = seq(0, 2500, 250),
       expand = c(0, 0),
       limits = c(0, 2500)
-    )+
-    xlab("")+
-    ggplot2::ylab("Huglin Heliothermal Index (HI)")+
-    theme(legend.title = element_blank())+
-    ggtitle("(b)")#; p2
+    ) +
+    xlab("") +
+    ggplot2::ylab("Huglin Heliothermal Index (HI)") +
+    theme(legend.title = element_blank()) +
+    ggtitle("(b)") # ; p2
 
   ggplot2::ggsave(
-    plot = p1+p2,
+    plot = p1 + p2,
     path = "~/NextCloud/DATA/Shared/KlimaKonform-Results/Heliothermal-Index/Auswertung",
     filename = paste0(stations[i], ".png"),
     height = 80,
@@ -231,5 +247,3 @@ for(i in 1:length(stations)){
     dpi = 600
   )
 }
-
-

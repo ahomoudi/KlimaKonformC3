@@ -194,6 +194,28 @@ linear_trend_df <- function(x) {
   )
   return(r.df)
 }
+# clacuate mean, min, max for plotting
+linear_trend_df_IDcol <- function(x, IDcol) {
+  # x<-r.rast
+
+  r.time <- as.Date(terra::time(x))
+
+  r.array <- terra::as.array(x)
+
+  r.mean <- apply(r.array, c(3), mean, na.rm = T)
+  r.max <- apply(r.array, c(3), max, na.rm = T)
+  r.min <- apply(r.array, c(3), min, na.rm = T)
+
+
+  r.df <- data.frame(
+    YEAR = r.time,
+    Kmean = r.mean,
+    Kmax = r.max,
+    Kmin = r.min,
+    ID = IDcol
+  )
+  return(r.df)
+}
 
 # boxplots_df
 boxplot_df <- function(x) {
@@ -569,25 +591,24 @@ set_sec_axis <- function(y.prim, y.sec.range) {
   return(c(left, right))
 }
 
-Heliothermal_Index<-function(tmax,
-                             tmean,
-                             k = 1.064,
-                             dates){
-
+Heliothermal_Index <- function(tmax,
+                               tmean,
+                               k = 1.064,
+                               dates) {
   # test<-hi_res[hi_res$YEAR==1882,]
   # tmax<-test$tmax; tmean = test$tmean
   # dates<-test$Datum
 
   #
-  iniday <- '04-01'
-  endday <- '09-30'
+  iniday <- "04-01"
+  endday <- "09-30"
 
-  days <- dates[which(as.numeric(substr(dates, 6,7))
-                      %in%
-                        substr(iniday, 1, 2):substr(endday, 1, 2))]
+  days <- dates[which(as.numeric(substr(dates, 6, 7))
+  %in%
+    substr(iniday, 1, 2):substr(endday, 1, 2))]
 
-   HI<-sum(k * (0.5 * ((tmax[dates %in% days]-10)+(tmean[dates %in% days] -10))),
-           na.rm = T)
-   return(HI)
-
+  HI <- sum(k * (0.5 * ((tmax[dates %in% days] - 10) + (tmean[dates %in% days] - 10))),
+    na.rm = T
+  )
+  return(HI)
 }

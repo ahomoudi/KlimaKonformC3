@@ -23,5 +23,7 @@ utils::globalVariables(c(
   "HI",
   "LAT",
   "tmax",
-  "tmean"
+  "tmean",
+  "Experiment",
+  "ID"
 ))

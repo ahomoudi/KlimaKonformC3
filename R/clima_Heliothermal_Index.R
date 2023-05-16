@@ -7,7 +7,6 @@
 #' @return  ggplot2 plot
 #' @export
 clima_Heliothermal_Index <- function(x.df, lat) {
-
   # test
 
   hi_res <- x.df %>%
@@ -18,9 +17,9 @@ clima_Heliothermal_Index <- function(x.df, lat) {
     dplyr::group_by(YEAR) %>%
     dplyr::mutate(HI = Heliothermal_Index(tmax, tmean, dates = Datum)) %>%
     dplyr::distinct(YEAR, HI)
-  hi_res<-na.omit(hi_res)
+  hi_res <- na.omit(hi_res)
 
-  hi_res<-hi_res[hi_res$HI!=0,]
+  hi_res <- hi_res[hi_res$HI != 0, ]
 
   p <- ggplot2::ggplot(hi_res) +
     ggplot2::geom_point(mapping = ggplot2::aes(x = YEAR, y = HI), size = 1) +
@@ -31,9 +30,9 @@ clima_Heliothermal_Index <- function(x.df, lat) {
     ) +
     ggplot2::theme_bw(base_size = 8) +
     ggplot2::scale_x_continuous(
-      breaks = seq(1880, 2022, 15),
+      breaks = seq(2018, 2022, 1),
       expand = c(0, 0),
-      limits = c(1880, 2022)
+      limits = c(2017, 2023)
     ) +
     ggplot2::scale_y_continuous(
       breaks = seq(0, 2500, 250),

@@ -1,7 +1,11 @@
-/media/ahmed/Daten/WHK2/Data/netCDF/4ter_lauf/rcp85/852006_yield-zr_MPI-M-MPI-ESM-LR_UHOH-WRF361H_rcp85_r1i1p1_v1_1970-01-01_2099-12-31.nc
+/media/HDD/Daten/WHK2/Data/netCDF/2ter_lauf/rcp85/85207_yield-sm_MPI-M-MPI-ESM-LR_UHOH-WRF361H_rcp85_r1i1p1_v1_1970-01-01_2099-12-31_1CO20irrigation.nc
+/media/HDD/Daten/WHK2/Data/netCDF/6ter_Lauf/852012/852012_yield-sm_MPI-M-MPI-ESM-LR_UHOH-WRF361H_rcp85_r1i1p1_v1_1970-01-01_2099-12-31_0CO20irrigation.nc
+/media/HDD/Daten/WHK2/Data/netCDF/6ter_Lauf/852014/852014_yield-sm_MPI-M-MPI-ESM-LR_UHOH-WRF361H_rcp85_r1i1p1_v1_1970-01-01_2099-12-31_0CO21irrigation.nc
+/media/HDD/Daten/WHK2/Data/netCDF/6ter_Lauf/852016/852016_yield-sm_MPI-M-MPI-ESM-LR_UHOH-WRF361H_rcp85_r1i1p1_v1_1970-01-01_2099-12-31_1CO21irrigation.nc
+yield-sm
 Altenburger Land
 211
 DE
-2ter
-/media/ahmed/Volume/WHK2-tmp/Plotting/4ter_lauf/211/AltenburgerLand/Yield/Yield-zr/
-/media/ahmed/Volume/WHK2-tmp/Plotting_data/4ter_lauf/211/AltenburgerLand/Yield/Yield-zr/
+6ter
+/media/HDD/Volume/WHK2-tmp/Plotting/6ter_lauf/boxplots/211/AltenburgerLand/Yield/Yield-sm/
+/media/HDD/Volume/WHK2-tmp/Plotting_data/6ter_lauf/boxplots/211/AltenburgerLand/Yield/Yield-sm/

@@ -158,7 +158,7 @@ ens_yearly_ridges <- function(netCDF.files,
     as.numeric(var_plotting$Period) %% 10
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -430,5 +430,5 @@ ens_yearly_ridges <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

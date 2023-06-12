@@ -25,5 +25,13 @@ utils::globalVariables(c(
   "tmax",
   "tmean",
   "Experiment",
-  "ID"
+  "ID",
+  "KRK",
+  "KTM",
+  "RK",
+  "TM",
+  "TT.MM.JJJJ",
+  "dMI",
+  "Kyear",
+  "Station"
 ))

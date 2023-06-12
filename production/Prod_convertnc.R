@@ -74,11 +74,13 @@ for (i in 1:length(rcp_dirs)) {
       # assign map projection
       crs(gibbon) <- "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 
-      indices_years<-(stringr::str_extract(names(gibbon),
-                                           stringr::regex("(\\d+)(?!.*\\d)")))
+      indices_years <- (stringr::str_extract(
+        names(gibbon),
+        stringr::regex("(\\d+)(?!.*\\d)")
+      ))
 
-      indices_years<-as.numeric(indices_years)
-      gibbon<-gibbon[[order(indices_years)]]
+      indices_years <- as.numeric(indices_years)
+      gibbon <- gibbon[[order(indices_years)]]
 
       # order_df<-as.data.frame(x=names(gibbon))
       # order_df$files<-asc.files

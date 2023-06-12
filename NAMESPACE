@@ -2,6 +2,8 @@
 
 export("%>%")
 export(clima_Heliothermal_Index)
+export(clima_dMI)
+export(clima_dMI_multiple)
 export(clima_diagramm_abs)
 export(clima_diagramm_change)
 export(clima_plot_cornors)

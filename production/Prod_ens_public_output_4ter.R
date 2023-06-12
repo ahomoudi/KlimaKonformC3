@@ -121,7 +121,7 @@ for (ifile in length(nc.files):1) {
 
         system("R CMD BATCH sub_ens_public_output.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }

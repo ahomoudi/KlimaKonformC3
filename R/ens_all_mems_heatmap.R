@@ -151,7 +151,7 @@ ens_all_mems_heatmap <- function(netCDF.files,
     )
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -469,5 +469,5 @@ ens_all_mems_heatmap <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

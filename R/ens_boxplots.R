@@ -155,7 +155,7 @@ ens_boxplots <- function(netCDF.files,
     )
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -435,5 +435,5 @@ ens_boxplots <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

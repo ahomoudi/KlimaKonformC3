@@ -170,19 +170,19 @@ ens_public_output <- function(netCDF.file,
 
   colnames(var_plotting_maps) <- c("x", "y", "Period", "Kvalue")
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # prepare boxplots data-----------------------------------------------------
 
   var_plotting_bp <- boxplot_df(r.rast)
 
-  gc(verbose = F)
+  invisible(gc())
 
   # prepare boxplots data-----------------------------------------------------
 
   var_plotting_lt <- linear_trend_df(r.rast)
 
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -698,5 +698,5 @@ ens_public_output <- function(netCDF.file,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

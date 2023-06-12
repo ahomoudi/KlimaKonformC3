@@ -17,7 +17,7 @@ Bodenuebersichts <- terra::as.data.frame(Bodenuebersichts, xy = TRUE)
 
 # crs(land_cover) <- NA
 rm(x1, x2)
-gc()
+invisible(gc())
 # sysdata_filenames <- load("R/sysdata.rda")
 # save(
 #   list = c(sysdata_filenames, "Bodenuebersichts"),

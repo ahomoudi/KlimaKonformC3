@@ -128,7 +128,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_12maps.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -275,7 +275,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_12maps.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -422,7 +422,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_12maps.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }

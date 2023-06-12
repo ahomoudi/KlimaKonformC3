@@ -122,7 +122,7 @@ compress_csv <- function(csv_file) {
   )
 
   rm(list = ls())
-  gc()
+  invisible(gc())
 }
 
 robust_spatial_trend <- function(x) {

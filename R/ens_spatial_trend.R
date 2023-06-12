@@ -169,7 +169,7 @@ ens_spatial_trend <- function(netCDF.files,
 
   var_plotting <- r.trend[r.trend$variables == "Slope", ]
 
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -490,5 +490,5 @@ ens_spatial_trend <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

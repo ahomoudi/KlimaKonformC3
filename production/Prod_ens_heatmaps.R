@@ -125,7 +125,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_heatmaps.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -269,7 +269,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_heatmaps.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -413,7 +413,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_heatmaps.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }

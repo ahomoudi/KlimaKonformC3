@@ -156,7 +156,7 @@ for (ivar in nrow(vars):1) {
         system("R CMD BATCH sub_ens_boxplots.R")
 
 
-        gc()
+        invisible(gc())
       }
     }
   }

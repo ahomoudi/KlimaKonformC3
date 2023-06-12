@@ -179,7 +179,7 @@ ens_12maps <- function(netCDF.files,
     )
   )
 
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -498,5 +498,5 @@ ens_12maps <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

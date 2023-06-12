@@ -9,6 +9,7 @@ exp_linear_trend(
   variable,
   region,
   landcover,
+  y.axis.limits = NA,
   language,
   run_id,
   output_path,
@@ -26,6 +27,9 @@ variables. They should be provided including the full path to the files}
 
 \item{landcover}{A numeric variable indicating which land cover should be
 considered. To consider all land cover give 1000.}
+
+\item{y.axis.limits}{A vector of length 2L to produce all plots with similar
+y axis limits.}
 
 \item{language}{A character variable either "EN" or "DE", to specify the
 languages of plots}

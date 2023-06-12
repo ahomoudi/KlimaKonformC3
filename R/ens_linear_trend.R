@@ -160,7 +160,7 @@ ens_linear_trend <- function(netCDF.files,
 
 
   rm(r.mean)
-  gc(verbose = F)
+  invisible(gc())
 
   # max
   r.max <- lapply(r.rast, f1_max)
@@ -178,7 +178,7 @@ ens_linear_trend <- function(netCDF.files,
     dplyr::right_join(y = var_plotting, by = c("YEAR", "Scenario"))
 
   rm(r.max)
-  gc(verbose = F)
+  invisible(gc())
 
   # min
   r.min <- lapply(r.rast, f1_min)
@@ -197,7 +197,7 @@ ens_linear_trend <- function(netCDF.files,
 
 
   rm(r.min)
-  gc(verbose = F)
+  invisible(gc())
 
 
   # meta data ---------------------------------------------------------------
@@ -508,5 +508,5 @@ ens_linear_trend <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

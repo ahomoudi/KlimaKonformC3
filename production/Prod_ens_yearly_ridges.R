@@ -128,7 +128,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_yearly_ridges.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -274,7 +274,7 @@ for (ivar in 1:nrow(vars)) {
         ), "input_text_yearly_ridges")
 
         system("R CMD BATCH sub_ens_yearly_ridges.R")
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -421,7 +421,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_yearly_ridges.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }

@@ -14,7 +14,7 @@ library(KlimaKonformC3)
 #   new.filename <- gsub(".nc$", "_1CO20irrigation.nc", ifile)
 #   file.copy(from = ifile, to = new.filename)
 # })
-# 6ter V001 --------------------------------------------------------------------
+# 6ter V002 --------------------------------------------------------------------
 
 input_dir1 <- "/media/HDD/Daten/WHK2/Data/netCDF/2ter_lauf"
 input_dir2 <- "/media/HDD/Daten/WHK2/Data/netCDF/6ter_Lauf"
@@ -36,22 +36,17 @@ nc.files2 <- list.files(
 # now we are only interested in the yield
 nc.files <- c(nc.files1, nc.files2)
 nc.files <- nc.files[c(
-  grep("AET-ww", nc.files),
-  grep("GWR-ww", nc.files),
-  grep("AET-sm", nc.files),
-  grep("GWR-sm", nc.files)
+  grep("_AET_", nc.files),
+  grep("_GWR_", nc.files)
 )]
 
-
-output_path <- "~/NextCloud/DATA/Shared/KlimaKonform-Results/Plotting/6ter_lauf/boxplots"
-# output_path <- "/media/HDD/Volume/WHK2-tmp/Plotting/6ter_lauf/boxplots"
+# output_path <- "~/NextCloud/DATA/Shared/KlimaKonform-Results/Plotting/6ter_lauf/ts"
+output_path <- "/home/ahmed/NextCloud/DATA/Shared/KlimaKonform-Results/Plotting/6ter_lauf/ts"
 output_plotting_data <- "/media/HDD/Volume/WHK2-tmp/Plotting_data/6ter_lauf"
 
 # meta data
 str_split_custom <- function(X) {
-  first <- unlist(stringr::str_split(X,
-    pattern = "/"
-  ))
+  first <- unlist(stringr::str_split(X, pattern = "/"))
 
   Xr <- unlist(stringr::str_split(first[length(first)],
     pattern = "_"
@@ -77,11 +72,22 @@ meta_df_prod$V11 <- substr(
   1, 5
 )
 
-meta_unique <- apply(unique(meta_df_prod[2:7]),
-  MARGIN = 1, FUN = function(x) {
-    paste0(x, collapse = "_")
-  }
+sim_steup <- rbind(
+  read.csv("/media/HDD/Daten/WHK2/Data/raw_data/230509_setup 6ter Lauf.csv",
+    stringsAsFactors = F
+  )[, c("run.id", "crop.id")],
+  read.csv("/media/HDD/Daten/WHK2/Data/raw_data/2ter_Lauf/sim_setups_neu.csv",
+    stringsAsFactors = F
+  )[, c("run.id", "crop.id")]
 )
+
+sim_steup$run.id <- as.character(sim_steup$run.id)
+
+meta_df_prod <- meta_df_prod %>%
+  dplyr::rename(run.id = V1) %>%
+  dplyr::left_join(y = sim_steup, by = "run.id")
+
+meta_unique <- unique(meta_df_prod[c(2:7, 12)])
 
 # combine the four files
 regions <- c(
@@ -96,14 +102,31 @@ landcover_variables <- c(211)
 # used cores
 ncores <- parallel::detectCores(logical = FALSE) / 3
 print(ncores)
+
+
 # loop over files
-parallel::mclapply(1:length(meta_unique), function(igroup) {
+parallel::mclapply(1:nrow(meta_unique), function(igroup) {
+  patterns_df <- meta_df_prod %>%
+    dplyr::filter(V2 == meta_unique$V2[igroup]) %>%
+    dplyr::filter(V3 == meta_unique$V3[igroup]) %>%
+    dplyr::filter(V4 == meta_unique$V4[igroup]) %>%
+    dplyr::filter(V5 == meta_unique$V5[igroup]) %>%
+    dplyr::filter(V6 == meta_unique$V6[igroup]) %>%
+    dplyr::filter(crop.id == meta_unique$crop.id[igroup])
+
+  vars_uniqui <- unique(patterns_df$crop.id)
+
+  patterns_df <- apply(patterns_df[, 1:9], MARGIN = 1, function(x) {
+    paste0(x, collapse = "_")
+  })
+
   # get sub files
-  sub_files <- grep(
-    pattern = meta_unique[igroup],
-    nc.files,
-    value = TRUE
-  )
+  sub_files <- unlist(lapply(patterns_df, FUN = function(x) {
+    grep(x,
+      nc.files,
+      value = T
+    )
+  }))
   # get meta data
   sub_metadf <- as.data.frame(do.call(
     rbind,
@@ -112,32 +135,12 @@ parallel::mclapply(1:length(meta_unique), function(igroup) {
     )
   ))
 
+  vars <- unique(sub_metadf$V2)
+  ivar <- 1
+
   # get var-path
-  sub_var <- unlist(stringr::str_split(
-    sub_metadf$V2[1],
-    "-"
-  ))
-
-  if (length(sub_var) == 2) {
-    if (sub_var[1] == "yield") {
-      sub_var[1] <- stringr::str_to_title(sub_var[1])
-    }
-
-    var_path <- paste0(
-      sub_var[1], "/",
-      sub_var[1], "-",
-      sub_var[2]
-    )
-  } else {
-    if (vars[ivar, 1] == "yield") {
-      vars[ivar, 1] <- stringr::str_to_title(vars[ivar, 1])
-    }
-    var_path <- paste0(
-      vars[ivar, 1],
-      "/",
-      vars[ivar, 1]
-    )
-  }
+  sub_var <- unlist(stringr::str_split(sub_metadf$V2[1], "-"))
+  var_path <- paste0(sub_var[1], "/", sub_var[1], "from", vars_uniqui)
 
   # loop over regions
   for (iregion in 1:length(regions)) {
@@ -184,7 +187,7 @@ parallel::mclapply(1:length(meta_unique), function(igroup) {
       }
 
       tmp_file <- paste0(
-        "input_BP_",
+        "input_LT_",
         igroup,
         unique(sub_metadf$V2),
         ilandcover,
@@ -214,10 +217,10 @@ parallel::mclapply(1:length(meta_unique), function(igroup) {
         output_csv_folder
       ), tmp_file)
 
-      # sub_exp_boxplots.R
+      # sub_exp_linear_trend.R
 
       system(paste0(
-        "Rscript --vanilla sub_exp_boxplots.R  ",
+        "Rscript --vanilla sub_exp_linear_trend.R ",
         tmp_file
       ))
 
@@ -226,14 +229,10 @@ parallel::mclapply(1:length(meta_unique), function(igroup) {
   }
 }, mc.cores = ncores)
 # output_path<-"D:/AHomoudi/KlimaKonform/output/Alle/"
-ifile <- 1
-iregion <- 2
-ilandcover <- 1
-igroup <- 1
-# for (igroup in 1:length(meta_unique)) {
-#
-# }
-
+# ifile <- 1
+# iregion <- 2
+# ilandcover <- 1
+# igroup <- 1
 # 6ter V002 --------------------------------------------------------------------
 
 input_dir1 <- "/media/HDD/Daten/WHK2/Data/netCDF/2ter_lauf"
@@ -261,8 +260,8 @@ nc.files <- nc.files[c(
 )]
 
 
-output_path <- "~/NextCloud/DATA/Shared/KlimaKonform-Results/Plotting/6ter_lauf/boxplots"
-# output_path <- "/media/HDD/Volume/WHK2-tmp/Plotting/6ter_lauf/boxplots"
+# output_path <- "~/NextCloud/DATA/Shared/KlimaKonform-Results/Plotting/6ter_lauf/boxplots"
+output_path <- "/media/HDD/Volume/WHK2-tmp/Plotting/6ter_lauf/boxplots"
 output_plotting_data <- "/media/HDD/Volume/WHK2-tmp/Plotting_data/6ter_lauf"
 
 # meta data
@@ -448,23 +447,7 @@ parallel::mclapply(1:nrow(meta_unique), function(igroup) {
   }
 }, mc.cores = ncores)
 # output_path<-"D:/AHomoudi/KlimaKonform/output/Alle/"
-ifile <- 1
-iregion <- 2
-ilandcover <- 1
-igroup <- 1
-
-# rename files ------------------------------------------------------------
-# input_dir1 <- "/media/HDD/Daten/WHK2/Data/netCDF/2ter_lauf"
-# nc.files1 <- list.files(
-#   path = input_dir1,
-#   pattern = "_1CO20irrigation.nc",
-#   recursive = T,
-#   full.names = T
-# )
-#
-# file.remove(nc.files1)
-
-# csv_file%>%
-#   dplyr::select(variable, maximum, minimum)%>%
-#   dplyr::group_by(variable)%>%
-#   dplyr::summarise_all(min)
+# ifile <- 1
+# iregion <- 2
+# ilandcover <- 1
+# igroup <- 1

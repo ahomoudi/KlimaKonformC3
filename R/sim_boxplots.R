@@ -141,7 +141,7 @@ sim_boxplots <- function(netCDF.file,
 
   var_plotting <- boxplot_df(r.rast)
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -356,5 +356,5 @@ sim_boxplots <- function(netCDF.file,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

@@ -182,7 +182,7 @@ ens_12maps_relative_change <- function(netCDF.files,
   )
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -523,5 +523,5 @@ ens_12maps_relative_change <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

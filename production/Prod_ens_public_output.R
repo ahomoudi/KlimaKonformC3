@@ -119,7 +119,7 @@ for (ifile in 1:length(nc.files)) {
 
         system("R CMD BATCH sub_ens_public_output.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -259,7 +259,7 @@ for (ifile in 1:length(nc.files)) {
 
         system("R CMD BATCH sub_ens_public_output.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -386,7 +386,7 @@ for (ifile in 1:length(nc.files)) {
 
         system("R CMD BATCH sub_ens_public_output.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }

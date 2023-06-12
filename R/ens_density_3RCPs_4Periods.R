@@ -159,7 +159,7 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
     dplyr::summarise(Kvalue = mean(Kvalue))
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -439,5 +439,5 @@ ens_density_3RCPs_4Periods <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

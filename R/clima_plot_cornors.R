@@ -106,5 +106,5 @@ clima_plot_cornors <- function(data,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

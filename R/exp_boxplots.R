@@ -211,7 +211,7 @@ exp_boxplots <- function(netCDF.files,
     )
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -271,9 +271,11 @@ exp_boxplots <- function(netCDF.files,
   #
   # plots and csv name  -----------------------------------------------------
 
-  uniquefilename<-unlist(stringr::str_extract_all(netCDF.files[1],pattern = paste0("(?<=",
-                                                          variable,
-                                                          "_).+(?=_197)")))
+  uniquefilename <- unlist(stringr::str_extract_all(netCDF.files[1], pattern = paste0(
+    "(?<=",
+    variable,
+    "_).+(?=_197)"
+  )))
 
   # define plot name
   if (exists("output_path")) {
@@ -317,7 +319,7 @@ exp_boxplots <- function(netCDF.files,
 
   if (is.na(y.axis.limits)) {
     csv_file <- system.file(paste0(run_id, "_lauf.csv"),
-                            package = "KlimaKonformC3"
+      package = "KlimaKonformC3"
     )
 
     csv_file <- readr::read_csv(csv_file, show_col_types = F)
@@ -443,5 +445,5 @@ exp_boxplots <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

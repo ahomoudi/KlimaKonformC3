@@ -17,7 +17,7 @@ land_cover <- terra::as.data.frame(land_cover, xy = TRUE)
 
 # crs(land_cover) <- NA
 rm(x1, x2)
-gc()
+invisible(gc())
 # sysdata_filenames <- load("R/sysdata.rda")
 # save(
 #   list = c(sysdata_filenames, "land_cover"),

@@ -126,13 +126,13 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_linear_trend.R")
 
-        gc()
+        invisible(gc())
       }
-      gc()
+      invisible(gc())
     }
-    gc()
+    invisible(gc())
   }
-  gc()
+  invisible(gc())
 }
 # test
 # netCDF.files <- sub_files
@@ -288,7 +288,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_linear_trend.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }
@@ -435,7 +435,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_linear_trend.R")
 
-        gc()
+        invisible(gc())
       }
     }
   }

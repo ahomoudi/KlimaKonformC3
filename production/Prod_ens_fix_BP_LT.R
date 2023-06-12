@@ -125,7 +125,7 @@ for (ivar in 1:nrow(vars)) {
 
         system("R CMD BATCH sub_ens_boxplots.R")
 
-        gc()
+        invisible(gc())
         writeLines(text = c(
           sub_files,
           vars[ivar, 1],
@@ -139,7 +139,7 @@ for (ivar in 1:nrow(vars)) {
         ), "input_text_linear_trend")
 
         system("R CMD BATCH sub_ens_linear_trend.R")
-        gc()
+        invisible(gc())
       }
     }
   }

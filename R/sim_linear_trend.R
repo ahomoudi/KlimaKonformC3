@@ -146,7 +146,7 @@ sim_linear_trend <- function(netCDF.file,
   var_plotting$Kmax <- unlist(terra::global(r.rast, "max", na.rm = T))
   var_plotting$Kmin <- unlist(terra::global(r.rast, "min", na.rm = T))
 
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -376,5 +376,5 @@ sim_linear_trend <- function(netCDF.file,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

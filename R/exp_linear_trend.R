@@ -9,6 +9,8 @@
 #' "Vogtlandkreis", "Burgenlandkreis", "Greiz", and "Altenburger Land".
 #' @param landcover A numeric variable indicating which land cover should be
 #' considered. To consider all land cover give 1000.
+#' @param y.axis.limits A vector of length 2L to produce all plots with similar
+#' y axis limits.
 #' @param language A character variable either "EN" or "DE", to specify the
 #' languages of plots
 #' @param run_id A character variable either "2ter", "3ter", "4ter", or "6ter"
@@ -23,13 +25,14 @@
 #' @importFrom utils globalVariables write.table
 #' @export
 exp_linear_trend <- function(netCDF.files,
-                         variable,
-                         region,
-                         landcover,
-                         language,
-                         run_id,
-                         output_path,
-                         output_csv = NULL) {
+                             variable,
+                             region,
+                             landcover,
+                             y.axis.limits = NA,
+                             language,
+                             run_id,
+                             output_path,
+                             output_csv = NULL) {
   # check Language
   if (language == "DE") {
     message("Producing Plots in German")
@@ -197,19 +200,20 @@ exp_linear_trend <- function(netCDF.files,
   # prepare timeseries  data---------------------------------------------------
 
   names(r.rast) <- r.names
-  #names(r.rast)<-paste0("ID", 1:length(r.rast))
+  # names(r.rast)<-paste0("ID", 1:length(r.rast))
 
   var_plotting <- lapply(names(r.rast),
-                         FUN = function(x){
-                           linear_trend_df_IDcol(r.rast[[x]], IDcol = x)
-                         })%>%
+    FUN = function(x) {
+      linear_trend_df_IDcol(r.rast[[x]], IDcol = x)
+    }
+  ) %>%
     data.table::rbindlist()
 
   # convert to years
-  #var_plotting$YEAR <- as.numeric(format(var_plotting$YEAR, "%Y"))
+  # var_plotting$YEAR <- as.numeric(format(var_plotting$YEAR, "%Y"))
 
   # clean some memory
-  gc(verbose = F)
+  invisible(gc())
 
   # meta data ---------------------------------------------------------------
 
@@ -269,9 +273,11 @@ exp_linear_trend <- function(netCDF.files,
   #
   # plots and csv name  -----------------------------------------------------
 
-  uniquefilename<-unlist(stringr::str_extract_all(netCDF.files[1],pattern = paste0("(?<=",
-                                                          variable,
-                                                          "_).+(?=_197)")))
+  uniquefilename <- unlist(stringr::str_extract_all(netCDF.files[1], pattern = paste0(
+    "(?<=",
+    variable,
+    "_).+(?=_197)"
+  )))
 
   # define plot name
   if (exists("output_path")) {
@@ -316,7 +322,7 @@ exp_linear_trend <- function(netCDF.files,
   # y axis
   if (is.na(y.axis.limits)) {
     csv_file <- system.file(paste0(run_id, "_lauf.csv"),
-                            package = "KlimaKonformC3"
+      package = "KlimaKonformC3"
     )
 
     csv_file <- readr::read_csv(csv_file, show_col_types = F)
@@ -358,22 +364,28 @@ exp_linear_trend <- function(netCDF.files,
     ) +
     # mean trend line
     ggplot2::geom_smooth(
-      mapping = ggplot2::aes(x = YEAR,
-                             y = Kmean,
-                             color = ID),
+      mapping = ggplot2::aes(
+        x = YEAR,
+        y = Kmean,
+        color = ID
+      ),
       method = "lm",
       linetype = "longdash",
       linewidth = 0.3,
       se = F
     ) +
-    ggplot2::scale_color_manual(values = rcps_colours,
-                                labels = stringr::str_wrap(r.names,
-                                                           width = 24
-                                )) +
-    ggplot2::scale_fill_manual(values = rcps_colours,
-                               labels = stringr::str_wrap(r.names,
-                                                          width = 24
-                               )) +
+    ggplot2::scale_color_manual(
+      values = rcps_colours,
+      labels = stringr::str_wrap(r.names,
+        width = 24
+      )
+    ) +
+    ggplot2::scale_fill_manual(
+      values = rcps_colours,
+      labels = stringr::str_wrap(r.names,
+        width = 24
+      )
+    ) +
     ggplot2::theme_bw(base_size = 6) +
 
     # add axis title
@@ -458,5 +470,5 @@ exp_linear_trend <- function(netCDF.files,
   # End ---------------------------------------------------------------------
   # clean
   rm(list = ls())
-  gc()
+  invisible(gc())
 }

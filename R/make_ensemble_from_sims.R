@@ -112,7 +112,7 @@ make_ensemble_from_sims <- name <- function(nc.files,
 
   # clean
   rm(list = ls())
-  gc(verbose = FALSE)
+  invisible(gc())
   message("Done ;), I also cleaned the memory for you ;)")
 }
 

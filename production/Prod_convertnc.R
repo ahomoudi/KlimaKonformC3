@@ -5,7 +5,31 @@ library(terra)
 
 sim_steup <- read.csv("/media/HDD/Daten/WHK2/Data/raw_data/230509_setup 6ter Lauf.csv",
   stringsAsFactors = F
-)
+)[, c("run.id",  "crop.id",
+      "gcm", "rcm", "scenario", "ensmem", "version", "start_date",
+      "end_date", "irrigation",  "rcp")]
+
+for(irow in 1:nrow(sim_steup)){
+  if(sim_steup$scenario[irow]== "rcp26" & sim_steup$rcp[irow] == "rcp26"){
+    sim_steup$NAME_1[irow] <- "0CO2"
+  }
+  if (sim_steup$scenario[irow]!= "rcp26" & sim_steup$rcp[irow] == "rcp26"){
+    sim_steup$NAME_1[irow] <- "0CO2"
+  }
+
+  if (sim_steup$scenario[irow]!= "rcp26" & sim_steup$rcp[irow] != "rcp26"){
+    sim_steup$NAME_1[irow] <- "1CO2"
+  }
+
+  if (sim_steup$irrigation[irow]== 1){
+    sim_steup$NAME_2[irow] <- "1irrgiation"
+  } else {
+    sim_steup$NAME_2[irow] <- "0irrgiation"
+  }
+
+
+}
+#expand.grid(c("rcp26", "rcp45", "rcp85"), c("rcp26", NA), c(TRUE, FALSE))
 
 input_dir <- "/media/HDD/Daten/WHK2/Data/raw_data/6ter_Lauf"
 output_dir <- "/media/HDD/Daten/WHK2/Data/netCDF/6ter_Lauf/"
@@ -33,8 +57,8 @@ time_axis2 <- seq(as.Date("1971/1/1", tz = "UTC"), as.Date("2100/1/1", tz = "UTC
 i <- 1
 j <- 6
 
-sim_steup$rcp[sim_steup$rcp == ""] <- 1
-sim_steup$rcp[sim_steup$rcp == "rcp26"] <- 0
+# sim_steup$rcp[sim_steup$rcp == ""] <- 1
+# sim_steup$rcp[sim_steup$rcp == "rcp26"] <- 0
 
 # loop over rcp_dirs
 for (i in 1:length(rcp_dirs)) {
@@ -48,10 +72,8 @@ for (i in 1:length(rcp_dirs)) {
 
   # Water+CO2 flag
   CW_flag <- paste0(
-    sim_steup$rcp[run_index],
-    "CO2",
-    sim_steup$irrigation[run_index],
-    "irrigation"
+    sim_steup$NAME_1[run_index],
+    sim_steup$NAME_2[run_index]
   )
 
   # loop over variables
@@ -150,6 +172,32 @@ for (i in 1:length(rcp_dirs)) {
     print(exp_id)
   }
 }
+
+#
+# copy missing from 2ter
+#
+# old_files<-list.files("/media/HDD/Daten/WHK2/Data/netCDF/2ter_lauf",
+#            recursive = TRUE,
+#            full.names = TRUE,
+#            pattern = ".nc$")
+#
+# x<- as.character(sim_steup$run.id)
+# sim_steup$run.id2 <- paste0(substr(x, 1,3), substr(x, 5,6))
+#
+# for (irow in 1: nrow(sim_steup)){
+#
+#   search.pattern<-paste0(sim_steup[irow, 3:7], collapse = "_")
+#   files_indices <- which(Reduce("&", lapply(search.pattern, grepl, old_files, fixed = TRUE)))
+#
+#   search.pattern1 <- as.character(sim_steup$run.id2[irow])
+#   files_indices <- which(Reduce("&", lapply(search.pattern1, grepl, old_files[files_indices], fixed = TRUE)))
+#
+#   if(sim_steup$scenario[irow]!= "rcp26")
+#
+# }
+
+
+
 
 # result_df<-as.data.frame(x=NA)
 # #loop over rcp_dirs

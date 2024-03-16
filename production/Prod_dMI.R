@@ -107,3 +107,15 @@ clima_dMI_multiple(csv.files,
   axis.scales = "fixed",
   output_path
 )
+
+
+Result%>%
+  dplyr::select(Scenario, Period, dMI)%>%
+  dplyr::group_by(Scenario, Period)%>%
+  dplyr::summarise(dMI_mean = mean(dMI),
+                   dMI_median = median(dMI),
+                   dMI_sd = sd(dMI),
+                   dMI_percentile_25 = quantile(dMI, 0.25),
+                   dMI_percentile_75 = quantile(dMI, 0.75),
+                   dMI_min = min(dMI),
+                   dMI_max = max(dMI))

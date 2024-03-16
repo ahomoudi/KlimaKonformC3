@@ -57,14 +57,14 @@ for (ifile in csv.files) {
 
   time_indices <- periods <- list(
     period1 = which(r.time > as.Date("1970-12-31") &
-      r.time < as.Date("2000-02-01")),
+      r.time < as.Date("1990-02-01")),
     period2 = which(r.time > as.Date("1990-12-31") &
       r.time < as.Date("2020-02-01"))
   )
 
   # assign periods
   data_mon$Period <- NA
-  data_mon$Period[time_indices$period1] <- "1971-2000"
+  data_mon$Period[time_indices$period1] <- "1971-1990"
   data_mon$Period[time_indices$period2] <- "1991-2020"
 
   # clean the data
@@ -94,7 +94,7 @@ for (ifile in csv.files) {
        Tmin = mean(TN, na.rm = T),
        Tavg = mean(TM, na.rm = T),
        Tmax = mean(TX, na.rm = T))%>%
-     dplyr::mutate(Period = dplyr::case_when(YEAR > 1970 & YEAR < 2001 ~ "1971-2000",
+     dplyr::mutate(Period = dplyr::case_when(YEAR > 1970 & YEAR < 2001 ~ "1971-1990",
                                              YEAR > 1990 & YEAR < 2021 ~ "1991-2020"))%>%
                                              dplyr::group_by(Period)%>%
                                                dplyr::summarise(
@@ -108,7 +108,7 @@ for (ifile in csv.files) {
                                                   str_split_custom(ifile), ".txt"))
 
   # get P1
-  data <- data_seasonal %>% dplyr::filter(Period == "1971-2000")
+  data <- data_seasonal %>% dplyr::filter(Period == "1971-1990")
   p1 <- clima_diagramm_abs(
     data = data,
     temp_precip_mean = data_longterm[1, c(4, 2)],
@@ -121,7 +121,7 @@ for (ifile in csv.files) {
 
   # get P2
   data <- ((data_seasonal %>% dplyr::filter(Period == "1991-2020"))[, -1] -
-    (data_seasonal %>% dplyr::filter(Period == "1971-2000"))[, -1]) %>%
+    (data_seasonal %>% dplyr::filter(Period == "1971-1990"))[, -1]) %>%
     dplyr::mutate(Period = "1991-2020") %>%
     dplyr::mutate(MONTH = 1:12)
 

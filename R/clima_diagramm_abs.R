@@ -251,11 +251,17 @@ clima_diagramm_abs <- function(data,
     )
   )
 
+  if(language == "DE"){
+    Klimadiagramm <- "Klimadiagramm \n "
+  }else if(language == "EN"){
+    Klimadiagramm<-"Climate diagram \n "
+  }
+
   # title
   figt <- grid::textGrob(
     label = paste0(
-      unique(data$Period),
-      "\n       "
+      Klimadiagramm,
+      unique(data$Period)
     ),
     gp = grid::gpar(
       fontsize = 6,

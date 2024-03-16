@@ -8,7 +8,8 @@
 #' @param axis.scales description
 #' @param output_path description
 #'
-#' @return A PNG
+#' @return A PNG & CSV file
+#' @importFrom utils  write.csv
 #' @export
 
 clima_dMI <- function(csv.file,
@@ -214,6 +215,11 @@ clima_dMI <- function(csv.file,
         )
       )
 
+    # print statistics
+    print(names(Result))
+    print(Result%>%
+            dplyr::group_by(Scenario, Kyear)%>%
+            dplyr::summarise(median(dMI)))
 
 
     # add some period index
@@ -257,6 +263,22 @@ clima_dMI <- function(csv.file,
         device = "png"
       )
   }
+
+  write.csv(x = Result%>%
+              dplyr::select(Scenario, Period, dMI)%>%
+              dplyr::group_by(Scenario)%>%
+              dplyr::summarise(dMI_mean = mean(dMI),
+                               dMI_median = median(dMI),
+                               dMI_sd = sd(dMI),
+                               dMI_percentile_25 = quantile(dMI, 0.25),
+                               dMI_percentile_75 = quantile(dMI, 0.75),
+                               dMI_min = min(dMI),
+                               dMI_max = max(dMI)),
+            file = filename <- paste0(
+              output_path,
+              plot.title,
+              ".csv"
+            ))
 
 
   # ggplot

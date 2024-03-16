@@ -25,7 +25,7 @@ clima_dMI(
 \item{output_path}{description}
 }
 \value{
-A PNG
+A PNG & CSV file
 }
 \description{
 This function calculates the dMI (De Martonne Aridity Index)) for climate

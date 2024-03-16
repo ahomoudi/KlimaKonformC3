@@ -88,7 +88,7 @@ clima_diagramm_change <- function(data,
       ) +
       ggplot2::scale_fill_manual(
         values = "blue",
-        labels = "\u00c4nderung N", ,
+        labels = "\u00c4nderung N",
         guide = ggplot2::guide_legend(
           title = NULL,
           keywidth = grid::unit(5, "mm"),
@@ -229,7 +229,8 @@ clima_diagramm_change <- function(data,
         breaks = seq(-5, 50, 5),
         sec.axis = ggplot2::sec_axis(~ . / b,
           breaks = seq(-5, 50, 5) / b,
-          name = "Rainfall (mm)"
+          name = "Rainfall (mm)",
+          labels = scales::label_number(accuracy = NULL)
         )
       ) +
       ggplot2::scale_x_continuous(

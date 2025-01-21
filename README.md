@@ -1,4 +1,4 @@
-# KlimaKonformC3 <img src="man/figures/logo.png" align="right" height="139" />
+# KlimaKonformC3
 
 <!-- badges: start -->
 
@@ -58,6 +58,7 @@ library(KlimaKonformC3)
 Please file bug reports and feature requests at
 <https://github.com/ahmathlete/KlimaKonformC3/issues>
 
-
+<!--
 ## Disclaimer
 The Original project logo is on the official project website mentioned above. The logo here is modified with @ColinFay's awesome [hexmake](https://connect.thinkr.fr/hexmake/) tool.
+-->
